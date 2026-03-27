@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="header">
+    <style>
+        /* 1. 헤더 기본 고정 스타일 */
+        .header-wrap {
+            width: 100%; 
+            border-bottom: 1px solid #e5e5e5; 
+            background: rgba(255, 255, 255, 1);
+            position: fixed; 
+            top: 0; left: 0;
+            z-index: 2000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 2. 내부 컨텐츠 높이 제어 */
+        .header-inner {
+            width: 1200px; 
+            margin: 0 auto; 
+            height: 100px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            transition: all 0.4s ease;
+        }
+
+        .header-wrap.shrink {
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(10px);           
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+        }
+
+        .header-wrap.shrink .header-inner {
+            height: 70px; 
+        }
+
+        /* 3. 로고 및 메뉴 스타일 */
+        .logo a { font-size: 32px; font-weight: bold; color: #000; text-decoration: none; letter-spacing: -1px; }
+        .gnb ul { list-style: none; display: flex; padding: 0; margin: 0; }
+        .gnb ul li { margin: 0 25px; position: relative; } /* 밑줄 위치 기준을 위해 relative 추가 */
+        .gnb ul li a { text-decoration: none; color: #333; font-weight: 500; font-size: 17px; transition: 0.2s; }
+        
+        /* [효과 추가] 호버 및 활성화 상태 스타일 */
+        .gnb ul li a:hover,
+        .gnb ul li a.active { color: #05141f; font-weight: bold; }
+
+        /* [효과 추가] 활성화된 메뉴 하단 밑줄 */
+        .gnb ul li a.active::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #05141f;
+        }
+
+        .util-menu { display: flex; align-items: center; }
+        .util-menu a { text-decoration: none; color: #666; font-size: 14px; margin-left: 25px; }
+
+        /* 4. 언어 드롭다운 */
+        .lang-dropdown { position: relative; margin-left: 25px; display: flex; align-items: center; padding: 10px 0; }
+        .lang-btn { font-size: 14px; color: #444; font-weight: 600; cursor: pointer; background: none; border: none; padding: 0; display: flex; align-items: center; line-height: 1; }
+        .lang-btn::after { content: "▼"; font-size: 9px; margin-left: 4px; color: #bbb; }
+        .lang-content { display: none; position: absolute; top: 25px; left: 50%; transform: translateX(-50%); background-color: #fff; min-width: 70px; box-shadow: 0px 4px 12px rgba(0,0,0,0.1); border: 1px solid #eee; border-radius: 4px; padding: 5px 0; z-index: 2100; }
+        .lang-content::before { content: ""; position: absolute; top: -10px; left: 0; width: 100%; height: 10px; }
+        .lang-content a { color: #666; padding: 8px 0; text-decoration: none; display: block; text-align: center; font-size: 13px; margin: 0 !important; }
+        .lang-content a:hover { background-color: #f8f9fa; color: #000; }
+        .lang-dropdown:hover .lang-content { display: block; }
+    </style>
+    
+    <div class="header-wrap" id="mainHeader">
+        <div class="header-inner">
+            <div class="logo"><a th:href="@{/main}">KIA EV</a></div>
+            <nav class="gnb">
+                <ul id="navLinks">
+                    <li><a th:href="@{/car/list}">차량조회</a></li>
+                    <li><a th:href="@{/consult/form}">상담신청</a></li>
+                    <li><a th:href="@{/board/list}">문의게시판</a></li>
+                    <li><a th:href="@{/promotion/list}">프로모션</a></li>
+                    <li><a th:href="@{/recommend/main}">충전소확인</a></li>
+                    <li><a th:href="@{/chatbot/main}">챗봇상담</a></li>
+                </ul>
+            </nav>
+            <div class="util-menu">
+                <div class="lang-dropdown">
+                    <button class="lang-btn">KR</button>
+                    <div class="lang-content">
+                        <a href="#">KR</a>
+                        <a href="#">EN</a>
+                    </div>
+                </div>
+                <a th:href="@{/login}">로그인</a>
+                <a th:href="@{/member/join}">회원가입</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. 스크롤 감지
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 50) {
+                header.classList.add('shrink');
+            } else {
+                header.classList.remove('shrink');
+            }
+        });
+
+        // 2. 현재 주소에 따른 메뉴 활성화 효과
+        document.addEventListener("DOMContentLoaded", function() {
+            const currentPath = window.location.pathname;
+            const links = document.querySelectorAll('#navLinks a');
+
+            links.forEach(link => {
+                const linkHref = link.getAttribute('href');
+                // 현재 주소창의 경로가 링크의 경로를 포함하고 있는지 확인 (단, 메인은 제외)
+                if (linkHref !== '/main' && currentPath.includes(linkHref.split('?')[0])) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</header>
