@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>EV 구매 지원 혜택</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* html, body 높이를 100%로 설정해야 하단 밀착 가능 */
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        
+        body { font-family: 'Pretendard', sans-serif; background: #fff; color: #111; }
+
+        .popup-container { 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; /* 화면 전체 높이 사용 */
+        }
+
+        .popup-header { 
+            background: #05141f; color: #fff; padding: 25px 20px; text-align: center; 
+        }
+        
+        .popup-body { 
+            padding: 20px; 
+            flex: 1; /* 남은 공간을 다 차지함 */
+        }
+
+        .benefit-box { 
+            background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 15px; 
+            border: 1px solid #eee;
+        }
+        .benefit-box i { color: #e6a600; margin-right: 8px; font-size: 18px; }
+        .benefit-box strong { color: #05141f; display: inline-block; margin-bottom: 8px; font-size: 16px; }
+        .benefit-box p { margin: 0; font-size: 14px; color: #666; line-height: 1.5; }
+
+        /* [핵심] 하단 바를 맨 아래로 밀착 */
+        .popup-footer { 
+            background: #f1f1f1; 
+            padding: 12px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-top: 1px solid #ddd;
+            margin-top: auto; /* 위쪽 여백을 자동으로 채워 아래로 밀어냄 */
+        }
+        
+        .popup-footer label { font-size: 13px; color: #444; cursor: pointer; display: flex; align-items: center; }
+        .popup-footer input { margin-right: 8px; }
+        
+        .btn-close { 
+            border: none; background: none; cursor: pointer; 
+            font-weight: bold; color: #05141f; font-size: 14px; 
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="popup-container">
+        <div class="popup-header">
+            <h2 style="margin:0; font-size:20px; letter-spacing: 0.5px;">EV 구매 지원 혜택</h2>
+        </div>
+        
+        <div class="popup-body">
+            <div class="benefit-box">
+                <strong><i class="fa-solid fa-bolt"></i> 전기차 보조금 안내</strong>
+                <p>2026년 국가 보조금 최대 지원 및 지자체별 추가 혜택을 지금 확인하세요.</p>
+            </div>
+            <div class="benefit-box">
+                <strong><i class="fa-solid fa-plug"></i> 충전기 설치 지원</strong>
+                <p>신규 구매 고객 대상 홈 충전기 무상 설치 및 충전 크레딧 프로모션 진행 중입니다.</p>
+            </div>
+        </div>
+
+        <div class="popup-footer">
+            <label><input type="checkbox" id="todayCheck"> 오늘 하루 보지 않기</label>
+            <button onclick="handleClose()" class="btn-close">닫기</button>
+        </div>
+    </div>
+
+    <script>
+        function handleClose() {
+            if(document.getElementById('todayCheck').checked) {
+                // 부모창(main.html)의 쿠키 설정 함수 호출
+                if (window.opener && !window.opener.closed) {
+                    window.opener.setPopupCookie("hidePopup", "true", 1);
+                }
+            }
+            window.close();
+        }
+    </script>
+</body>
+</html>
