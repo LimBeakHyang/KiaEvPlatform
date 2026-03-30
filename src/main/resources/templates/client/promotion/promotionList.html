@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>기아 전기차 - 진행 중인 프로모션</title>
+    <style>
+        /* 기본적인 구조를 보기 위한 임시 스타일입니다 */
+        .promotion-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .promotion-card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .promotion-title { font-size: 1.5em; font-weight: bold; color: #05141f; margin-bottom: 10px; }
+        .promotion-date { color: #666; font-size: 0.9em; margin-bottom: 15px; }
+        .promotion-discount { color: #e2231a; font-weight: bold; margin-bottom: 15px; }
+        .detail-btn { display: inline-block; padding: 8px 15px; background-color: #05141f; color: #fff; text-decoration: none; border-radius: 4px; }
+        .detail-btn:hover { background-color: #333; }
+        .empty-message { text-align: center; color: #999; padding: 50px 0; }
+    </style>
+</head>
+<body>
+
+<div class="promotion-container">
+    <h2>현재 진행 중인 프로모션</h2>
+    <hr>
+
+    <div th:if="${#lists.isEmpty(promotions)}" class="empty-message">
+        <p>현재 진행 중인 프로모션이 없습니다.</p>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(promotions)}">
+        <div class="promotion-card" th:each="promo : ${promotions}">
+            
+            <div class="promotion-title" th:text="${promo.title}">프로모션 제목 예시</div>
+            
+            <div class="promotion-date">
+                기간: <span th:text="${#temporals.format(promo.startDate, 'yyyy-MM-dd')}">2024-01-01</span> 
+                ~ <span th:text="${#temporals.format(promo.endDate, 'yyyy-MM-dd')}">2024-12-31</span>
+            </div>
+
+            <div class="promotion-discount" th:if="${promo.discountAmount != null and promo.discountAmount > 0}">
+                할인 혜택: <span th:text="${#numbers.formatInteger(promo.discountAmount, 3, 'COMMA')}">1,000,000</span>원
+            </div>
+
+            <a th:href="@{/promotion/detail(id=${promo.id})}" class="detail-btn">자세히 보기</a>
+            
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
