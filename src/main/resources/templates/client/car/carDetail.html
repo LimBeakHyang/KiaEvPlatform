@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${car.modelName} + ' - 상세정보'"></title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Pretendard', sans-serif;
+	background-color: #fff;
+	color: #111;
+	letter-spacing: -0.5px;
+}
+
+/* 헤더 고정(100px)에 따른 상단 여백 확보 */
+.container {
+	width: 1200px;
+	margin: 0 auto;
+	/* 기존 60px에서 130px로 변경 */
+	padding: 130px 0 100px;
+}
+
+/* 1. 상단 모델명 */
+.page-header {
+	margin-bottom: 40px;
+	border-bottom: 2px solid #111;
+	padding-bottom: 25px;
+}
+
+.page-header h2 {
+	font-size: 72px;
+	color: #05141f;
+	font-weight: 900;
+	margin: 0;
+	text-transform: uppercase;
+	line-height: 1;
+}
+
+.page-header p {
+	color: #888;
+	margin: 15px 0 0;
+	font-size: 18px;
+	font-weight: 500;
+}
+
+.detail-wrapper {
+	display: flex;
+	gap: 80px;
+	align-items: flex-start;
+}
+
+/* 좌측 이미지 영역: 스크롤 고정 위치 조정 */
+.detail-left {
+	width: 58%;
+	position: sticky;
+	/* 헤더(100px) + 여유공간(30px) 합산하여 130px로 설정 */
+	top: 130px;
+}
+
+.main-img-box {
+	width: 100%;
+	height: 480px;
+	border-radius: 20px;
+	overflow: hidden;
+	background: #f8f9fa;
+}
+
+.main-img-box img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.thumb-container {
+	display: flex;
+	gap: 12px;
+	margin-top: 20px;
+	justify-content: center;
+}
+
+.thumb {
+	width: 100px;
+	height: 65px;
+	border-radius: 8px;
+	overflow: hidden;
+	cursor: pointer;
+	border: 2px solid transparent;
+	background: #f8f9fa;
+	transition: 0.3s;
+}
+
+.thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	opacity: 0.4;
+}
+
+.thumb.active {
+	border-color: #05141f;
+}
+
+.thumb.active img {
+	opacity: 1;
+}
+
+.detail-right {
+	width: 42%;
+}
+
+.price-container {
+	padding: 10px 0 40px;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 35px;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+}
+
+.status-box, .price-box {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.price-box {
+	text-align: right;
+}
+
+.label-sm {
+	font-size: 11px;
+	color: #999;
+	font-weight: 700;
+	letter-spacing: 1.5px;
+	text-transform: uppercase;
+	margin: 0;
+}
+
+.status-val {
+	font-size: 15px;
+	font-weight: 700;
+	color: #05141f;
+	background: #f1f1f1;
+	padding: 5px 12px;
+	border-radius: 4px;
+	display: inline-block;
+	width: fit-content;
+}
+
+.price-val {
+	margin: 0;
+	display: flex;
+	align-items: baseline;
+	justify-content: flex-end;
+	color: #05141f;
+}
+
+.price-val .num {
+	font-size: 52px;
+	font-weight: 800;
+	letter-spacing: -1.5px;
+	line-height: 1;
+}
+
+.price-val .won {
+	font-size: 24px;
+	font-weight: 600;
+	margin-left: 4px;
+}
+
+.core-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 15px;
+	margin-bottom: 40px;
+}
+
+.core-item {
+	background: #fdfdfd;
+	padding: 25px;
+	border-radius: 12px;
+	text-align: center;
+	border: 1px solid #f0f0f0;
+}
+
+.core-item i {
+	font-size: 20px;
+	color: #05141f;
+	margin-bottom: 12px;
+	display: block;
+}
+
+.core-item .c-label {
+	font-size: 13px;
+	color: #999;
+	display: block;
+	margin-bottom: 6px;
+}
+
+.core-item .c-val {
+	font-size: 18px;
+	font-weight: 700;
+	color: #111;
+}
+
+.info-list {
+	margin-bottom: 40px;
+}
+
+.info-item {
+	display: flex;
+	padding: 20px 0;
+	border-bottom: 1px solid #f5f5f5;
+	align-items: flex-start;
+}
+
+.info-name {
+	color: #888;
+	font-size: 15px;
+	min-width: 130px;
+	flex-shrink: 0;
+	font-weight: 500;
+}
+
+.info-data {
+	color: #111;
+	font-weight: 600;
+	font-size: 15px;
+	text-align: right;
+	flex-grow: 1;
+	line-height: 1.7;
+	word-break: keep-all;
+}
+
+.description-area {
+	margin-bottom: 50px;
+	padding: 30px;
+	background: #f9f9f9;
+	border-radius: 15px;
+}
+
+.description-area h4 {
+	font-size: 18px;
+	font-weight: 700;
+	color: #05141f;
+	margin: 0 0 15px 0;
+}
+
+.description-area p {
+	font-size: 15px;
+	line-height: 1.8;
+	color: #555;
+	margin: 0;
+}
+
+.action-btns {
+	display: grid;
+	grid-template-columns: 1.6fr 1fr;
+	gap: 15px;
+}
+
+.btn {
+	padding: 22px;
+	border-radius: 12px;
+	font-size: 18px;
+	font-weight: 700;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	transition: 0.3s;
+}
+
+.btn-main {
+	background: #05141f;
+	color: #fff;
+	border: none;
+}
+
+.btn-sub {
+	background: #fff;
+	color: #05141f;
+	border: 1px solid #05141f;
+}
+
+.btn:hover {
+	background: #1a2a3a;
+	color: #fff;
+}
+
+.btn-sub:hover {
+	background: #f5f5f5;
+	color: #05141f;
+}
+</style>
+</head>
+<body>
+
+	<th:block th:replace="~{common/header :: header}"></th:block>
+
+	<main class="container">
+		<!-- 상단 모델 헤더 -->
+		<div class="page-header">
+			<h2 th:text="${car.modelName}">모델명</h2>
+			<p>Innovation and Sustainability in Every Detail</p>
+		</div>
+
+		<div class="detail-wrapper">
+			<!-- 좌측 이미지 & 갤러리 -->
+			<div class="detail-left">
+				<div class="main-img-box">
+					<img id="activeImg" th:src="${car.imagePath}">
+				</div>
+				<!-- 갤러리 썸네일 구조 -->
+				<div class="thumb-container">
+					<div class="thumb active" onclick="updatePreview(this)">
+						<img th:src="${car.imagePath}">
+					</div>
+					<div class="thumb" onclick="updatePreview(this)">
+						<img
+							th:src="${#strings.replace(car.imagePath, '_1.jpg', '_2.jpg')}">
+					</div>
+					<div class="thumb" onclick="updatePreview(this)">
+						<img
+							th:src="${#strings.replace(car.imagePath, '_1.jpg', '_3.jpg')}">
+					</div>
+				</div>
+			</div>
+
+			<!-- 우측 상세 정보 -->
+			<div class="detail-right">
+				
+				<div class="price-container">
+					<div class="status-box">
+						<p class="label-sm">Sale Status</p>
+						<span class="status-val" th:text="${car.saleStatus}">판매중</span>
+					</div>
+					<div class="price-box">
+						<p class="label-sm">Estimated Price</p>
+						<div class="price-val">
+							<span class="num"
+								th:text="${#numbers.formatInteger(car.price, 3, 'COMMA')}">0</span>
+							<span class="won">원~</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="core-grid">
+					<div class="core-item">
+						<i class="fa-solid fa-battery-full"></i> <span class="c-label">배터리
+							용량</span> <span class="c-val" th:text="${car.batteryCapacity}">-</span>
+					</div>
+					<div class="core-item">
+						<i class="fa-solid fa-gauge-high"></i> <span class="c-label">최대
+							주행거리</span> <span class="c-val" th:text="${car.drivingRangeKm} + 'km'">-</span>
+					</div>
+				</div>
+
+				<div class="info-list">
+					<div class="info-item">
+						<span class="info-name">차량 유형</span><span class="info-data"
+							th:text="${car.carType}">-</span>
+					</div>
+					<div class="info-item">
+						<span class="info-name">급속 충전 시간</span><span class="info-data"
+							th:text="${car.fastChargeTime}">-</span>
+					</div>
+					<div class="info-item">
+						<span class="info-name">충전 정보</span><span class="info-data"
+							th:text="${car.chargeInfo}">-</span>
+					</div>
+					<div class="info-item">
+						<span class="info-name">차량 색상</span><span class="info-data"
+							th:text="${car.carColor}">-</span>
+					</div>
+				</div>
+
+				<div class="description-area">
+					<h4>The All-Electric Overview</h4>
+					<p th:text="${car.carDescription}">상세 설명</p>
+				</div>
+
+				<div class="action-btns">
+					<a th:href="@{/consult/form(carNo=${car.carNo})}"
+						class="btn btn-main">구매 상담 신청하기</a>
+					<button class="btn btn-sub">관심 차량</button>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<th:block th:replace="~{common/footer :: footer}"></th:block>
+
+	<script>
+        function updatePreview(element) {
+            document.getElementById('activeImg').src = element.querySelector('img').src;
+            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+        }
+    </script>
+</body>
+</html>

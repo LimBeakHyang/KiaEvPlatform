@@ -37,14 +37,14 @@
         /* 3. 로고 및 메뉴 스타일 */
         .logo a { font-size: 32px; font-weight: bold; color: #000; text-decoration: none; letter-spacing: -1px; }
         .gnb ul { list-style: none; display: flex; padding: 0; margin: 0; }
-        .gnb ul li { margin: 0 25px; position: relative; } /* 밑줄 위치 기준을 위해 relative 추가 */
+        .gnb ul li { margin: 0 25px; position: relative; } 
         .gnb ul li a { text-decoration: none; color: #333; font-weight: 500; font-size: 17px; transition: 0.2s; }
         
-        /* [효과 추가] 호버 및 활성화 상태 스타일 */
+        /* 호버 및 활성화 상태 스타일 */
         .gnb ul li a:hover,
         .gnb ul li a.active { color: #05141f; font-weight: bold; }
 
-        /* [효과 추가] 활성화된 메뉴 하단 밑줄 */
+        /* 활성화된 메뉴 하단 밑줄 */
         .gnb ul li a.active::after {
             content: "";
             position: absolute;
@@ -71,8 +71,13 @@
     
     <div class="header-wrap" id="mainHeader">
         <div class="header-inner">
-            <div class="logo"><a th:href="@{/main}">KIA EV</a></div>
-            <nav class="gnb">
+            <!-- 1. 로고: 클릭 시 무조건 한국어 메인 페이지로 이동 (lang=kr 파라미터 강제 추가) -->
+            <div class="logo">
+                <a th:href="@{/main(lang='kr')}">KIA EV</a>
+            </div>
+
+            <!-- 2. GNB: EN 모드가 아닐 때만 노출 -->
+            <nav class="gnb" th:if="${session.lang != 'en'}">
                 <ul id="navLinks">
                     <li><a th:href="@{/car/list}">차량조회</a></li>
                     <li><a th:href="@{/consult/form}">상담신청</a></li>
@@ -82,16 +87,23 @@
                     <li><a th:href="@{/chatbot/main}">챗봇상담</a></li>
                 </ul>
             </nav>
+
             <div class="util-menu">
                 <div class="lang-dropdown">
-                    <button class="lang-btn">KR</button>
+                    <!-- 현재 세션 언어 표시 -->
+                    <button class="lang-btn" th:text="${session.lang == 'en' ? 'EN' : 'KR'}">KR</button>
                     <div class="lang-content">
-                        <a href="#">KR</a>
-                        <a href="#">EN</a>
+                        <!-- 클릭 시 lang 파라미터를 전달하여 MainController에서 세션 처리 -->
+                        <a th:href="@{/main(lang='kr')}">KR</a>
+                        <a th:href="@{/main(lang='en')}">EN</a>
                     </div>
                 </div>
-                <a th:href="@{/login}">로그인</a>
-                <a th:href="@{/member/join}">회원가입</a>
+
+                <!-- 3. 로그인/회원가입: EN 모드가 아닐 때만 노출 -->
+                <th:block th:if="${session.lang != 'en'}">
+                    <a th:href="@{/login}">로그인</a>
+                    <a th:href="@{/member/join}">회원가입</a>
+                </th:block>
             </div>
         </div>
     </div>
@@ -114,11 +126,11 @@
 
             links.forEach(link => {
                 const linkHref = link.getAttribute('href');
-                // 현재 주소창의 경로가 링크의 경로를 포함하고 있는지 확인 (단, 메인은 제외)
-                if (linkHref !== '/main' && currentPath.includes(linkHref.split('?')[0])) {
+                if (linkHref && linkHref !== '/main' && currentPath.includes(linkHref.split('?')[0])) {
                     link.classList.add('active');
                 }
             });
         });
     </script>
 </header>
+</html>
