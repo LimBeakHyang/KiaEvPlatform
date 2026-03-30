@@ -68,11 +68,13 @@ public class MainController {
     }
     */
     
+    /*
     // 4. 프로모션 목록
     @GetMapping("/promotion/list")
     public String promotionList() { 
         return "client/promotion/promotionList"; 
     }
+    */
 
     // 5. 충전소 확인 및 추천 메인
     @GetMapping("/recommend/main")
