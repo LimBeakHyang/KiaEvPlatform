@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <title>기아 전기차 - 프로모션 상세</title>
     <style>
-        .promotion-container { max-width: 800px; margin: 0 auto; padding: 20px; font-family: sans-serif; }
+        .promotion-container { 
+    max-width: 800px; 
+    margin: 120px auto 50px; /* 👈 위쪽 여백 120px, 좌우 중앙, 아래 여백 50px */
+    padding: 20px; 
+    font-family: sans-serif; 
+}
         .promo-header { border-bottom: 2px solid #05141f; padding-bottom: 20px; margin-bottom: 20px; }
         .promo-title { font-size: 2em; font-weight: bold; color: #05141f; margin-bottom: 10px; }
         .promo-meta { color: #666; font-size: 0.95em; }
@@ -16,6 +21,7 @@
     </style>
 </head>
 <body>
+<th:block th:replace="~{common/header :: header}"></th:block>
 
 <div class="promotion-container">
     <div class="promo-header">
@@ -42,6 +48,6 @@
         <a th:href="@{/promotion/list}" class="btn-list">목록으로 돌아가기</a>
     </div>
 </div>
-
+<th:block th:replace="~{common/footer :: footer}"></th:block>
 </body>
 </html>
