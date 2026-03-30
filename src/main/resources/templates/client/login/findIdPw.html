@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>아이디 / 비밀번호 찾기</title>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #dfe3e8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .find-container {
+        width: 420px;
+        background-color: #f4f4f4;
+        border-radius: 20px;
+        padding: 40px 35px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .find-title {
+        text-align: center;
+        font-size: 42px;
+        font-weight: bold;
+        color: #1f3556;
+        margin-bottom: 35px;
+    }
+
+    .section-title {
+        font-size: 28px;
+        font-weight: bold;
+        color: #111;
+        margin-bottom: 20px;
+    }
+
+    .input-box {
+        width: 100%;
+        height: 48px;
+        padding: 0 14px;
+        margin-bottom: 14px;
+        border: 1px solid #c8ccd2;
+        border-radius: 8px;
+        font-size: 16px;
+        background-color: white;
+    }
+
+    .main-btn {
+        width: 100%;
+        height: 48px;
+        border: none;
+        border-radius: 8px;
+        background-color: #3f6aa6;
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 8px;
+        margin-bottom: 14px;
+    }
+
+    .main-btn:hover {
+        background-color: #355b90;
+    }
+
+    .msg {
+        font-size: 15px;
+        color: #333;
+        margin-bottom: 18px;
+        line-height: 1.5;
+    }
+
+    .divider {
+        border: none;
+        border-top: 1px solid #d2d6dc;
+        margin: 28px 0;
+    }
+
+    .bottom-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .bottom-link a {
+        color: #3f6aa6;
+        text-decoration: none;
+        font-size: 16px;
+        margin: 0 8px;
+    }
+
+    .bottom-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+
+<div class="find-container">
+    <div class="find-title">찾기</div>
+
+    <div class="section-title">아이디 찾기</div>
+    <form th:action="@{/login/findId}" method="post">
+        <input type="text" name="memberName" class="input-box" placeholder="이름 입력" required>
+        <input type="email" name="email" class="input-box" placeholder="이메일 입력" required>
+        <button type="submit" class="main-btn">아이디 찾기</button>
+    </form>
+
+    <div class="msg" th:if="${findIdMsg}" th:text="${findIdMsg}"></div>
+
+    <hr class="divider">
+
+    <div class="section-title">비밀번호 찾기</div>
+    <form th:action="@{/login/findPw}" method="post">
+        <input type="text" name="loginId" class="input-box" placeholder="아이디 입력" th:value="${loginId}" required>
+        <input type="email" name="email" class="input-box" placeholder="이메일 입력" th:value="${email}" required>
+        <button type="submit" class="main-btn">정보 확인</button>
+    </form>
+
+    <div class="msg" th:if="${findPwMsg}" th:text="${findPwMsg}"></div>
+
+    <div th:if="${resetMode}">
+        <hr class="divider">
+        <div class="section-title">비밀번호 재설정</div>
+
+        <form th:action="@{/login/resetPw}" method="post">
+            <input type="hidden" name="loginId" th:value="${loginId}">
+            <input type="hidden" name="email" th:value="${email}">
+
+            <input type="password" name="newPw" class="input-box" placeholder="새 비밀번호 입력" required>
+            <input type="password" name="confirmPw" class="input-box" placeholder="새 비밀번호 확인 입력" required>
+
+            <button type="submit" class="main-btn">비밀번호 변경</button>
+        </form>
+
+        <div class="msg" th:if="${resetPwMsg}" th:text="${resetPwMsg}"></div>
+    </div>
+
+    <div class="bottom-link">
+        <a th:href="@{/login}">로그인으로 돌아가기</a>
+    </div>
+</div>
+
+</body>
+</html>
