@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원가입</title>
+<style>
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	background: #dfe3e8;
+	font-family: "Malgun Gothic", Arial, sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 20px;
+}
+
+.join-wrap {
+	width: 860px;
+	background: #f4f4f4;
+	border-radius: 16px;
+	padding: 45px 55px 40px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.join-title {
+	text-align: center;
+	font-size: 36px;
+	font-weight: 700;
+	color: #1f2a37;
+	margin: 0 0 35px;
+}
+
+.form-row {
+	display: flex;
+	align-items: center;
+	margin-bottom: 18px;
+}
+
+.form-label {
+	width: 120px;
+	font-size: 22px;
+	font-weight: 700;
+	color: #243447;
+	flex-shrink: 0;
+}
+
+.input-group {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.form-input {
+	flex: 1;
+	height: 52px;
+	border: 1px solid #d0d5db;
+	border-radius: 8px;
+	background: #ffffff;
+	padding: 0 16px;
+	font-size: 18px;
+	color: #222;
+	outline: none;
+}
+
+.form-input::placeholder {
+	color: #b8b8b8;
+}
+
+.form-input:focus {
+	border-color: #355f96;
+	box-shadow: 0 0 0 3px rgba(53, 95, 150, 0.12);
+}
+
+.short-btn {
+	width: 110px;
+	height: 52px;
+	border: none;
+	border-radius: 8px;
+	background: #355f96;
+	color: #fff;
+	font-size: 17px;
+	font-weight: 700;
+	cursor: pointer;
+	flex-shrink: 0;
+}
+
+.short-btn:hover,
+.action-btn:hover {
+	opacity: 0.92;
+}
+
+.msg {
+	margin-left: 120px;
+	margin-top: -8px;
+	margin-bottom: 12px;
+	font-size: 14px;
+	font-weight: 600;
+	min-height: 20px;
+}
+
+.msg.success {
+	color: #1d7a32;
+}
+
+.msg.error {
+	color: #c62828;
+}
+
+.btn-row {
+	display: flex;
+	justify-content: center;
+	gap: 18px;
+	margin-top: 30px;
+}
+
+.action-btn {
+	width: 160px;
+	height: 56px;
+	border: none;
+	border-radius: 8px;
+	background: #355f96;
+	color: white;
+	font-size: 22px;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+@media (max-width: 900px) {
+	.join-wrap {
+		width: 100%;
+		padding: 30px 20px;
+	}
+
+	.form-row {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 8px;
+	}
+
+	.form-label {
+		width: 100%;
+		font-size: 18px;
+	}
+
+	.msg {
+		margin-left: 0;
+	}
+
+	.action-btn {
+		width: 140px;
+		font-size: 18px;
+	}
+}
+</style>
+</head>
+<body>
+
+	<div class="join-wrap">
+		<h2 class="join-title">회원가입</h2>
+
+		<form id="joinForm" action="/member/join" method="post">
+
+			<div class="form-row">
+				<label for="loginId" class="form-label">아이디</label>
+				<div class="input-group">
+					<input type="text" id="loginId" name="loginId" class="form-input"
+						placeholder="영문/숫자 포함 8~20자" maxlength="20" required>
+					<button type="button" class="short-btn" onclick="checkLoginId()">중복확인</button>
+				</div>
+			</div>
+			<div id="loginIdMsg" class="msg"></div>
+
+			<div class="form-row">
+				<label for="memberPw" class="form-label">비밀번호</label>
+				<div class="input-group">
+					<input type="password" id="memberPw" name="memberPw"
+						class="form-input" placeholder="영문/숫자 포함 8~20자" maxlength="20" required>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<label for="memberPwCheck" class="form-label">비밀번호확인</label>
+				<div class="input-group">
+					<input type="password" id="memberPwCheck" name="memberPwCheck"
+						class="form-input" placeholder="입력한 비밀번호와 일치해야 합니다." maxlength="20" required>
+				</div>
+			</div>
+			<div id="pwMsg" class="msg"></div>
+
+			<div class="form-row">
+				<label for="memberName" class="form-label">이름</label>
+				<div class="input-group">
+					<input type="text" id="memberName" name="memberName"
+						class="form-input" placeholder="홍길동" required>
+				</div>
+			</div>
+			<div id="nameMsg" class="msg"></div>
+
+			<div class="form-row">
+				<label for="birthDate" class="form-label">생년월일</label>
+				<div class="input-group">
+					<input type="text" id="birthDate" name="birthDate"
+						class="form-input" placeholder="예) 19981020"
+						maxlength="8" inputmode="numeric" required>
+				</div>
+			</div>
+			<div id="birthMsg" class="msg"></div>
+
+			<div class="form-row">
+				<label for="email" class="form-label">이메일</label>
+				<div class="input-group">
+					<input type="email" id="email" name="email" class="form-input"
+						placeholder="example@email.com" required>
+					<button type="button" class="short-btn" onclick="checkEmail()">중복확인</button>
+				</div>
+			</div>
+			<div id="emailMsg" class="msg"></div>
+
+			<div class="form-row">
+				<label for="phone" class="form-label">전화번호</label>
+				<div class="input-group">
+					<input type="text" id="phone" name="phone" class="form-input"
+						placeholder="010-0000-0000" maxlength="13" inputmode="numeric" required>
+				</div>
+			</div>
+			<div id="phoneMsg" class="msg"></div>
+
+			<div class="form-row">
+				<label for="address" class="form-label">주소</label>
+				<div class="input-group">
+					<input type="text" id="address" name="address" class="form-input"
+						placeholder="주소를 검색해주세요" readonly required>
+					<button type="button" class="short-btn" onclick="execPostcode()">우편검색</button>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<label for="detailAddress" class="form-label">상세주소</label>
+				<div class="input-group">
+					<input type="text" id="detailAddress" name="detailAddress"
+						class="form-input" placeholder="상세주소 입력">
+				</div>
+			</div>
+
+			<div class="form-row">
+				<label for="zipcode" class="form-label">우편번호</label>
+				<div class="input-group">
+					<input type="text" id="zipcode" name="zipcode" class="form-input"
+						placeholder="우편번호" readonly required>
+				</div>
+			</div>
+
+			<div class="btn-row">
+				<button type="submit" class="action-btn">회원가입</button>
+				<button type="button" class="action-btn"
+					onclick="location.href='/member/login'">취소</button>
+			</div>
+		</form>
+	</div>
+
+	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+	<script>
+		let loginIdChecked = false;
+		let emailChecked = false;
+
+		const loginIdInput = document.getElementById('loginId');
+		const memberPwInput = document.getElementById('memberPw');
+		const memberPwCheckInput = document.getElementById('memberPwCheck');
+		const memberNameInput = document.getElementById('memberName');
+		const birthDateInput = document.getElementById('birthDate');
+		const emailInput = document.getElementById('email');
+		const phoneInput = document.getElementById('phone');
+
+		const loginIdMsg = document.getElementById('loginIdMsg');
+		const pwMsg = document.getElementById('pwMsg');
+		const nameMsg = document.getElementById('nameMsg');
+		const birthMsg = document.getElementById('birthMsg');
+		const emailMsg = document.getElementById('emailMsg');
+		const phoneMsg = document.getElementById('phoneMsg');
+
+		loginIdInput.addEventListener('input', function() {
+			loginIdChecked = false;
+			loginIdMsg.textContent = '';
+			loginIdMsg.className = 'msg';
+		});
+
+		emailInput.addEventListener('input', function() {
+			emailChecked = false;
+			validateEmailFormat();
+		});
+
+		memberPwInput.addEventListener('input', validatePasswordMatch);
+		memberPwCheckInput.addEventListener('input', validatePasswordMatch);
+
+		memberNameInput.addEventListener('input', function() {
+			const value = memberNameInput.value.trim();
+
+			if (value === '') {
+				nameMsg.textContent = '';
+				nameMsg.className = 'msg';
+				return;
+			}
+
+			if (value.length < 2) {
+				nameMsg.textContent = '이름은 2자 이상 입력해주세요.';
+				nameMsg.className = 'msg error';
+			} else {
+				nameMsg.textContent = '';
+				nameMsg.className = 'msg';
+			}
+		});
+
+		birthDateInput.addEventListener('input', function() {
+			this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
+
+			if (this.value === '') {
+				birthMsg.textContent = '';
+				birthMsg.className = 'msg';
+				return;
+			}
+
+			if (this.value.length !== 8) {
+				birthMsg.textContent = '생년월일은 8자리로 입력해주세요. 예: 19981020';
+				birthMsg.className = 'msg error';
+			} else {
+				birthMsg.textContent = '';
+				birthMsg.className = 'msg';
+			}
+		});
+
+		phoneInput.addEventListener('input', function() {
+			let value = this.value.replace(/[^0-9]/g, '').slice(0, 11);
+
+			if (value.length < 4) {
+				this.value = value;
+			} else if (value.length < 8) {
+				this.value = value.slice(0, 3) + '-' + value.slice(3);
+			} else {
+				this.value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+			}
+
+			validatePhone();
+		});
+
+		function validatePasswordMatch() {
+			const pw = memberPwInput.value;
+			const pwCheck = memberPwCheckInput.value;
+
+			if (pwCheck === '') {
+				pwMsg.textContent = '';
+				pwMsg.className = 'msg';
+				return;
+			}
+
+			if (pw === pwCheck) {
+				pwMsg.textContent = '비밀번호가 일치합니다.';
+				pwMsg.className = 'msg success';
+			} else {
+				pwMsg.textContent = '비밀번호가 일치하지 않습니다.';
+				pwMsg.className = 'msg error';
+			}
+		}
+
+		function validateEmailFormat() {
+			const email = emailInput.value.trim();
+			const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+			if (email === '') {
+				emailMsg.textContent = '';
+				emailMsg.className = 'msg';
+				return false;
+			}
+
+			if (!emailPattern.test(email)) {
+				emailMsg.textContent = '올바른 이메일 형식이 아닙니다.';
+				emailMsg.className = 'msg error';
+				return false;
+			}
+
+			emailMsg.textContent = '올바른 이메일 형식입니다. 중복확인을 진행해주세요.';
+			emailMsg.className = 'msg success';
+			return true;
+		}
+
+		function validatePhone() {
+			const phone = phoneInput.value.trim();
+			const phonePattern = /^010-\d{4}-\d{4}$/;
+
+			if (phone === '') {
+				phoneMsg.textContent = '';
+				phoneMsg.className = 'msg';
+				return false;
+			}
+
+			if (!phonePattern.test(phone)) {
+				phoneMsg.textContent = '전화번호는 010-0000-0000 형식으로 입력해주세요.';
+				phoneMsg.className = 'msg error';
+				return false;
+			}
+
+			phoneMsg.textContent = '올바른 전화번호 형식입니다.';
+			phoneMsg.className = 'msg success';
+			return true;
+		}
+
+		function validateLoginIdFormat(loginId) {
+			const loginIdPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
+			return loginIdPattern.test(loginId);
+		}
+
+		function checkLoginId() {
+			const loginId = loginIdInput.value.trim();
+
+			if (loginId === '') {
+				loginIdMsg.textContent = '아이디를 입력해주세요.';
+				loginIdMsg.className = 'msg error';
+				loginIdChecked = false;
+				return;
+			}
+
+			if (!validateLoginIdFormat(loginId)) {
+				loginIdMsg.textContent = '아이디는 영문/숫자를 포함한 8~20자여야 합니다.';
+				loginIdMsg.className = 'msg error';
+				loginIdChecked = false;
+				return;
+			}
+
+			fetch('/member/check-loginId?loginId=' + encodeURIComponent(loginId))
+				.then(response => response.json())
+				.then(data => {
+					if (data.exists) {
+						loginIdMsg.textContent = '이미 사용 중인 아이디입니다.';
+						loginIdMsg.className = 'msg error';
+						loginIdChecked = false;
+					} else {
+						loginIdMsg.textContent = '사용 가능한 아이디입니다.';
+						loginIdMsg.className = 'msg success';
+						loginIdChecked = true;
+					}
+				})
+				.catch(() => {
+					loginIdMsg.textContent = '아이디 중복확인 중 오류가 발생했습니다.';
+					loginIdMsg.className = 'msg error';
+					loginIdChecked = false;
+				});
+		}
+
+		function checkEmail() {
+			const email = emailInput.value.trim();
+
+			if (email === '') {
+				emailMsg.textContent = '이메일을 입력해주세요.';
+				emailMsg.className = 'msg error';
+				emailChecked = false;
+				return;
+			}
+
+			if (!validateEmailFormat()) {
+				emailChecked = false;
+				return;
+			}
+
+			fetch('/member/check-email?email=' + encodeURIComponent(email))
+				.then(response => response.json())
+				.then(data => {
+					if (data.exists) {
+						emailMsg.textContent = '이미 사용 중인 이메일입니다.';
+						emailMsg.className = 'msg error';
+						emailChecked = false;
+					} else {
+						emailMsg.textContent = '사용 가능한 이메일입니다.';
+						emailMsg.className = 'msg success';
+						emailChecked = true;
+					}
+				})
+				.catch(() => {
+					emailMsg.textContent = '이메일 중복확인 중 오류가 발생했습니다.';
+					emailMsg.className = 'msg error';
+					emailChecked = false;
+				});
+		}
+
+		function execPostcode() {
+			new daum.Postcode({
+				oncomplete: function(data) {
+					document.getElementById('zipcode').value = data.zonecode;
+					document.getElementById('address').value = data.roadAddress || data.jibunAddress;
+					document.getElementById('detailAddress').focus();
+				}
+			}).open();
+		}
+
+		document.getElementById('joinForm').addEventListener('submit', function(e) {
+			const loginId = loginIdInput.value.trim();
+			const pw = memberPwInput.value;
+			const pwCheck = memberPwCheckInput.value;
+			const name = memberNameInput.value.trim();
+			const birthDate = birthDateInput.value.trim();
+			const email = emailInput.value.trim();
+			const phone = phoneInput.value.trim();
+			const address = document.getElementById('address').value.trim();
+			const zipcode = document.getElementById('zipcode').value.trim();
+
+			if (!validateLoginIdFormat(loginId)) {
+				alert('아이디는 영문/숫자를 포함한 8~20자여야 합니다.');
+				loginIdInput.focus();
+				e.preventDefault();
+				return;
+			}
+
+			if (pw.length < 8 || pw.length > 20) {
+				alert('비밀번호는 8~20자로 입력해주세요.');
+				memberPwInput.focus();
+				e.preventDefault();
+				return;
+			}
+
+			if (pw !== pwCheck) {
+				alert('비밀번호와 비밀번호확인이 일치하지 않습니다.');
+				memberPwCheckInput.focus();
+				e.preventDefault();
+				return;
+			}
+
+			if (name.length < 2) {
+				alert('이름은 2자 이상 입력해주세요.');
+				memberNameInput.focus();
+				e.preventDefault();
+				return;
+			}
+
+			if (birthDate.length !== 8) {
+				alert('생년월일은 8자리로 입력해주세요. 예: 19981020');
+				birthDateInput.focus();
+				e.preventDefault();
+				return;
+			}
+
+			if (!validateEmailFormat()) {
+				alert('이메일 형식을 확인해주세요.');
+				emailInput.focus();
+				e.preventDefault();
+				return;
+			}
+
+			if (!validatePhone()) {
+				alert('전화번호는 010-0000-0000 형식으로 입력해주세요.');
+				phoneInput.focus();
+				e.preventDefault();
+				return;
+			}
+
+			if (address === '' || zipcode === '') {
+				alert('우편검색을 통해 주소를 입력해주세요.');
+				e.preventDefault();
+				return;
+			}
+
+			if (!loginIdChecked) {
+				alert('아이디 중복확인을 해주세요.');
+				e.preventDefault();
+				return;
+			}
+
+			if (!emailChecked) {
+				alert('이메일 중복확인을 해주세요.');
+				e.preventDefault();
+				return;
+			}
+		});
+	</script>
+
+</body>
+</html>

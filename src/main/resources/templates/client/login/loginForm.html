@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>로그인</title>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #dfe3e8;
+    font-family: "Malgun Gothic", Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-wrap {
+    width: 460px;
+    background: #f4f4f4;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.login-title {
+    text-align: center;
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #1f2a37;
+}
+
+.form-row {
+    margin-bottom: 18px;
+}
+
+.form-label {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #243447;
+}
+
+.form-input {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #d0d5db;
+    border-radius: 8px;
+    padding: 0 14px;
+    font-size: 16px;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #355f96;
+    box-shadow: 0 0 0 3px rgba(53, 95, 150, 0.12);
+}
+
+.login-btn {
+    width: 100%;
+    height: 52px;
+    border: none;
+    border-radius: 8px;
+    background: #355f96;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    opacity: 0.92;
+}
+
+.sub-row {
+    margin-top: 16px;
+    text-align: center;
+}
+
+.sub-row a {
+    text-decoration: none;
+    color: #355f96;
+    font-size: 15px;
+    margin: 0 8px;
+}
+
+.msg {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #c62828;
+}
+</style>
+</head>
+<body>
+
+<div class="login-wrap">
+    <h2 class="login-title">로그인</h2>
+
+    <form action="/login" method="post">
+        <div class="form-row">
+            <label for="loginId" class="form-label">아이디</label>
+            <input type="text" id="loginId" name="loginId" class="form-input" required>
+        </div>
+
+        <div class="form-row">
+            <label for="memberPw" class="form-label">비밀번호</label>
+            <input type="password" id="memberPw" name="memberPw" class="form-input" required>
+        </div>
+
+        <button type="submit" class="login-btn">로그인</button>
+    </form>
+
+    <div th:if="${loginError}" class="msg" th:text="${loginError}"></div>
+
+    <div class="sub-row">
+        <a href="/member/join">회원가입</a>
+        <a href="/client/login/findIdPw">아이디/비밀번호 찾기</a>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const joinSuccess = /*[[${param.joinSuccess}]]*/ null;
+    if (joinSuccess != null) {
+        alert('회원가입이 완료되었습니다. 로그인해주세요.');
+    }
+</script>
+
+</body>
+</html>

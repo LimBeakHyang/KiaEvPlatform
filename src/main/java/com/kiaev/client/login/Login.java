@@ -1,0 +1,146 @@
+package com.kiaev.client.login;
+
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "member_tbl")
+public class Login {
+	 @Id
+	    @Column(name = "member_no")
+	    private Long memberNo;
+
+	    @Column(name = "login_id")
+	    private String loginId;
+
+	    @Column(name = "member_pw")
+	    private String memberPw;
+
+	    @Column(name = "member_name")
+	    private String memberName;
+
+	    @Column(name = "birth_date")
+	    private LocalDate birthDate;
+
+	    @Column(name = "email")
+	    private String email;
+
+	    @Column(name = "phone")
+	    private String phone;
+
+	    @Column(name = "zipcode")
+	    private String zipcode;
+
+	    @Column(name = "address")
+	    private String address;
+
+	    @Column(name = "detail_address")
+	    private String detailAddress;
+
+	    @Column(name = "member_status")
+	    private String memberStatus;
+
+	    @Column(name = "join_date")
+	    private LocalDate joinDate;
+
+	    public Long getMemberNo() {
+	        return memberNo;
+	    }
+
+	    public void setMemberNo(Long memberNo) {
+	        this.memberNo = memberNo;
+	    }
+
+	    public String getLoginId() {
+	        return loginId;
+	    }
+
+	    public void setLoginId(String loginId) {
+	        this.loginId = loginId;
+	    }
+
+	    public String getMemberPw() {
+	        return memberPw;
+	    }
+
+	    public void setMemberPw(String memberPw) {
+	        this.memberPw = memberPw;
+	    }
+
+	    public String getMemberName() {
+	        return memberName;
+	    }
+
+	    public void setMemberName(String memberName) {
+	        this.memberName = memberName;
+	    }
+
+	    public LocalDate getBirthDate() {
+	        return birthDate;
+	    }
+
+	    public void setBirthDate(LocalDate birthDate) {
+	        this.birthDate = birthDate;
+	    }
+
+	    public String getEmail() {
+	        return email;
+	    }
+
+	    public void setEmail(String email) {
+	        this.email = email;
+	    }
+
+	    public String getPhone() {
+	        return phone;
+	    }
+
+	    public void setPhone(String phone) {
+	        this.phone = phone;
+	    }
+
+	    public String getZipcode() {
+	        return zipcode;
+	    }
+
+	    public void setZipcode(String zipcode) {
+	        this.zipcode = zipcode;
+	    }
+
+	    public String getAddress() {
+	        return address;
+	    }
+
+	    public void setAddress(String address) {
+	        this.address = address;
+	    }
+
+	    public String getDetailAddress() {
+	        return detailAddress;
+	    }
+
+	    public void setDetailAddress(String detailAddress) {
+	        this.detailAddress = detailAddress;
+	    }
+
+	    public String getMemberStatus() {
+	        return memberStatus;
+	    }
+
+	    public void setMemberStatus(String memberStatus) {
+	        this.memberStatus = memberStatus;
+	    }
+
+	    public LocalDate getJoinDate() {
+	        return joinDate;
+	    }
+
+	    public void setJoinDate(LocalDate joinDate) {
+	        this.joinDate = joinDate;
+	    }
+	}
+
