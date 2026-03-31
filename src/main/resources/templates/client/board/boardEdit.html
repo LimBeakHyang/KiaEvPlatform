@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>기아 전기차 - 문의글 수정</title>
     <style>
-        .container { width: 800px; margin: 50px auto; font-family: sans-serif; }
+        /* 💡 50px을 120px auto 50px로 변경! */
+        .container { width: 800px; margin: 120px auto 50px; font-family: sans-serif; } 
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         th, td { border: 1px solid #ddd; padding: 12px; }
         th { background-color: #f4f4f4; width: 15%; text-align: center; }
@@ -17,6 +19,7 @@
     </style>
 </head>
 <body>
+<th:block th:replace="~{common/header :: header}"></th:block>
 
     <div class="container">
         <h2>✏️ 문의글 수정하기</h2>
@@ -57,6 +60,6 @@
             </div>
         </form>
     </div>
-
+<th:block th:replace="~{common/footer :: footer}"></th:block>
 </body>
 </html>
