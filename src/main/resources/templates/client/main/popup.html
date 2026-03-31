@@ -78,15 +78,30 @@
     </div>
 
     <script>
-        function handleClose() {
-            if(document.getElementById('todayCheck').checked) {
-                // 부모창(main.html)의 쿠키 설정 함수 호출
-                if (window.opener && !window.opener.closed) {
-                    window.opener.setPopupCookie("hidePopup", "true", 1);
-                }
+    // 1. 쿠키 저장 함수 (직접 정의)
+    function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        // [중요] path=/ 설정이 있어야 메인 페이지에서 읽을 수 있습니다.
+        document.cookie = name + "=" + value + ";expires=" + date.toUTCString() + ";path=/";
+    }
+
+    // 2. 닫기 버튼 클릭 시 실행
+    function handleClose() {
+        try {
+            const isChecked = document.getElementById('todayCheck').checked;
+            
+            if (isChecked) {
+                // 오늘 하루 보지 않기 체크 시 쿠키 저장
+                setCookie("hidePopup", "true", 1);
             }
+        } catch (e) {
+            console.error("쿠키 저장 중 오류 발생:", e);
+        } finally {
+            // 에러가 나든 안 나든 창은 무조건 닫음
             window.close();
         }
-    </script>
+    }
+</script>
 </body>
 </html>
