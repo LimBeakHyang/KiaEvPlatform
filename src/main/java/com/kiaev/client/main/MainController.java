@@ -83,12 +83,10 @@ public class MainController {
     public String showPopup() {
         return "client/main/popup";
     }
-    
-    /*
-    // 로그인 페이지
-    @GetMapping("/login")
-    public String loginForm() {
-        return "client/login/loginForm";
+
+    // 7. 로그인 페이지
+    //@GetMapping("/login")
+    //public String loginForm() {
+       // return "client/login/loginForm";
     }
-    */
-}
+
