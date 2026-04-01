@@ -9,11 +9,68 @@
 <style>
 body {
 	font-family: 'Pretendard', sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #ffffff;
 }
 
-/* 라인업 카드 호버 효과 */
+/* --- 프로모션 슬라이드 스타일 --- */
+.promo-container {
+	width: 100%;
+	height: 450px;
+	background: #05141f;
+	border-radius: 25px;
+	margin-bottom: 80px;
+	position: relative;
+	overflow: hidden;
+	box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.promo-slider {
+	display: flex;
+	height: 100%;
+	transition: transform 0.5s ease-out;
+}
+
+.promo-slide {
+	min-width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	color: #fff;
+	padding: 0 120px;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+/* 슬라이드 화살표 */
+.slide-btn {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	color: #fff;
+	font-size: 40px;
+	cursor: pointer;
+	opacity: 0.3;
+	transition: 0.3s;
+	z-index: 10;
+}
+
+.slide-btn:hover {
+	opacity: 1;
+}
+
+.btn-prev { left: 30px; }
+.btn-next { right: 30px; }
+
+/* --- 라인업 카드 스타일 (기존 유지) --- */
 .lineup-card {
-	width: 31%;
+	flex: 1;
+	min-width: 0;
 	background: #fff;
 	border-radius: 20px;
 	overflow: hidden;
@@ -30,17 +87,16 @@ body {
 
 .img-box {
 	width: 100%;
-	height: 220px;
+	height: 240px;
 	background: #fdfdfd;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	overflow: hidden;
 }
 
 .img-box img {
-	width: 85%;
-	object-fit: contain;
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* 이미지가 카드에 꽉 차도록 설정 */
+	display: block;
 	transition: 0.5s;
 }
 
@@ -49,100 +105,113 @@ body {
 }
 
 .info-box {
-	padding: 30px 25px;
-	text-align: left;
+	padding: 25px;
+	background: #fff;
 }
 
 .info-box h4 {
 	margin: 0 0 10px 0;
-	font-size: 24px;
+	font-size: 22px;
 	font-weight: 800;
 	color: #05141f;
 }
-
-.price-text {
-	margin: 0;
-	font-size: 15px;
-	color: #888;
-}
-
-.price-value {
-	font-size: 20px;
-	font-weight: 700;
-	color: #05141f;
-	margin-top: 5px;
-}
 </style>
 </head>
-<script>
-	window.onload = function() {
-		if (!getCookie("hidePopup")) {
-			window.open('/popup', 'EV_Popup',
-					'width=420,height=500,top=100,left=100');
-		}
-	}
 
-	function setPopupCookie(name, value, days) {
-		const date = new Date();
-		date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-		document.cookie = name + "=" + value + ";expires=" + date.toUTCString()
-				+ ";path=/";
-	}
+<script th:inline="javascript">
+    // 정규식을 이용해 쿠키를 정확하게 찾아내는 함수
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
 
-	function getCookie(name) {
-		const value = `; ${document.cookie}`;
-		const parts = value.split(`; ${name}=`);
-		if (parts.length === 2)
-			return parts.pop().split(';').shift();
-	}
+    // 0.5초 지연 후 실행 (브라우저 차단 정책 회피)
+    setTimeout(function() {
+        // 쿠키가 없을 때만 팝업 실행
+        if (!getCookie("hidePopup")) {
+            window.open('/popup', 'EV_Popup', 'width=420,height=500,top=100,left=100');
+        } else {
+            console.log("팝업 숨기기 상태입니다 (쿠키 있음)");
+        }
+    }, 500);
+
+    /* 프로모션 슬라이드 로직 */
+    let currentIndex = 0;
+    const totalSlides = /*[[${#lists.size(promoList)}]]*/ 0;
+
+    function moveSlide(direction) {
+        const slider = document.getElementById('promoSlider');
+        if (!slider || totalSlides <= 1) return;
+        currentIndex += direction;
+        if (currentIndex >= totalSlides) currentIndex = 0;
+        if (currentIndex < 0) currentIndex = totalSlides - 1;
+        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
 </script>
-<body style="margin: 0; padding: 0; background-color: #ffffff;">
+
+<body>
 
 	<!-- 고정 헤더 불러오기 -->
 	<th:block th:replace="~{common/header :: header}"></th:block>
 
-	<main
-		style="width: 1200px; margin: 0 auto; min-height: 800px; padding-top: 130px; padding-bottom: 100px;">
+	<main style="width: 1200px; margin: 0 auto; min-height: 800px; padding-top: 130px; padding-bottom: 100px;">
 
-		<!-- 메인 배너 -->
-		<div
-			style="width: 100%; height: 400px; background: #05141f; color: #fff; display: flex; align-items: center; justify-content: center; border-radius: 25px; margin-bottom: 80px;">
-			<h2 style="font-size: 40px; font-weight: 800;">EV9: The
-				All-Electric SUV</h2>
-		</div>
-
-		<!-- 라인업 섹션 시작 -->
-		<div style="width: 100%;">
-			<h3
-				style="font-size: 28px; font-weight: 800; color: #05141f; margin-bottom: 40px; padding-left: 10px; border-left: 5px solid #05141f;">KIA
-				EV LINE-UP</h3>
-
-			<!-- flex-wrap을 사용하되, 너비를 명확히 계산 -->
-			<div
-				style="display: flex; flex-wrap: nowrap; justify-content: space-between; gap: 20px;">
-
-				<div th:each="car : ${carLineup}" class="lineup-card"
-					style="flex: 1; min-width: 0; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); border: 1px solid #f0f0f0; cursor: pointer;"
-					th:onclick="|location.href='@{/car/detail/{id}(id=${car.carNo})}'|">
-
-					<div class="img-box"
-						style="width: 100%; height: 240px; background: #fdfdfd; overflow: hidden;">
-						<img th:src="${car.imagePath}" th:alt="${car.modelName}"
-							style="width: 100%; height: 100%; object-fit: cover; display: block;">
-					</div>
-
-					<div class="info-box" style="padding: 25px; background: #fff;">
-						<h4 th:text="${car.modelName}"
-							style="margin: 0 0 10px 0; font-size: 22px; font-weight: 800; color: #05141f;">모델명</h4>
-						<p style="margin: 0; font-size: 14px; color: #888;">판매가</p>
-						<div
-							style="font-size: 19px; font-weight: 700; color: #05141f; margin-top: 5px;">
-							<span th:text="${#numbers.formatInteger(car.price, 3, 'COMMA')}">0</span>원
-							~
+		<!-- [수정] 영역 1: 메인 프로모션 배너 (스토리보드 반영) -->
+		<div class="promo-container">
+			
+			<!-- 프로모션 데이터가 있을 때 슬라이드 실행 -->
+			<div th:if="${not #lists.isEmpty(promoList)}" id="promoSlider" class="promo-slider">
+				<div th:each="promo : ${promoList}" class="promo-slide"
+					 th:onclick="|location.href='@{/promotion/detail(id=${promo.id})}'|">
+					<div>
+						<h2 th:text="${promo.title}" style="font-size: 52px; font-weight: 800; margin: 0; line-height: 1.2;">프로모션 제목</h2>
+						<p th:text="${promo.content}" style="font-size: 20px; color: #999; margin: 25px 0 40px;">간략한 정보 소개글</p>
+						<div th:if="${promo.discountAmount != null and promo.discountAmount > 0}" 
+							 style="display: inline-block; background: #fff; color: #05141f; padding: 12px 30px; border-radius: 50px; font-weight: 700;">
+							최대 <span th:text="${#numbers.formatInteger(promo.discountAmount, 3, 'COMMA')}"></span>원 혜택
 						</div>
 					</div>
 				</div>
+			</div>
 
+			<!-- 프로모션 데이터가 없을 때 표시할 기본 배너 -->
+			<div th:unless="${not #lists.isEmpty(promoList)}" 
+				 style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+				<h2 style="font-size: 40px; font-weight: 800; color: #fff;">KIA EV: MOVEMENT THAT INSPIRES</h2>
+			</div>
+
+			<!-- 좌우 화살표 버튼 (데이터가 2개 이상일 때만 의미 있음) -->
+			<th:block th:if="${#lists.size(promoList) > 1}">
+				<button class="slide-btn btn-prev" onclick="moveSlide(-1)">❮</button>
+				<button class="slide-btn btn-next" onclick="moveSlide(1)">❯</button>
+			</th:block>
+		</div>
+
+		<!-- [유지] 영역 2: 라인업 섹션 -->
+		<div style="width: 100%;">
+			<h3 style="font-size: 28px; font-weight: 800; color: #05141f; margin-bottom: 40px; padding-left: 10px; border-left: 5px solid #05141f;">
+				KIA EV LINE-UP
+			</h3>
+
+			<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; gap: 20px;">
+				<!-- 백엔드에서 받아온 3종 모델 반복 출력 -->
+				<div th:each="car : ${carLineup}" class="lineup-card"
+					 th:onclick="|location.href='@{/car/detail/{id}(id=${car.carNo})}'|">
+
+					<div class="img-box">
+						<img th:src="${car.imagePath}" th:alt="${car.modelName}">
+					</div>
+
+					<div class="info-box">
+						<h4 th:text="${car.modelName}">모델명</h4>
+						<p style="margin: 0; font-size: 14px; color: #888;">판매가</p>
+						<div style="font-size: 19px; font-weight: 700; color: #05141f; margin-top: 5px;">
+							<span th:text="${#numbers.formatInteger(car.price, 3, 'COMMA')}">0</span>원 ~
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</main>
