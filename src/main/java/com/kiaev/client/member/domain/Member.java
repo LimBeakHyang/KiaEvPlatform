@@ -2,11 +2,14 @@ package com.kiaev.client.member.domain;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -27,8 +30,9 @@ public class Member {
     @Column(name = "member_name")
     private String memberName;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "birth_date")
-    private String birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "email")
     private String email;
@@ -48,8 +52,20 @@ public class Member {
     @Column(name = "member_status")
     private String memberStatus;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "join_date")
     private LocalDate joinDate;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.joinDate == null) {
+            this.joinDate = LocalDate.now();
+        }
+
+        if (this.memberStatus == null || this.memberStatus.trim().isEmpty()) {
+            this.memberStatus = "Y";
+        }
+    }
 
     public Long getMemberNo() {
         return memberNo;
@@ -83,11 +99,11 @@ public class Member {
         this.memberName = memberName;
     }
 
-    public String getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

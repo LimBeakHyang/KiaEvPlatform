@@ -1,7 +1,5 @@
 package com.kiaev.client.member.service;
 
-import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,17 +12,23 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
-    public Member save(Member member) {
-        member.setMemberStatus("정상회원");
-        member.setJoinDate(LocalDate.now());
-        return memberRepository.save(member);
+    public void join(Member member) {
+        if (memberRepository.existsByLoginId(member.getLoginId())) {
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
+
+        if (memberRepository.existsByEmail(member.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        }
+
+        memberRepository.save(member);
     }
 
-    public boolean existsByLoginId(String loginId) {
+    public boolean isLoginIdDuplicate(String loginId) {
         return memberRepository.existsByLoginId(loginId);
     }
 
-    public boolean existsByEmail(String email) {
+    public boolean isEmailDuplicate(String email) {
         return memberRepository.existsByEmail(email);
     }
 }

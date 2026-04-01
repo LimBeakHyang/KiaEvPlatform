@@ -2,145 +2,175 @@ package com.kiaev.client.login;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "member_tbl")
 public class Login {
-	 @Id
-	    @Column(name = "member_no")
-	    private Long memberNo;
 
-	    @Column(name = "login_id")
-	    private String loginId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_no")
+    private Long memberNo;
 
-	    @Column(name = "member_pw")
-	    private String memberPw;
+    @Column(name = "login_id")
+    private String loginId;
 
-	    @Column(name = "member_name")
-	    private String memberName;
+    @Column(name = "dealer_id")
+    private String dealerId;
 
-	    @Column(name = "birth_date")
-	    private LocalDate birthDate;
+    @Column(name = "member_pw")
+    private String memberPw;
 
-	    @Column(name = "email")
-	    private String email;
+    @Column(name = "member_name")
+    private String memberName;
 
-	    @Column(name = "phone")
-	    private String phone;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 
-	    @Column(name = "zipcode")
-	    private String zipcode;
+    @Column(name = "email")
+    private String email;
 
-	    @Column(name = "address")
-	    private String address;
+    @Column(name = "phone")
+    private String phone;
 
-	    @Column(name = "detail_address")
-	    private String detailAddress;
+    @Column(name = "zipcode")
+    private String zipcode;
 
-	    @Column(name = "member_status")
-	    private String memberStatus;
+    @Column(name = "address")
+    private String address;
 
-	    @Column(name = "join_date")
-	    private LocalDate joinDate;
+    @Column(name = "detail_address")
+    private String detailAddress;
 
-	    public Long getMemberNo() {
-	        return memberNo;
-	    }
+    @Column(name = "member_status")
+    private String memberStatus;
 
-	    public void setMemberNo(Long memberNo) {
-	        this.memberNo = memberNo;
-	    }
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "join_date")
+    private LocalDate joinDate;
 
-	    public String getLoginId() {
-	        return loginId;
-	    }
+    @PrePersist
+    public void prePersist() {
+        if (this.joinDate == null) {
+            this.joinDate = LocalDate.now();
+        }
 
-	    public void setLoginId(String loginId) {
-	        this.loginId = loginId;
-	    }
+        if (this.memberStatus == null || this.memberStatus.trim().isEmpty()) {
+            this.memberStatus = "Y";
+        }
+    }
 
-	    public String getMemberPw() {
-	        return memberPw;
-	    }
+    public Long getMemberNo() {
+        return memberNo;
+    }
 
-	    public void setMemberPw(String memberPw) {
-	        this.memberPw = memberPw;
-	    }
+    public void setMemberNo(Long memberNo) {
+        this.memberNo = memberNo;
+    }
 
-	    public String getMemberName() {
-	        return memberName;
-	    }
+    public String getLoginId() {
+        return loginId;
+    }
 
-	    public void setMemberName(String memberName) {
-	        this.memberName = memberName;
-	    }
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
 
-	    public LocalDate getBirthDate() {
-	        return birthDate;
-	    }
+    public String getDealerId() {
+        return dealerId;
+    }
 
-	    public void setBirthDate(LocalDate birthDate) {
-	        this.birthDate = birthDate;
-	    }
+    public void setDealerId(String dealerId) {
+        this.dealerId = dealerId;
+    }
 
-	    public String getEmail() {
-	        return email;
-	    }
+    public String getMemberPw() {
+        return memberPw;
+    }
 
-	    public void setEmail(String email) {
-	        this.email = email;
-	    }
+    public void setMemberPw(String memberPw) {
+        this.memberPw = memberPw;
+    }
 
-	    public String getPhone() {
-	        return phone;
-	    }
+    public String getMemberName() {
+        return memberName;
+    }
 
-	    public void setPhone(String phone) {
-	        this.phone = phone;
-	    }
+    public void setMemberName(String memberName) {
+        this.memberName = memberName;
+    }
 
-	    public String getZipcode() {
-	        return zipcode;
-	    }
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
 
-	    public void setZipcode(String zipcode) {
-	        this.zipcode = zipcode;
-	    }
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
 
-	    public String getAddress() {
-	        return address;
-	    }
+    public String getEmail() {
+        return email;
+    }
 
-	    public void setAddress(String address) {
-	        this.address = address;
-	    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	    public String getDetailAddress() {
-	        return detailAddress;
-	    }
+    public String getPhone() {
+        return phone;
+    }
 
-	    public void setDetailAddress(String detailAddress) {
-	        this.detailAddress = detailAddress;
-	    }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	    public String getMemberStatus() {
-	        return memberStatus;
-	    }
+    public String getZipcode() {
+        return zipcode;
+    }
 
-	    public void setMemberStatus(String memberStatus) {
-	        this.memberStatus = memberStatus;
-	    }
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
 
-	    public LocalDate getJoinDate() {
-	        return joinDate;
-	    }
+    public String getAddress() {
+        return address;
+    }
 
-	    public void setJoinDate(LocalDate joinDate) {
-	        this.joinDate = joinDate;
-	    }
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
+    public String getDetailAddress() {
+        return detailAddress;
+    }
+
+    public void setDetailAddress(String detailAddress) {
+        this.detailAddress = detailAddress;
+    }
+
+    public String getMemberStatus() {
+        return memberStatus;
+    }
+
+    public void setMemberStatus(String memberStatus) {
+        this.memberStatus = memberStatus;
+    }
+
+    public LocalDate getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate(LocalDate joinDate) {
+        this.joinDate = joinDate;
+    }
+}

@@ -15,25 +15,18 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    // 로그인 화면
+    // 로그인 페이지
     @GetMapping("/login")
     public String loginForm() {
         return "client/login/loginForm";
     }
 
-    // 아이디/비밀번호 찾기 화면
-    @GetMapping("/client/login/findIdPw")
-    public String findIdPwForm() {
-        return "client/login/findIdPw";
-    }
-
     // 로그인 처리
     @PostMapping("/login")
-    public String login(
-            @RequestParam("loginId") String loginId,
-            @RequestParam("memberPw") String memberPw,
-            HttpSession session,
-            Model model) {
+    public String login(@RequestParam("loginId") String loginId,
+                        @RequestParam("memberPw") String memberPw,
+                        HttpSession session,
+                        Model model) {
 
         Login loginUser = loginService.login(loginId, memberPw);
 
@@ -46,81 +39,79 @@ public class LoginController {
         return "redirect:/";
     }
 
-    // 로그아웃 처리
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login";
+    // 아이디 찾기 화면
+    @GetMapping("/client/login/findId")
+    public String findIdForm() {
+        return "client/login/findId";
     }
 
     // 아이디 찾기 처리
-    @PostMapping("/login/findId")
-    public String findId(
-            @RequestParam("memberName") String memberName,
-            @RequestParam("email") String email,
-            Model model) {
+    @PostMapping("/client/login/findId")
+    public String findId(@RequestParam("memberName") String memberName,
+                         @RequestParam("email") String email,
+                         Model model) {
 
-        String foundId = loginService.findId(memberName, email);
+        Login user = loginService.findId(memberName, email);
 
-        if (foundId == null) {
-            model.addAttribute("findIdMsg", "일치하는 아이디가 없습니다.");
-        } else {
-            model.addAttribute("findIdMsg", "회원님의 아이디는 [ " + foundId + " ] 입니다.");
+        if (user == null) {
+            model.addAttribute("findIdFail", true);
+            return "client/login/findId";
         }
 
-        return "client/login/findIdPw";
+        model.addAttribute("findIdSuccess", true);
+        model.addAttribute("foundLoginId", user.getLoginId());
+        return "client/login/findId";
     }
 
-    // 비밀번호 찾기 -> 정보 확인 후 같은 페이지에서 재설정 폼 보여주기
-    @PostMapping("/login/findPw")
-    public String findPw(
-            @RequestParam("loginId") String loginId,
-            @RequestParam("email") String email,
-            Model model) {
+    // 비밀번호 찾기 화면
+    @GetMapping("/client/login/findPw")
+    public String findPwForm() {
+        return "client/login/findPw";
+    }
 
-        boolean exists = loginService.checkMemberForPasswordReset(loginId, email);
+    // 1단계: 본인확인
+    @PostMapping("/client/login/findPw")
+    public String findPw(@RequestParam("loginId") String loginId,
+                         @RequestParam("email") String email,
+                         Model model) {
 
-        if (!exists) {
-            model.addAttribute("findPwMsg", "입력한 정보와 일치하는 회원이 없습니다.");
-            return "client/login/findIdPw";
+        Login user = loginService.findPw(loginId, email);
+
+        if (user == null) {
+            model.addAttribute("findPwFail", true);
+            return "client/login/findPw";
         }
 
-        model.addAttribute("resetMode", true);
+        model.addAttribute("findPwSuccess", true);
         model.addAttribute("loginId", loginId);
         model.addAttribute("email", email);
-        model.addAttribute("findPwMsg", "회원 확인이 완료되었습니다. 새 비밀번호를 입력해주세요.");
-
-        return "client/login/findIdPw";
+        return "client/login/findPw";
     }
 
-    // 비밀번호 재설정 처리
-    @PostMapping("/login/resetPw")
-    public String resetPw(
-            @RequestParam("loginId") String loginId,
-            @RequestParam("email") String email,
-            @RequestParam("newPw") String newPw,
-            @RequestParam("confirmPw") String confirmPw,
-            Model model) {
+    // 2단계: 같은 findPw.html에서 새 비밀번호 변경
+    @PostMapping("/client/login/updatePw")
+    public String updatePw(@RequestParam("loginId") String loginId,
+                           @RequestParam("email") String email,
+                           @RequestParam("newPassword") String newPassword,
+                           @RequestParam("confirmPassword") String confirmPassword,
+                           Model model) {
 
-        if (!newPw.equals(confirmPw)) {
-            model.addAttribute("resetMode", true);
+        if (!newPassword.equals(confirmPassword)) {
+            model.addAttribute("findPwSuccess", true);
             model.addAttribute("loginId", loginId);
             model.addAttribute("email", email);
-            model.addAttribute("resetPwMsg", "새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-            return "client/login/findIdPw";
+            model.addAttribute("resetPwError", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            return "client/login/findPw";
         }
 
-        boolean result = loginService.resetPassword(loginId, email, newPw);
+        boolean result = loginService.updatePassword(loginId, email, newPassword);
 
         if (!result) {
-            model.addAttribute("resetMode", true);
-            model.addAttribute("loginId", loginId);
-            model.addAttribute("email", email);
-            model.addAttribute("resetPwMsg", "비밀번호 변경에 실패했습니다.");
-            return "client/login/findIdPw";
+            model.addAttribute("findPwFail", true);
+            return "client/login/findPw";
         }
 
-        model.addAttribute("msg", "비밀번호가 성공적으로 변경되었습니다. 다시 로그인해주세요.");
+        model.addAttribute("resetPwSuccess", true);
         return "client/login/loginForm";
     }
 }

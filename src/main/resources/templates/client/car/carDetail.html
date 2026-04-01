@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${car.modelName} + ' - 상세정보'"></title>
+
+
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+/* [1] 브라우저 공통 설정: 페이지 이동 시 메뉴 흔들림 방지 */
+html {
+    overflow-y: scroll !important; /* 스크롤바 자리를 강제로 만들어 화면 폭 고정 */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Pretendard', sans-serif;
+    background-color: #fff;
+    color: #111;
+}
+
+/* [2] 헤더 영역 보호: 배경색 실종 및 본문 겹침 해결 */
+.header-wrap {
+    background-color: #ffffff !important; /* 헤더 배경을 흰색으로 강제 고정 */
+    z-index: 9999 !important; /* 본문보다 무조건 위에 보이게 설정 */
+}
+
+/* [3] 컨테이너: 헤더 높이(100px)만큼 확실히 내려주기 */
+.container {
+    width: 1200px;
+    margin: 0 auto;
+    padding: 130px 0 100px; /* 상단 여백 130px (헤더 100 + 여유 30) */
+    box-sizing: border-box;
+}
+
+/* [4] 상단 모델명 섹션 */
+.page-header {
+    margin-bottom: 40px;
+    border-bottom: 2px solid #111;
+    padding-bottom: 25px;
+}
+
+.page-header h2 {
+    font-size: 72px;
+    color: #05141f;
+    font-weight: 900;
+    margin: 0;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.page-header p {
+    color: #888;
+    margin: 15px 0 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/* [5] 상세 페이지 레이아웃 (Flex) */
+.detail-wrapper {
+    display: flex;
+    gap: 80px;
+    align-items: flex-start;
+}
+
+/* 좌측 이미지 (스크롤 시 고정) */
+.detail-left {
+    width: 58%;
+    position: sticky;
+    top: 130px; /* 헤더 아래에 딱 붙어서 고정됨 */
+}
+
+.main-img-box {
+    width: 100%;
+    height: 480px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+}
+
+.main-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* 썸네일 박스 */
+.thumb-container {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.thumb {
+    width: 100px;
+    height: 65px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid #eee;
+    background: #f8f9fa;
+    transition: 0.3s;
+}
+
+.thumb.active { border-color: #05141f; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; }
+.thumb.active img { opacity: 1; }
+
+/* 우측 정보 영역 */
+.detail-right {
+    width: 42%;
+}
+
+.price-container {
+    padding: 10px 0 40px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.label-sm {
+    font-size: 11px;
+    color: #999;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.status-val {
+    font-size: 15px;
+    font-weight: 700;
+    color: #05141f;
+    background: #f1f1f1;
+    padding: 5px 12px;
+    border-radius: 4px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.price-val {
+    display: flex;
+    align-items: baseline;
+    color: #05141f;
+}
+
+.price-val .num {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1;
+}
+
+.price-val .won {
+    font-size: 24px;
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+/* 핵심 스펙 그리드 */
+.core-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.core-item {
+    background: #fdfdfd;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #f0f0f0;
+}
+
+.core-item i {
+    font-size: 20px;
+    color: #05141f;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.core-item .c-val {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* 리스트 정보 */
+.info-item {
+    display: flex;
+    padding: 20px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.info-name { color: #888; font-size: 15px; min-width: 130px; }
+.info-data { color: #111; font-weight: 600; font-size: 15px; flex-grow: 1; text-align: right; }
+
+.description-area {
+    margin: 40px 0;
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 15px;
+}
+
+/* 버튼 */
+.action-btns {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 15px;
+}
+
+.btn {
+    padding: 22px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-main { background: #05141f; color: #fff; border: none; }
+.btn-sub { background: #fff; color: #05141f; border: 1px solid #05141f; }
+.btn:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+
+	<th:block th:replace="~{common/header :: header}"></th:block>
+
+	<main class="container">
+		<div class="page-header">
+			<h2 th:text="${car.modelName}">모델명</h2>
+			<p>Innovation and Sustainability in Every Detail</p>
+		</div>
+
+		<div class="detail-wrapper">
+			<div class="detail-left">
+				<div class="main-img-box">
+					<img id="activeImg" th:src="${car.imagePath}" alt="Main Car Image">
+				</div>
+				<div class="thumb-container">
+					<div class="thumb active" onclick="updatePreview(this)">
+						<img th:src="${car.imagePath}" alt="Thumbnail 1">
+					</div>
+					<div class="thumb" onclick="updatePreview(this)">
+						<img
+							th:src="${#strings.replace(car.imagePath, '_1.jpg', '_2.jpg')}"
+							alt="Thumbnail 2">
+					</div>
+					<div class="thumb" onclick="updatePreview(this)">
+						<img
+							th:src="${#strings.replace(car.imagePath, '_1.jpg', '_3.jpg')}"
+							alt="Thumbnail 3">
+					</div>
+				</div>
+			</div>
+
+			<div class="detail-right">
+				<div class="price-container">
+					<div class="status-box">
+						<p class="label-sm">Sale Status</p>
+						<span class="status-val" th:text="${car.saleStatus}">판매중</span>
+					</div>
+					<div class="price-box" style="text-align: right;">
+						<p class="label-sm">Estimated Price</p>
+						<div class="price-val">
+							<span class="num"
+								th:text="${#numbers.formatInteger(car.price, 3, 'COMMA')}">0</span>
+							<span class="won">원~</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="core-grid">
+					<div class="core-item">
+						<i class="fa-solid fa-battery-full"></i> <span class="c-label">배터리
+							용량</span> <span class="c-val" th:text="${car.batteryCapacity}">-</span>
+					</div>
+					<div class="core-item">
+						<i class="fa-solid fa-gauge-high"></i> <span class="c-label">최대
+							주행거리</span> <span class="c-val" th:text="${car.drivingRangeKm} + 'km'">-</span>
+					</div>
+				</div>
+
+				<div class="info-list">
+					<div class="info-item">
+						<span class="info-name">차량 유형</span><span class="info-data"
+							th:text="${car.carType}">-</span>
+					</div>
+					<div class="info-item">
+						<span class="info-name">급속 충전 시간</span><span class="info-data"
+							th:text="${car.fastChargeTime}">-</span>
+					</div>
+					<div class="info-item">
+						<span class="info-name">충전 정보</span><span class="info-data"
+							th:text="${car.chargeInfo}">-</span>
+					</div>
+					<div class="info-item">
+						<span class="info-name">차량 색상</span><span class="info-data"
+							th:text="${car.carColor}">-</span>
+					</div>
+				</div>
+
+				<div class="description-area">
+					<h4>The All-Electric Overview</h4>
+					<p th:text="${car.carDescription}">상세 설명</p>
+				</div>
+
+				<div class="action-btns">
+					<a th:href="@{/consult/form(carNo=${car.carNo})}"
+						class="btn btn-main">구매 상담 신청하기</a>
+					<button class="btn btn-sub">관심 차량</button>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<th:block th:replace="~{common/footer :: footer}"></th:block>
+
+	<script>
+        function updatePreview(element) {
+            const mainImg = document.getElementById('activeImg');
+            const targetSrc = element.querySelector('img').src;
+            
+            mainImg.src = targetSrc;
+            
+            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+        }
+    </script>
+</body>
+</html>

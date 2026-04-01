@@ -1,7 +1,5 @@
 package com.kiaev.client.login;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,52 +9,36 @@ public class LoginService {
     @Autowired
     private LoginRepository loginRepository;
 
-    // 로그인
+    // 회원 로그인
     public Login login(String loginId, String memberPw) {
-        Optional<Login> optionalLogin = loginRepository.findByLoginId(loginId);
+        return loginRepository.findByLoginIdAndMemberPw(loginId, memberPw).orElse(null);
+    }
 
-        if (optionalLogin.isEmpty()) {
-            return null;
-        }
-
-        Login login = optionalLogin.get();
-
-        if (!login.getMemberPw().equals(memberPw)) {
-            return null;
-        }
-
-        return login;
+    // 딜러 로그인
+    public Login dealerLogin(String dealerId, String memberPw) {
+        return loginRepository.findByDealerIdAndMemberPw(dealerId, memberPw).orElse(null);
     }
 
     // 아이디 찾기
-    public String findId(String memberName, String email) {
-        Optional<Login> optionalLogin = loginRepository.findByMemberNameAndEmail(memberName, email);
-
-        if (optionalLogin.isEmpty()) {
-            return null;
-        }
-
-        return optionalLogin.get().getLoginId();
+    public Login findId(String memberName, String email) {
+        return loginRepository.findByMemberNameAndEmail(memberName, email).orElse(null);
     }
 
-    // 비밀번호 재설정용 회원 확인
-    public boolean checkMemberForPasswordReset(String loginId, String email) {
-        Optional<Login> optionalLogin = loginRepository.findByLoginIdAndEmail(loginId, email);
-        return optionalLogin.isPresent();
+    // 비밀번호 찾기
+    public Login findPw(String loginId, String email) {
+        return loginRepository.findByLoginIdAndEmail(loginId, email).orElse(null);
     }
 
-    // 비밀번호 재설정
-    public boolean resetPassword(String loginId, String email, String newPw) {
-        Optional<Login> optionalLogin = loginRepository.findByLoginIdAndEmail(loginId, email);
+    // 비밀번호 변경
+    public boolean updatePassword(String loginId, String email, String newPassword) {
+        Login user = loginRepository.findByLoginIdAndEmail(loginId, email).orElse(null);
 
-        if (optionalLogin.isEmpty()) {
+        if (user == null) {
             return false;
         }
 
-        Login login = optionalLogin.get();
-        login.setMemberPw(newPw);
-        loginRepository.save(login);
-
+        user.setMemberPw(newPassword);
+        loginRepository.save(user);
         return true;
     }
 }
