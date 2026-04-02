@@ -2,52 +2,58 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <footer th:fragment="footer">
     <style>
+        /* 1. 푸터 바깥쪽 감싸는 영역: 배경색과 위쪽 선 담당 */
         .footer-wrap { 
-            background: #f4f4f4; 
-            padding: 60px 0;
-            border-top: 1px solid #ddd; 
-            margin-top: 50px; 
+            width: 100%;
+            background-color: #f8f8f8 !important; /* 기아차 느낌의 연한 회색 */
+            border-top: 1px solid #eeeeee; 
+            padding: 25px 0;    /* 상하 높이를 결정하는 결정적 수치 */
+            margin-top: 50px;   /* 본문과 푸터 사이의 외부 간격 */
+            clear: both;        /* 주변 요소 간섭 방지 */
         }
+
+        /* 2. 푸터 내부 정렬 */
         .footer-inner { 
-            width: 1200px; 
+            max-width: 1200px; 
             margin: 0 auto; 
             text-align: center; 
         }
+
+        /* 3. 링크 메뉴 스타일 */
         .f-links { 
-            margin-bottom: 25px; 
+            margin-bottom: 8px; /* 카피라이트와의 간격 */
             display: flex;
             justify-content: center;
             align-items: center;
         }
+
         .f-links a { 
             text-decoration: none; 
-            color: #333; 
-            font-weight: bold;
-            font-size: 16px; 
-            display: flex;
-            align-items: center;
+            color: #444 !important; /* 글자색을 조금 더 선명하게 */
+            font-weight: 600;   
+            font-size: 14px;    
             transition: 0.2s;
         }
-        .f-links a:hover {
-            color: #000;
-        }
+
+        .f-links a:hover { color: #000; }
         
+        /* 세로 구분선 */
         .f-links a:not(:last-child)::after {
             content: "";
             display: inline-block;
-            width: 1px;        /* 선 두께 */
-            height: 14px;      /* 선 높이 */
-            background-color: #bbb; /* 선 색상 */
-            margin: 0 25px;    /* 좌우 간격 */
-            /* 💡 텍스트 높이에 맞춰 수직 중앙 정렬 */
+            width: 1px;        
+            height: 12px;      
+            background-color: #ccc; 
+            margin: 0 20px;    
             vertical-align: middle; 
         }
 
+        /* 4. 카피라이트 스타일 */
         .f-copy { 
-            color: #999; 
-            font-size: 14px; 
-            letter-spacing: 0.5px;
-            margin-top: 15px;
+            color: #999;       
+            font-size: 13px;   
+            letter-spacing: 0.3px;
+            line-height: 1.2;
         }
     </style>
     
