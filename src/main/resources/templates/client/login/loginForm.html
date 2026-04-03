@@ -5,270 +5,252 @@
 <title>LOGIN</title>
 <style>
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 body {
-    font-family: 'Malgun Gothic', sans-serif;
-    background: #f3f3f3;
-    color: #111;
+	font-family: 'Malgun Gothic', sans-serif;
+	background: #f3f3f3;
+	color: #111;
 }
 
 /* 헤더 */
 .header {
-    width: 100%;
-    height: 74px;
-    background: #fff;
-    border-bottom: 1px solid #e5e5e5;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 48px;
+	width: 100%;
+	height: 74px;
+	background: #fff;
+	border-bottom: 1px solid #e5e5e5;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 48px;
 }
 
 .logo {
-    font-size: 22px;
-    font-weight: 800;
-    color: #000;
+	font-size: 22px;
+	font-weight: 800;
+	color: #000;
 }
 
 .nav {
-    display: flex;
-    gap: 42px;
-    font-size: 15px;
-    font-weight: 600;
+	display: flex;
+	gap: 42px;
+	font-size: 15px;
+	font-weight: 600;
 }
 
 .nav a {
-    text-decoration: none;
-    color: #111;
+	text-decoration: none;
+	color: #111;
 }
 
 .header-right {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    font-size: 14px;
-    font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	font-size: 14px;
+	font-weight: 500;
 }
 
 .header-right a {
-    text-decoration: none;
-    color: #444;
+	text-decoration: none;
+	color: #444;
 }
 
 /* 본문 */
 .login-page {
-    min-height: calc(100vh - 74px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
+	min-height: calc(100vh - 74px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 40px 20px;
 }
 
 .login-box {
-    width: 500px;
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
-    padding: 56px 44px 38px;
+	width: 500px;
+	background: #fff;
+	border-radius: 20px;
+	box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+	padding: 56px 44px 38px;
 }
 
 .login-title {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 800;
-    color: #001b36;
-    margin-bottom: 30px;
+	text-align: center;
+	font-size: 28px;
+	font-weight: 800;
+	color: #001b36;
+	margin-bottom: 30px;
 }
 
 .login-type {
-    display: flex;
-    justify-content: center;
-    gap: 34px;
-    margin-bottom: 24px;
-    font-size: 16px;
-    font-weight: 600;
+	display: flex;
+	justify-content: center;
+	gap: 34px;
+	margin-bottom: 24px;
+	font-size: 16px;
+	font-weight: 600;
 }
 
 .login-type label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	cursor: pointer;
 }
 
 .line {
-    width: 100%;
-    height: 1px;
-    background: #ececec;
-    margin-bottom: 26px;
+	width: 100%;
+	height: 1px;
+	background: #ececec;
+	margin-bottom: 26px;
 }
 
 .input-group {
-    margin-bottom: 16px;
+	margin-bottom: 16px;
 }
 
 .input-group input {
-    width: 100%;
-    height: 54px;
-    border: 1px solid #dddddd;
-    border-radius: 10px;
-    padding: 0 16px;
-    font-size: 17px;
-    outline: none;
-    background: #fff;
+	width: 100%;
+	height: 54px;
+	border: 1px solid #dddddd;
+	border-radius: 10px;
+	padding: 0 16px;
+	font-size: 17px;
+	outline: none;
+	background: #fff;
 }
 
 .input-group input::placeholder {
-    color: #9b9b9b;
+	color: #9b9b9b;
 }
 
 .input-group input:focus {
-    border-color: #001b36;
+	border-color: #001b36;
 }
 
 .login-btn {
-    width: 100%;
-    height: 50px;
-    border: none;
-    border-radius: 10px;
-    background: #001b36;
-    color: #fff;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 12px;
+	width: 100%;
+	height: 50px;
+	border: none;
+	border-radius: 10px;
+	background: #001b36;
+	color: #fff;
+	font-size: 18px;
+	font-weight: 700;
+	cursor: pointer;
+	margin-top: 12px;
 }
 
 .login-btn:hover {
-    background: #00264b;
+	background: #00264b;
 }
 
 .find-links {
-    margin-top: 22px;
-    text-align: center;
-    font-size: 15px;
-    color: #b7b7b7;
+	margin-top: 22px;
+	text-align: center;
+	font-size: 15px;
+	color: #b7b7b7;
 }
 
 .find-links a {
-    text-decoration: none;
-    color: #b7b7b7;
-    margin: 0 10px;
+	text-decoration: none;
+	color: #b7b7b7;
+	margin: 0 10px;
 }
 
 .find-links a:hover {
-    color: #001b36;
+	color: #001b36;
 }
 
 .bottom-line {
-    width: 100%;
-    height: 1px;
-    background: #ececec;
-    margin: 34px 0 22px;
+	width: 100%;
+	height: 1px;
+	background: #ececec;
+	margin: 34px 0 22px;
 }
 
 .join-area {
-    text-align: center;
-    font-size: 15px;
-    color: #a0a0a0;
+	text-align: center;
+	font-size: 15px;
+	color: #a0a0a0;
 }
 
 .join-area a {
-    margin-left: 6px;
-    text-decoration: none;
-    color: #001b36;
-    font-weight: 700;
+	margin-left: 6px;
+	text-decoration: none;
+	color: #001b36;
+	font-weight: 700;
 }
 
 .message-box {
-    margin-bottom: 18px;
-    padding: 12px 14px;
-    border-radius: 10px;
-    font-size: 14px;
-    text-align: center;
+	margin-bottom: 18px;
+	padding: 12px 14px;
+	border-radius: 10px;
+	font-size: 14px;
+	text-align: center;
 }
 
 .error-box {
-    background: #fff1f1;
-    color: #c62828;
-    border: 1px solid #f0c7c7;
+	background: #fff1f1;
+	color: #c62828;
+	border: 1px solid #f0c7c7;
 }
 
 .success-box {
-    background: #eef6ff;
-    color: #1565c0;
-    border: 1px solid #c9def7;
+	background: #eef6ff;
+	color: #1565c0;
+	border: 1px solid #c9def7;
 }
 </style>
 </head>
 <body>
+	<th:block th:replace="~{common/header :: header}"></th:block>
 
-<header class="header">
-    <div class="logo">KIA EV</div>
+	<section class="login-page">
+		<div class="login-box">
+			<h2 class="login-title">LOGIN</h2>
 
-    <nav class="nav">
-        <a href="#">차량조회</a>
-        <a href="#">상담신청</a>
-        <a href="#">문의게시판</a>
-        <a href="#">프로모션</a>
-        <a href="#">충전소확인</a>
-        <a href="#">챗봇상담</a>
-    </nav>
+			<div class="login-type">
+				<label> <input type="radio" name="userType" checked>
+					회원
+				</label> <label class="disabled-label"> <input type="radio"
+					name="userType" value="dealer" disabled> 딜러
+				</label>
+			</div>
 
-    <div class="header-right">
-        <a href="#">KR ▼</a>
-        <a th:href="@{/login}">로그인</a>
-        <a th:href="@{/member/join}">회원가입</a>
-    </div>
-</header>
+			<div class="line"></div>
 
-<section class="login-page">
-    <div class="login-box">
-        <h2 class="login-title">LOGIN</h2>
+			<div th:if="${loginError}" class="message-box error-box"
+				th:text="${loginError}"></div>
+			<div th:if="${joinSuccess}" class="message-box success-box"
+				th:text="${joinSuccess}"></div>
 
-        <div class="login-type">
-            <label>
-                <input type="radio" name="userType" checked> 회원
-            </label>
-            <label class="disabled-label">
-        <input type="radio" name="userType" value="dealer" disabled> 딜러
-    </label>
-        </div>
+			<form th:action="@{/login}" method="post">
+				<div class="input-group">
+					<input type="text" name="loginId" placeholder="아이디" required>
+				</div>
 
-        <div class="line"></div>
+				<div class="input-group">
+					<input type="password" name="memberPw" placeholder="비밀번호" required>
+				</div>
 
-        <div th:if="${loginError}" class="message-box error-box" th:text="${loginError}"></div>
-        <div th:if="${joinSuccess}" class="message-box success-box" th:text="${joinSuccess}"></div>
+				<button type="submit" class="login-btn">로그인</button>
+			</form>
 
-        <form th:action="@{/login}" method="post">
-            <div class="input-group">
-                <input type="text" name="loginId" placeholder="아이디" required>
-            </div>
+			<div class="find-links">
+				<a th:href="@{/client/login/findId}">아이디 찾기</a> | <a
+					th:href="@{/client/login/findPw}">비밀번호 찾기</a>
+			</div>
 
-            <div class="input-group">
-                <input type="password" name="memberPw" placeholder="비밀번호" required>
-            </div>
+			<div class="bottom-line"></div>
 
-            <button type="submit" class="login-btn">로그인</button>
-        </form>
-
-        <div class="find-links">
-            <a th:href="@{/client/login/findId}">아이디 찾기</a> |
-            <a th:href="@{/client/login/findPw}">비밀번호 찾기</a>
-        </div>
-
-        <div class="bottom-line"></div>
-
-        <div class="join-area">
-            아직 회원이 아니신가요?
-            <a th:href="@{/member/join}">회원가입</a>
-        </div>
-    </div>
-</section>
+			<div class="join-area">
+				아직 회원이 아니신가요? <a th:href="@{/member/join}">회원가입</a>
+			</div>
+		</div>
+	</section>
 
 </body>
 </html>
