@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로모션 관리</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            display: block;
+            padding: 12px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .btn {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn.blue {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn.sub {
+            background: white;
+            border: 1px solid #ccc;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .tag.green {
+            background: #dcfce7;
+        }
+
+        .tag.gray {
+            background: #eee;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f9fafb;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+        <div class="logo">KIAEV ADMIN</div>
+
+        <nav class="nav">
+            <a href="#">대시보드</a>
+            <a href="#">회원관리</a>
+            <a href="#">상담관리</a>
+            <a href="#">게시판관리</a>
+            <a href="#">딜러관리</a>
+            <a href="#" class="active">프로모션관리</a>
+            <a href="#">차량관리</a>
+        </nav>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="content">
+
+        <div class="topbar">
+            <h1>프로모션 관리</h1>
+            <div>ADMIN님</div>
+        </div>
+
+        <div class="breadcrumb">
+            ADMIN > 프로모션 관리
+        </div>
+
+        <div class="card">
+
+            <!-- 검색 -->
+            <div class="toolbar">
+
+                <select>
+                    <option>전체</option>
+                    <option>진행중</option>
+                    <option>종료</option>
+                </select>
+
+                <input type="text" placeholder="프로모션명 검색">
+
+                <a href="#" class="btn blue">신규 등록</a>
+
+            </div>
+
+            <!-- 테이블 -->
+            <table>
+                <thead>
+                <tr>
+                    <th>프로모션명</th>
+                    <th>진행 여부</th>
+                    <th>기간</th>
+                    <th>상세</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>EV 시리즈 봄맞이 혜택</td>
+                    <td><span class="tag green">진행중</span></td>
+                    <td>2026.03.18 ~ 2026.04.18</td>
+                    <td><a href="#" class="btn sub">상세확인</a></td>
+                </tr>
+
+                <tr>
+                    <td>시승 이벤트 종료 안내</td>
+                    <td><span class="tag gray">종료</span></td>
+                    <td>2026.02.01 ~ 2026.03.01</td>
+                    <td><a href="#" class="btn sub">상세확인</a></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
