@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>차량 등록하기</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            display: block;
+            padding: 12px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 18px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .hero-note {
+            padding: 12px;
+            background: #eef6ff;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .upload-box {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 14px;
+            align-items: start;
+            margin-top: 16px;
+        }
+
+        .upload-left {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .upload-right {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            min-height: 180px;
+            background: #fafafa;
+            padding: 14px;
+        }
+
+        .file-item {
+            padding: 8px 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        .btn.green {
+            background: #059669;
+            color: white;
+        }
+
+        .btn.sub {
+            background: white;
+            border: 1px solid #ccc;
+            color: #333;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .hint {
+            color: #666;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+        .file-select-row {
+    	display: flex;
+    	gap: 8px;
+    	align-items: center;
+	}
+
+	.file-name-box {
+    	flex: 1;
+    	background: #fff;
+	}
+
+	.file-btn {
+    	padding: 10px 14px;
+    	border-radius: 10px;
+    	border: 1px solid #ccc;
+    	background: white;
+    	cursor: pointer;
+    	white-space: nowrap;
+    	font-size: 14px;
+	}
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="logo">KIAEV ADMIN</div>
+
+        <nav class="nav">
+            <a href="/admin/main">대시보드</a>
+            <a href="/admin/member/list">회원관리</a>
+            <a href="/admin/consult/list">상담관리</a>
+            <a href="/admin/board/list">게시판관리</a>
+            <a href="/admin/dealer/list">딜러관리</a>
+            <a href="/admin/promotion/list">프로모션관리</a>
+            <a href="/admin/car/list" class="active">차량관리</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+
+        <div class="topbar">
+            <h1>차량 등록하기</h1>
+            <div>ADMIN님</div>
+        </div>
+
+        <div class="breadcrumb">
+            ADMIN &gt; 차량관리 &gt; 차량 등록하기
+        </div>
+
+        <div class="card">
+            <p class="section-title">차량 등록하기</p>
+
+            <form action="/admin/car/register" method="post" enctype="multipart/form-data"
+                  onsubmit="return validateForm();">
+
+                <div class="hero-note">
+                    차량 사진 등록 하기 (최소 3장 이상 등록 必)
+                </div>
+
+                <div style="height: 16px;"></div>
+
+                <div class="grid grid-2">
+                    <div>
+                        <label class="form-label">차량번호</label>
+                        <input type="text" name="carNumber" placeholder="예: KIA-2026-001">
+                    </div>
+
+                    <div>
+                        <label class="form-label">모델명</label>
+                        <input type="text" name="carName" placeholder="예: EV6">
+                    </div>
+
+                    <div>
+                        <label class="form-label">브랜드</label>
+                        <select name="carBrand">
+                            <option value="">브랜드 선택</option>
+                            <option value="KIA">KIA</option>
+                            <option value="HYUNDAI">HYUNDAI</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="form-label">차량유형</label>
+                        <input type="text" name="carType" placeholder="예: SUV / 세단 / 경형 EV">
+                    </div>
+
+                    <div>
+                        <label class="form-label">차량색상</label>
+                        <input type="text" name="carColor" placeholder="예: 스노우 화이트 펄">
+                    </div>
+
+                    <div>
+                        <label class="form-label">상태</label>
+                        <select name="carStatus">
+                            <option value="판매중" selected>판매중</option>
+                            <option value="품절">품절</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="form-label">가격(숫자 저장용)</label>
+                        <input type="number" name="carPrice" placeholder="예: 55000000 (숫자만 입력)">
+                    </div>
+
+                    <div>
+                        <label class="form-label">가격 표시문구</label>
+                        <input type="text" name="carPriceDisplay" placeholder="예: 약 5,000만~6,000만">
+                    </div>
+
+                    <div>
+                        <label class="form-label">배터리용량</label>
+                        <input type="text" name="batteryCapacity" placeholder="예: 84kWh">
+                    </div>
+
+                    <div>
+                        <label class="form-label">1회충전 주행거리</label>
+                        <input type="text" name="drivingRange" placeholder="예: 501km">
+                    </div>
+
+                    <div>
+                        <label class="form-label">급속 충전시간</label>
+                        <input type="text" name="fastChargeTime" placeholder="예: 18분">
+                    </div>
+
+                    <div>
+                        <label class="form-label">충전 퍼센트 정보</label>
+                        <input type="text" name="chargePercentInfo" placeholder="예: 10% → 80%">
+                    </div>
+                </div>
+
+                <div style="height: 12px;"></div>
+
+                <label class="form-label">차량설명</label>
+                <textarea name="carContent" placeholder="차량 특징과 설명을 입력하세요"></textarea>
+
+                <div class="upload-box">
+    				<div class="upload-left">
+        				<label class="form-label">이미지 선택</label>
+
+        			<div class="file-select-row">
+            			<input type="text" id="selectedFileName" class="file-name-box" value="선택된 파일 없음" readonly>
+            			<label for="carFiles" class="file-btn">찾아보기</label>
+            			<input type="file" id="carFiles" name="carFiles" multiple accept="image/*" onchange="previewFiles(this)" hidden>
+        			</div>
+
+        			<div class="hint">최소 3장 이상 선택</div>
+    			</div>
+
+    			<div class="upload-right">
+        			<div class="form-label">첨부 내역</div>
+        			<div id="fileList">선택된 파일이 없습니다.</div>
+    			</div>
+			</div>
+
+                <div class="btn-row">
+                    <button type="submit" class="btn green">등록 완료</button>
+                    <a href="/admin/car/list" class="btn sub"
+                       onclick="return confirm('등록을 취소하시겠습니까?');">등록 취소</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+<script>
+    function previewFiles(input) {
+        const fileList = document.getElementById("fileList");
+        const selectedFileName = document.getElementById("selectedFileName");
+
+        fileList.innerHTML = "";
+
+        if (!input.files || input.files.length === 0) {
+            fileList.innerHTML = "선택된 파일이 없습니다.";
+            selectedFileName.value = "선택된 파일 없음";
+            return;
+        }
+
+        selectedFileName.value = input.files[0].name;
+
+        for (let i = 0; i < input.files.length; i++) {
+            const div = document.createElement("div");
+            div.className = "file-item";
+            div.textContent = input.files[i].name;
+            fileList.appendChild(div);
+        }
+    }
+
+    function validateForm() {
+        const fileInput = document.getElementById("carFiles");
+
+        if (!fileInput.files || fileInput.files.length < 3) {
+            alert("차량 이미지는 최소 3장 이상 등록해야 합니다.");
+            return false;
+        }
+
+        return confirm("등록을 완료하시겠습니까?");
+    }
+</script>
+
+</body>
+</html>
