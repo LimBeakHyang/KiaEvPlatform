@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 로그인</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-wrap {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px 32px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #111;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 46px;
+            padding: 0 14px;
+            border: 1px solid #d9d9d9;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #111;
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 48px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 10px;
+            background-color: #111;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            opacity: 0.92;
+        }
+
+        .error-box {
+            margin-top: 18px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background-color: #fff2f2;
+            color: #d93025;
+            font-size: 14px;
+            text-align: center;
+            border: 1px solid #ffd6d6;
+        }
+    </style>
+</head>
+<body>
+<div class="login-wrap">
+    <div class="login-title">관리자 로그인</div>
+
+    <form th:action="@{/admin/login}" method="post" th:object="${adminLogin}">
+        <div class="form-group">
+            <label for="adminId" class="form-label">ID</label>
+            <input type="text" id="adminId" th:field="*{adminId}" class="form-input" placeholder="아이디를 입력하세요">
+        </div>
+
+        <div class="form-group">
+            <label for="adminPw" class="form-label">PW</label>
+            <input type="password" id="adminPw" th:field="*{adminPw}" class="form-input" placeholder="비밀번호를 입력하세요">
+        </div>
+
+        <button type="submit" class="login-btn">로그인</button>
+    </form>
+
+    <div th:if="${errorMessage}" class="error-box" th:text="${errorMessage}"></div>
+</div>
+</body>
+</html>
