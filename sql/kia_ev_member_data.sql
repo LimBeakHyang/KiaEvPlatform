@@ -10,9 +10,10 @@ CREATE TABLE member_tbl (
     phone VARCHAR(20) NOT NULL,
     zipcode VARCHAR(10),
     address VARCHAR(255) NOT NULL,
-    detail_address VARCHAR(200),
-    member_status VARCHAR(20) NOT NULL,
-    join_date DATE NOT NULL
+    detail_address VARCHAR(255),
+    member_status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+    join_date DATETIME NOT NULL,
+    update_date DATETIME
 );
 
 SELECT DATABASE();

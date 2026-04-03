@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>약관동의</title>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Malgun Gothic', sans-serif;
+    background: #f5f6f8;
+}
+
+.wrap {
+    width: 700px;
+    margin: 60px auto;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    padding: 40px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #0b1f33;
+    font-size: 32px;
+}
+
+.all-check {
+    background: #f3f5f7;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.term-box {
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 18px;
+}
+
+.term-title {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #222;
+}
+
+.term-content {
+    width: 100%;
+    height: 120px;
+    resize: none;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 14px;
+    background: #fafafa;
+    color: #555;
+    margin-top: 10px;
+}
+
+.check-line {
+    margin-top: 12px;
+    font-size: 15px;
+}
+
+.btn-box {
+    text-align: center;
+    margin-top: 30px;
+}
+
+button {
+    width: 220px;
+    height: 52px;
+    border: none;
+    border-radius: 12px;
+    background: #0b1f33;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #163554;
+}
+
+.notice {
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    margin-top: 15px;
+}
+</style>
+
+<script>
+function toggleAll(source) {
+    const checkboxes = document.querySelectorAll('.agree-check');
+    checkboxes.forEach(checkbox => checkbox.checked = source.checked);
+}
+
+function validateTerms() {
+    const required1 = document.getElementById("terms1");
+    const required2 = document.getElementById("terms2");
+
+    if (!required1.checked || !required2.checked) {
+        alert("필수 약관에 동의해야 회원가입이 가능합니다.");
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body>
+
+<div class="wrap">
+    <h1>약관동의</h1>
+
+    <form action="/member/join/terms" method="post" onsubmit="return validateTerms()">
+
+        <div class="all-check">
+            <label>
+                <input type="checkbox" onclick="toggleAll(this)">
+                전체 동의
+            </label>
+        </div>
+
+        <div class="term-box">
+            <div class="term-title">[필수] 이용약관 동의</div>
+            <textarea class="term-content" readonly>
+여기에 이용약관 내용을 넣으시면 됩니다.
+회원가입, 서비스 이용, 계정 관리 등에 대한 기본 약관입니다.
+            </textarea>
+            <div class="check-line">
+                <label>
+                    <input type="checkbox" class="agree-check" id="terms1">
+                    이용약관에 동의합니다.
+                </label>
+            </div>
+        </div>
+
+        <div class="term-box">
+            <div class="term-title">[필수] 개인정보 수집 및 이용 동의</div>
+            <textarea class="term-content" readonly>
+여기에 개인정보 수집 및 이용 동의 내용을 넣으시면 됩니다.
+이름, 아이디, 비밀번호, 연락처 등의 수집 목적과 보관 내용을 작성합니다.
+            </textarea>
+            <div class="check-line">
+                <label>
+                    <input type="checkbox" class="agree-check" id="terms2">
+                    개인정보 수집 및 이용에 동의합니다.
+                </label>
+            </div>
+        </div>
+
+        <div class="term-box">
+            <div class="term-title">[선택] 마케팅 정보 수신 동의</div>
+            <textarea class="term-content" readonly>
+이벤트, 프로모션, 혜택 안내 등을 위한 선택 동의 항목입니다.
+            </textarea>
+            <div class="check-line">
+                <label>
+                    <input type="checkbox" class="agree-check" id="terms3">
+                    마케팅 정보 수신에 동의합니다.
+                </label>
+            </div>
+        </div>
+
+        <div class="btn-box">
+            <button type="submit">회원가입 진행</button>
+        </div>
+
+        <div class="notice">
+            필수 약관에 모두 동의해야 다음 단계로 이동할 수 있습니다.
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

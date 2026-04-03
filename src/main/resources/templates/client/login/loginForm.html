@@ -2,203 +2,268 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>KIA EV - 로그인</title>
+<title>LOGIN</title>
 <style>
 * {
+	margin: 0;
+	padding: 0;
 	box-sizing: border-box;
 }
 
 body {
-	margin: 0;
-	padding: 0;
-	font-family: 'Pretendard', 'Malgun Gothic', sans-serif;
-	background-color: #f8f9fa;
+	font-family: 'Malgun Gothic', sans-serif;
+	background: #f3f3f3;
+	color: #111;
 }
 
-.login-container {
-	width: 1200px;
-	margin: 0 auto;
-	padding: 160px 0 100px;
-	min-height: calc(100vh - 100px);
-	display: flex;
-	justify-content: center;
-	align-items: flex-start;
-	box-sizing: border-box;
-}
-
-.login-box {
-	width: 560px;
-	padding: 60px 50px 45px;
-	border: 1px solid #eee;
-	border-radius: 20px;
-	box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07);
+/* 헤더 */
+.header {
+	width: 100%;
+	height: 74px;
 	background: #fff;
-}
-
-.login-title {
-	font-size: 32px;
-	font-weight: 800;
-	color: #05141f;
-	text-align: center;
-	margin: 0 0 35px 0;
-	letter-spacing: -1px;
-}
-
-.type-selector {
-	display: flex;
-	justify-content: center;
-	gap: 40px;
-	margin-bottom: 28px;
-	padding-bottom: 25px;
-	border-bottom: 1px solid #f0f0f0;
-}
-
-.type-option {
+	border-bottom: 1px solid #e5e5e5;
 	display: flex;
 	align-items: center;
-	cursor: pointer;
-	font-size: 20px;
-	color: #222;
+	justify-content: space-between;
+	padding: 0 48px;
+}
+
+.logo {
+	font-size: 22px;
+	font-weight: 800;
+	color: #000;
+}
+
+.nav {
+	display: flex;
+	gap: 42px;
+	font-size: 15px;
 	font-weight: 600;
 }
 
-.type-option input {
-	margin-right: 10px;
-	accent-color: #05141f;
-	width: 18px;
-	height: 18px;
+.nav a {
+	text-decoration: none;
+	color: #111;
+}
+
+.header-right {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.header-right a {
+	text-decoration: none;
+	color: #444;
+}
+
+/* 본문 */
+.login-page {
+	min-height: calc(100vh - 74px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 40px 20px;
+}
+
+.login-box {
+	width: 500px;
+	background: #fff;
+	border-radius: 20px;
+	box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+	padding: 56px 44px 38px;
+}
+
+.login-title {
+	text-align: center;
+	font-size: 28px;
+	font-weight: 800;
+	color: #001b36;
+	margin-bottom: 30px;
+}
+
+.login-type {
+	display: flex;
+	justify-content: center;
+	gap: 34px;
+	margin-bottom: 24px;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.login-type label {
+	display: flex;
+	align-items: center;
+	gap: 8px;
 	cursor: pointer;
 }
 
-.form-group {
-	margin-bottom: 18px;
+.line {
+	width: 100%;
+	height: 1px;
+	background: #ececec;
+	margin-bottom: 26px;
 }
 
-.form-input {
+.input-group {
+	margin-bottom: 16px;
+}
+
+.input-group input {
 	width: 100%;
-	height: 58px;
-	padding: 0 18px;
-	border: 1px solid #ddd;
+	height: 54px;
+	border: 1px solid #dddddd;
 	border-radius: 10px;
-	box-sizing: border-box;
-	font-size: 18px;
+	padding: 0 16px;
+	font-size: 17px;
 	outline: none;
-	transition: 0.2s;
+	background: #fff;
 }
 
-.form-input:focus {
-	border-color: #05141f;
-	box-shadow: 0 0 0 3px rgba(5, 20, 31, 0.05);
+.input-group input::placeholder {
+	color: #9b9b9b;
 }
 
-.btn-login {
+.input-group input:focus {
+	border-color: #001b36;
+}
+
+.login-btn {
 	width: 100%;
-	height: 58px;
-	background: #05141f;
-	color: #fff;
+	height: 50px;
 	border: none;
 	border-radius: 10px;
-	font-size: 22px;
+	background: #001b36;
+	color: #fff;
+	font-size: 18px;
 	font-weight: 700;
 	cursor: pointer;
 	margin-top: 12px;
-	transition: 0.3s;
 }
 
-.btn-login:hover {
-	background: #1a2a3a;
-	transform: translateY(-1px);
+.login-btn:hover {
+	background: #00264b;
 }
 
-.login-footer-links {
-	margin-top: 28px;
-	display: flex;
-	justify-content: center;
-	gap: 14px;
-	font-size: 16px;
-	color: #999;
-}
-
-.login-footer-links a {
-	text-decoration: none;
-	color: #999;
-	transition: 0.2s;
-}
-
-.login-footer-links a:hover {
-	color: #05141f;
-	font-weight: 700;
-}
-
-.join-prompt {
-	margin-top: 35px;
-	padding-top: 24px;
-	border-top: 1px solid #f0f0f0;
-	text-align: center;
-	font-size: 16px;
-	color: #999;
-}
-
-.btn-join {
-	color: #05141f;
-	font-weight: 700;
-	text-decoration: none;
-	margin-left: 8px;
-}
-
-.msg {
-	margin-top: 14px;
+.find-links {
+	margin-top: 22px;
 	text-align: center;
 	font-size: 15px;
+	color: #b7b7b7;
+}
+
+.find-links a {
+	text-decoration: none;
+	color: #b7b7b7;
+	margin: 0 10px;
+}
+
+.find-links a:hover {
+	color: #001b36;
+}
+
+.bottom-line {
+	width: 100%;
+	height: 1px;
+	background: #ececec;
+	margin: 34px 0 22px;
+}
+
+.join-area {
+	text-align: center;
+	font-size: 15px;
+	color: #a0a0a0;
+}
+
+.join-area a {
+	margin-left: 6px;
+	text-decoration: none;
+	color: #001b36;
 	font-weight: 700;
+}
+
+.message-box {
+	margin-bottom: 18px;
+	padding: 12px 14px;
+	border-radius: 10px;
+	font-size: 14px;
+	text-align: center;
+}
+
+.error-box {
+	background: #fff1f1;
 	color: #c62828;
+	border: 1px solid #f0c7c7;
+}
+
+.success-box {
+	background: #eef6ff;
+	color: #1565c0;
+	border: 1px solid #c9def7;
 }
 </style>
 </head>
 <body>
-
 	<th:block th:replace="~{common/header :: header}"></th:block>
 
-	<main class="login-container">
+	<section class="login-page">
 		<div class="login-box">
 			<h2 class="login-title">LOGIN</h2>
 
+<<<<<<< HEAD
 			<div class="type-selector">
 				<label class="type-option"> <input type="radio"
 					name="userType" value="MEMBER" checked
 					onclick="handleTypeChange('MEMBER')"> <span>회원</span>
 				</label> <label class="type-option disabled-option"> <input
 					type="radio" name="userType" value="DEALER" disabled> <span>딜러</span>
+=======
+			<div class="login-type">
+				<label> <input type="radio" name="userType" checked>
+					회원
+				</label> <label class="disabled-label"> <input type="radio"
+					name="userType" value="dealer" disabled> 딜러
+>>>>>>> branch 'dev' of https://github.com/LimBeakHyang/KiaEvPlatform
 				</label>
 			</div>
 
-			<form id="loginForm" th:action="@{/login}" method="post">
-				<div class="form-group">
-					<input type="text" id="targetId" name="loginId" class="form-input"
-						placeholder="아이디" required>
+			<div class="line"></div>
+
+			<div th:if="${loginError}" class="message-box error-box"
+				th:text="${loginError}"></div>
+			<div th:if="${joinSuccess}" class="message-box success-box"
+				th:text="${joinSuccess}"></div>
+
+			<form th:action="@{/login}" method="post">
+				<div class="input-group">
+					<input type="text" name="loginId" placeholder="아이디" required>
 				</div>
 
-				<div class="form-group">
-					<input type="password" id="memberPw" name="memberPw"
-						class="form-input" placeholder="비밀번호" required>
+				<div class="input-group">
+					<input type="password" name="memberPw" placeholder="비밀번호" required>
 				</div>
 
-				<button type="submit" class="btn-login">로그인</button>
+				<button type="submit" class="login-btn">로그인</button>
 			</form>
 
-			<div th:if="${loginError}" class="msg" th:text="${loginError}"></div>
-
-			<div class="login-footer-links">
-				<a th:href="@{/client/login/findId}" id="findIdLink">아이디 찾기</a> <span
-					id="findDivider">|</span> <a th:href="@{/client/login/findPw}"
-					id="findPwLink">비밀번호 찾기</a>
+			<div class="find-links">
+				<a th:href="@{/client/login/findId}">아이디 찾기</a> | <a
+					th:href="@{/client/login/findPw}">비밀번호 찾기</a>
 			</div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'dev' of https://github.com/LimBeakHyang/KiaEvPlatform
 
-			<div class="join-prompt" id="joinPrompt">
-				아직 회원이 아니신가요? <a th:href="@{/member/join}" class="btn-join">회원가입</a>
+			<div class="bottom-line"></div>
+
+			<div class="join-area">
+				아직 회원이 아니신가요? <a th:href="@{/member/join}">회원가입</a>
 			</div>
 		</div>
+<<<<<<< HEAD
 	</main>
 
 	<th:block th:replace="~{common/footer :: footer}"></th:block>
@@ -250,6 +315,9 @@ body {
 			}
 		};
 	</script>
+=======
+	</section>
+>>>>>>> branch 'dev' of https://github.com/LimBeakHyang/KiaEvPlatform
 
 </body>
 </html>

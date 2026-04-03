@@ -13,22 +13,10 @@ public class MemberService {
     private MemberRepository memberRepository;
 
     public void join(Member member) {
-        if (memberRepository.existsByLoginId(member.getLoginId())) {
-            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
-        }
-
-        if (memberRepository.existsByEmail(member.getEmail())) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
-        }
-
         memberRepository.save(member);
     }
 
-    public boolean isLoginIdDuplicate(String loginId) {
-        return memberRepository.existsByLoginId(loginId);
-    }
-
-    public boolean isEmailDuplicate(String email) {
-        return memberRepository.existsByEmail(email);
+    public void delete(Long memberNo) {
+        memberRepository.deleteById(memberNo);
     }
 }
