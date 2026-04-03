@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로모션 수정</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            display: block;
+            padding: 12px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 18px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            min-height: 120px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn.green {
+            background: #059669;
+            color: white;
+        }
+
+        .btn.sub {
+            background: white;
+            border: 1px solid #ccc;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+        <div class="logo">KIAEV ADMIN</div>
+
+        <nav class="nav">
+            <a href="#">대시보드</a>
+            <a href="#">회원관리</a>
+            <a href="#">상담관리</a>
+            <a href="#">게시판관리</a>
+            <a href="#">딜러관리</a>
+            <a href="#" class="active">프로모션관리</a>
+            <a href="#">차량관리</a>
+        </nav>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="content">
+
+        <div class="topbar">
+            <h1>프로모션 수정</h1>
+            <div>ADMIN님</div>
+        </div>
+
+        <div class="breadcrumb">
+            ADMIN > 프로모션 관리 > 상세확인 > 수정
+        </div>
+
+        <div class="card">
+
+            <p class="section-title">프로모션 수정</p>
+
+            <div class="grid grid-2">
+
+                <div>
+                    <label class="form-label">프로모션명</label>
+                    <input value="EV 시리즈 봄맞이 혜택">
+                </div>
+
+                <div>
+                    <label class="form-label">진행 여부</label>
+                    <select>
+                        <option selected>진행중</option>
+                        <option>종료</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label">시작일</label>
+                    <input type="date" value="2026-03-18">
+                </div>
+
+                <div>
+                    <label class="form-label">종료일</label>
+                    <input type="date" value="2026-04-18">
+                </div>
+
+            </div>
+
+            <div style="height: 12px;"></div>
+
+            <label class="form-label">내용</label>
+            <textarea>시승 고객 대상 충전 크레딧 및 계약 혜택 제공</textarea>
+
+            <div style="height: 16px;"></div>
+
+            <div class="btn-row">
+                <button class="btn green">저장</button>
+                <button class="btn sub">취소</button>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
