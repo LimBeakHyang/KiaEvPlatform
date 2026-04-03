@@ -95,8 +95,10 @@ def send_to_spring_boot(items: list[dict]):
 # ==============================
 # 6. 테스트 실행
 # ==============================
-if __name__ == "__main__":
+'''	# 특정 지역만 조회
+	if __name__ == "__main__":
     print("=== 1. 공공데이터 충전소 정보 조회 ===")
+  
     # 테스트를 위해 우선 10건만 조회
     info_items = get_charger_info(page_no=1, num_of_rows=10, zcode="11") 
     
@@ -106,4 +108,22 @@ if __name__ == "__main__":
     if info_items:
         send_to_spring_boot(info_items)
     else:
-        print("가져온 데이터가 없어 전송하지 않습니다.")
+        print("가져온 데이터가 없어 전송하지 않습니다.")'''
+        
+    # 많은 지역 조회
+if __name__ == "__main__":
+    # 1. 지역 코드 리스트를 먼저 만듭니다.
+    zone_codes = ["11", "26", "27", "28", "29", "30", "31", "36", "41", "42", "43", "44", "45", "46", "47", "48", "50"]
+    
+    # 2. for문을 사용해서 지역별로 하나씩 호출합니다.
+    for code in zone_codes:
+        print(f"\n=== [{code}] 지역 데이터 수집 및 전송 시작 ===")
+        
+        # num_of_rows= 각 지역마다 10개씩 데이타를 가져옵니다.
+        # 여기서 zcode=code 라고 넣어주는 것이 핵심입니다!
+        info_items = get_charger_info(page_no=1, num_of_rows=10, zcode=code)
+        
+        if info_items:
+            send_to_spring_boot(info_items)
+        else:
+            print(f"{code} 지역에 데이터가 없습니다.")
