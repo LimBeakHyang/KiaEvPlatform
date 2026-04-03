@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상담내역 관리</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            display: block;
+            padding: 12px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            height: 42px;
+        }
+
+        .search-input {
+            min-width: 240px;
+        }
+
+        .hero-note {
+            padding: 12px;
+            background: #eef6ff;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            font-weight: 500;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+
+        th {
+            background: #f9fafb;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .tag.blue {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .tag.green {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .tag.orange {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #eee;
+            text-decoration: none;
+            color: #111;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn.dark {
+            background: #111827;
+            color: white;
+        }
+
+        .empty-row {
+            text-align: center;
+            color: #888;
+            padding: 30px 0;
+        }
+
+        .paging {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .paging a {
+            display: inline-block;
+            min-width: 34px;
+            padding: 8px 10px;
+            text-align: center;
+            border-radius: 8px;
+            background: #f3f4f6;
+            text-decoration: none;
+            color: #111827;
+        }
+
+        .paging a.active {
+            background: #111827;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+        <div class="logo">KIAEV ADMIN</div>
+
+        <nav class="nav">
+            <a href="/admin/main">대시보드</a>
+            <a href="#">회원관리</a>
+            <a href="/admin/consult/list" class="active">상담관리</a>
+            <a href="#">게시판관리</a>
+            <a href="#">딜러관리</a>
+            <a href="#">프로모션관리</a>
+            <a href="#">차량관리</a>
+        </nav>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="content">
+
+        <div class="topbar">
+            <h1>상담내역 관리</h1>
+            <div>ADMIN님</div>
+        </div>
+
+        <div class="breadcrumb">
+            ADMIN &gt; 상담내역 관리
+        </div>
+
+        <div class="card">
+
+            <!-- 검색/필터 -->
+            <form method="get" action="/admin/consult/list" class="toolbar">
+                <select name="sort">
+                    <option value="memberNumber" th:selected="${sort == 'memberNumber'}">회원번호</option>
+                    <option value="createdAt" th:selected="${sort == 'createdAt'}">신청일시</option>
+                </select>
+
+                <select name="status">
+                    <option value="" th:selected="${status == null or status == ''}">없음</option>
+                    <option value="상담 대기" th:selected="${status == '상담 대기'}">상담 대기</option>
+                    <option value="상담 진행" th:selected="${status == '상담 진행'}">상담 진행</option>
+                    <option value="상담 완료" th:selected="${status == '상담 완료'}">상담 완료</option>
+                </select>
+
+                <input type="text" name="keyword" class="search-input"
+                       placeholder="회원번호 또는 상담번호 검색"
+                       th:value="${keyword}">
+
+                <button type="submit" class="btn dark">조회</button>
+                <a href="/admin/consult/list" class="btn">초기화</a>
+            </form>
+
+            <!-- 상태 요약 -->
+            <div class="hero-note">
+                대기중 상담 :
+                <span th:text="${waitingCount}">15</span>건 |
+                진행중 상담 :
+                <span th:text="${progressCount}">43</span>건 |
+                완료 된 상담 :
+                <span th:text="${completedCount}">557</span>건
+            </div>
+
+            <!-- 테이블 -->
+            <table>
+                <thead>
+                <tr>
+                    <th>상담번호</th>
+                    <th>회원번호</th>
+                    <th>차량명</th>
+                    <th>상태</th>
+                    <th>신청일시</th>
+                    <th>상세</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:if="${#lists.isEmpty(consultList)}">
+                    <td colspan="6" class="empty-row">조회된 상담 내역이 없습니다.</td>
+                </tr>
+
+                <tr th:each="consult : ${consultList}">
+                    <td th:text="${consult.consultNumber}">S202401</td>
+                    <td th:text="${consult.memberNumber}">M1001</td>
+                    <td th:text="${consult.carName}">EV6</td>
+                    <td>
+                        <span th:if="${consult.consultStatus == '상담 대기'}"
+                              class="tag orange"
+                              th:text="${consult.consultStatus}">상담 대기</span>
+
+                        <span th:if="${consult.consultStatus == '상담 진행'}"
+                              class="tag blue"
+                              th:text="${consult.consultStatus}">상담 진행</span>
+
+                        <span th:if="${consult.consultStatus == '상담 완료'}"
+                              class="tag green"
+                              th:text="${consult.consultStatus}">상담 완료</span>
+                    </td>
+                    <td th:text="${consult.createdAt}">2026.03.24</td>
+                    <td>
+                        <a th:href="@{/admin/consult/detail(consultId=${consult.consultId})}" class="btn">
+                            상세확인
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- 페이징 -->
+            <div class="paging">
+                <a href="#">&lt;&lt;</a>
+                <a href="#">&lt;</a>
+                <a href="#" class="active">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">&gt;</a>
+                <a href="#">&gt;&gt;</a>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

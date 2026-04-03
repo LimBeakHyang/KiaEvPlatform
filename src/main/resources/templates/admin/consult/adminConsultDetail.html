@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상담내역 상세</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            display: block;
+            padding: 12px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .detail dt {
+            font-weight: bold;
+            padding: 10px 0;
+        }
+
+        .detail dd {
+            margin: 0;
+            padding: 10px 0;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            min-height: 120px;
+        }
+
+        .btn {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn.sub {
+            background: white;
+            border: 1px solid #ccc;
+        }
+
+        .btn.green {
+            background: #059669;
+            color: white;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+        <div class="logo">KIAEV ADMIN</div>
+
+        <nav class="nav">
+            <a href="/admin/main">대시보드</a>
+            <a href="#">회원관리</a>
+            <a href="/admin/consult/list" class="active">상담관리</a>
+            <a href="#">게시판관리</a>
+            <a href="#">딜러관리</a>
+            <a href="#">프로모션관리</a>
+            <a href="#">차량관리</a>
+        </nav>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="content">
+
+        <div class="topbar">
+            <h1>상담내역 상세</h1>
+            <div>ADMIN님</div>
+        </div>
+
+        <div class="breadcrumb">
+            ADMIN > 상담내역 관리 > 상세확인
+        </div>
+
+        <div class="split">
+
+            <!-- 상담 정보 -->
+            <section class="card">
+                <h3>상담 신청 내역 상세</h3>
+
+                <dl class="detail detail-grid">
+                    <dt>상담번호</dt><dd th:text="${consult.consultNumber}"></dd>
+                    <dt>회원번호</dt><dd th:text="${consult.memberNumber}"></dd>
+                    <dt>차량명</dt><dd th:text="${consult.carName}"></dd>
+                    <dt>예산</dt><dd th:text="${consult.consultBudget} + '원'"></dd>
+                    <dt>주요 용도</dt><dd th:text="${consult.consultPurpose}"></dd>
+                    <dt>주행거리</dt><dd th:text="${consult.driveDistance}"></dd>
+                    <dt>동승 정보</dt><dd th:text="${consult.companionInfo}"></dd>
+                    <dt>상담 내용</dt><dd th:text="${consult.consultContent}"></dd>
+                </dl>
+            </section>
+
+            <!-- 딜러/메모 -->
+            <section class="card">
+                <h3>딜러 배정 및 메모</h3>
+
+                <!-- 🔥 딜러 배정 FORM -->
+                <form method="post" action="/admin/consult/assign">
+                    <input type="hidden" name="consultId" th:value="${consult.consultId}">
+
+                    <label>딜러 배정하기</label>
+                    <div style="display:flex; gap:10px;">
+                        <input name="dealerNumber" th:value="${consult.dealerNumber}">
+                        <button type="button" class="btn sub">찾아보기</button>
+                    </div>
+
+                    <br>
+
+                    <button type="submit" class="btn green"
+                            onclick="return confirm('딜러를 배정하시겠습니까?')">
+                        딜러 배정
+                    </button>
+                </form>
+
+                <br><hr><br>
+
+                <!-- 🔥 메모 수정 FORM -->
+                <form method="post" action="/admin/consult/update">
+                    <input type="hidden" name="consultId" th:value="${consult.consultId}">
+
+                    <label>상담 메모</label>
+                    <textarea name="adminMemo"
+                              placeholder="상담 메모를 입력해주세요."
+                              th:text="${consult.adminMemo}"></textarea>
+
+                    <br>
+
+                    <div class="btn-row">
+                        <a href="/admin/consult/list" class="btn sub">상담 내역 이동</a>
+
+                        <button type="submit" class="btn green"
+                                onclick="return confirm('수정 내용을 저장하시겠습니까?')">
+                            저장
+                        </button>
+
+                        <button type="button" class="btn sub"
+                                onclick="history.back()">취소</button>
+                    </div>
+                </form>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
