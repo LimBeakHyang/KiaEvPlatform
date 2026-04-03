@@ -50,7 +50,7 @@ body {
 }
 
 .search-input {
-	flex: 2; /* 검색창이 더 넓게 */
+	flex: 2; 
 	padding: 15px 20px;
 	border: 1px solid #ddd;
 	border-radius: 8px;
@@ -58,9 +58,8 @@ body {
 	outline: none;
 }
 
-/* 필터/정렬 전용 셀렉트 박스 스타일 */
 .filter-select {
-	flex: 0.5; /* 셀렉트 박스 너비 조절 */
+	flex: 0.5;
 	padding: 15px;
 	border: 1px solid #ddd;
 	border-radius: 8px;
@@ -87,7 +86,7 @@ body {
 	background: #1a2a3a;
 }
 
-/* 기존 그리드 및 카드 스타일 유지 */
+/* 그리드 및 카드 스타일 */
 .car-grid {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
@@ -127,11 +126,13 @@ body {
 	object-fit: cover;
 }
 
+/* [중요] 하트 배치를 위한 영역 설정 */
 .car-content {
 	padding: 25px;
 	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
+	position: relative; /* 하트 absolute 위치의 기준 */
 }
 
 .status-badge {
@@ -149,11 +150,37 @@ body {
 	color: #28a745;
 }
 
+/* 모델명 영역 (하트와 겹치지 않게 여백 추가) */
 .car-model-name {
-	font-size: 22px;
+	font-size: 24px;
 	font-weight: 700;
 	color: #05141f;
 	margin-bottom: 20px;
+	padding-right: 40px; 
+}
+
+/* 하트 버튼 스타일 (모델명 우측 배치) */
+.heart-btn {
+	position: absolute;
+	right: 25px;
+	top: 55px; /* 판매중 배지 아래, 모델명과 같은 라인 */
+	background: none;
+	border: none;
+	font-size: 26px;
+	color: #ddd; /* 비활성: 회색 */
+	cursor: pointer;
+	transition: 0.2s;
+	padding: 0;
+	line-height: 1;
+	z-index: 10;
+}
+
+.heart-btn.active {
+	color: #ff4d4d; /* 활성: 빨간색 */
+}
+
+.heart-btn:hover {
+	transform: scale(1.1);
 }
 
 .spec-summary {
@@ -210,77 +237,99 @@ body {
 			<p>기아의 혁신적인 EV 라인업을 만나보세요.</p>
 		</div>
 
-		<!-- 검색 필터 - 검색창 + 차종 필터 + 정렬 조건 -->
 		<form th:action="@{/car/list}" method="get" class="search-wrapper">
-			<!-- 1. 키워드 검색 -->
-			<input type="text" name="keyword" th:value="${keyword}"
-				class="search-input" placeholder="모델명을 입력하세요 (예: EV4, EV6)">
-
-			<!-- 2. 차종 필터 -->
-			<select name="carType" class="filter-select"
-				onchange="this.form.submit()">
-				<option value="" th:selected="${carType == null || carType == ''}">전체
-					차종</option>
+			<input type="text" name="keyword" th:value="${keyword}" class="search-input" placeholder="모델명을 입력하세요">
+			<select name="carType" class="filter-select" onchange="this.form.submit()">
+				<option value="" th:selected="${carType == null || carType == ''}">전체 차종</option>
 				<option value="세단" th:selected="${carType == '세단'}">세단</option>
 				<option value="SUV" th:selected="${carType == 'SUV'}">SUV</option>
 				<option value="경형" th:selected="${carType == '경형'}">경형</option>
 			</select>
-
-			<!-- 3. 정렬 필터 -->
-			<select name="sort" class="filter-select"
-				onchange="this.form.submit()">
-				<!-- 모델명 순을 첫 번째 옵션으로 -->
-				<option value="nameAsc"
-					th:selected="${sort == 'nameAsc' || sort == null || sort == ''}">모델명순</option>
-				<option value="latest" th:selected="${sort == 'latest'}">최신
-					등록순</option>
-				<option value="priceAsc" th:selected="${sort == 'priceAsc'}">가격
-					낮은순</option>
-				<option value="priceDesc" th:selected="${sort == 'priceDesc'}">가격
-					높은순</option>
+			<select name="sort" class="filter-select" onchange="this.form.submit()">
+				<option value="nameAsc" th:selected="${sort == 'nameAsc' || sort == null || sort == ''}">모델명순</option>
+				<option value="latest" th:selected="${sort == 'latest'}">최신 등록순</option>
+				<option value="priceAsc" th:selected="${sort == 'priceAsc'}">가격 낮은순</option>
+				<option value="priceDesc" th:selected="${sort == 'priceDesc'}">가격 높은순</option>
 				<option value="rangeDesc" th:selected="${sort == 'rangeDesc'}">주행거리순</option>
 			</select>
-
 			<button type="submit" class="btn-search">검색하기</button>
 		</form>
 
-		<!-- 차량 그리드 시작 -->
 		<div class="car-grid">
-			<a th:each="car : ${cars}"
-				th:href="@{/car/detail/{id}(id=${car.carNo})}" class="car-card">
-				<div class="car-img-area">
-					<img th:src="${car.imagePath}" alt="차량 이미지">
-				</div>
-				<div class="car-content">
-					<span class="status-badge status-active"
-						th:text="${car.saleStatus}">판매중</span>
-					<div class="car-model-name" th:text="${car.modelName}">모델명</div>
-					<div class="spec-summary">
-						<div class="spec-item">
-							<span class="label">주행거리</span> <span class="val"
-								th:text="${car.drivingRangeKm} + 'km'">-</span>
+			<div th:each="car : ${cars}" class="car-card">
+				
+				<a th:href="@{/car/detail/{carNo}(carNo=${car.carNo})}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
+					<div class="car-img-area">
+						<img th:src="${car.imagePath}" alt="차량 이미지">
+					</div>
+					
+					<div class="car-content">
+						<span class="status-badge status-active" th:text="${car.saleStatus}">판매중</span>
+						
+						<div class="car-model-name" th:text="${car.modelName}">모델명</div>
+						
+						<button type="button" class="heart-btn" 
+								th:classappend="${#sets.contains(wishCarNos, car.carNo)} ? 'active' : ''"
+								th:onclick="'toggleWish(event, this, ' + ${car.carNo} + ')'">
+							♥
+						</button>
+
+						<div class="spec-summary">
+							<div class="spec-item">
+								<span class="label">주행거리</span> 
+								<span class="val" th:text="${car.drivingRangeKm} + 'km'">-</span>
+							</div>
+							<div class="spec-item" style="border-left: 1px solid #f4f4f4;">
+								<span class="label">배터리</span> 
+								<span class="val" th:text="${car.batteryCapacity}">-</span>
+							</div>
 						</div>
-						<div class="spec-item" style="border-left: 1px solid #f4f4f4;">
-							<span class="label">배터리</span> <span class="val"
-								th:text="${car.batteryCapacity}">-</span>
+						
+						<div class="price-area">
+							<small>판매가</small> 
+							<span th:text="${car.price != null} ? ${#numbers.formatInteger(car.price, 3, 'COMMA')} + '원~' : '0원'"></span>
 						</div>
 					</div>
-					<div class="price-area">
-						<small>판매가</small> <span
-							th:text="${#numbers.formatInteger(car.price, 3, 'COMMA')} + '원~'"></span>
-					</div>
-				</div>
-			</a>
+				</a>
+			</div>
 		</div>
 
-		<!-- 데이터 없을 때 -->
-		<div th:if="${#lists.isEmpty(cars)}"
-			style="text-align: center; padding: 100px 0;">
+		<div th:if="${#lists.isEmpty(cars)}" style="text-align: center; padding: 100px 0;">
 			<p style="color: #999;">검색 결과에 맞는 차량 정보가 없습니다.</p>
 		</div>
 	</main>
 
 	<th:block th:replace="~{common/footer :: footer}"></th:block>
 
+	<script th:inline="javascript">
+	function toggleWish(event, element, carNo) {
+		// 부모 <a> 태그의 클릭 이벤트(상세페이지 이동) 차단
+		event.preventDefault();
+		event.stopPropagation();
+
+		fetch('/mypage/wishlist/toggle?carNo=' + carNo, {
+			method: 'POST'
+		})
+		.then(response => {
+			if (response.status === 401) {
+				if (confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) {
+					location.href = "/login";
+				}
+				return;
+			}
+			return response.text();
+		})
+		.then(result => {
+			if (result === "added") {
+				element.classList.add('active');
+			} else if (result === "removed") {
+				element.classList.remove('active');
+			}
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
+	}
+	</script>
 </body>
 </html>
