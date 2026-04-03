@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신규 딜러 등록</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            display: block;
+            padding: 12px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 18px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn.green {
+            background: #059669;
+            color: white;
+        }
+
+        .btn.sub {
+            background: white;
+            border: 1px solid #ccc;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+        <div class="logo">KIAEV ADMIN</div>
+
+        <nav class="nav">
+            <a href="#">대시보드</a>
+            <a href="#">회원관리</a>
+            <a href="#">상담관리</a>
+            <a href="#">게시판관리</a>
+            <a href="#" class="active">딜러관리</a>
+            <a href="#">프로모션관리</a>
+            <a href="#">차량관리</a>
+        </nav>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="content">
+
+        <div class="topbar">
+            <h1>신규 딜러 등록</h1>
+            <div>ADMIN님</div>
+        </div>
+
+        <div class="breadcrumb">
+            ADMIN > 딜러관리 > 신규 딜러 등록
+        </div>
+
+        <div class="card">
+
+            <p class="section-title">딜러 정보 입력</p>
+
+            <div class="grid grid-2">
+
+                <div>
+                    <label class="form-label">이름</label>
+                    <input placeholder="딜러명을 입력하세요">
+                </div>
+
+                <div>
+                    <label class="form-label">사원번호</label>
+                    <input placeholder="사원번호를 입력하세요">
+                </div>
+
+                <div>
+                    <label class="form-label">입사일</label>
+                    <input type="date" value="2026-03-18">
+                </div>
+
+                <div>
+                    <label class="form-label">지점</label>
+                    <select>
+                        <option>서울 본점</option>
+                        <option>인천 지점</option>
+                        <option>대구 지점</option>
+                        <option>부산 지점</option>
+                        <option>제주 지점</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label">연락처</label>
+                    <input placeholder="010-0000-0000">
+                </div>
+
+                <div>
+                    <label class="form-label">이메일</label>
+                    <input placeholder="dealer@kiaev.com">
+                </div>
+
+            </div>
+
+            <div style="height: 18px;"></div>
+
+            <div class="btn-row">
+                <button class="btn green">저장</button>
+                <button class="btn sub">취소</button>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
