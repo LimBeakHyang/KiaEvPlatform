@@ -167,9 +167,8 @@ body {
 				<label class="type-option"> <input type="radio"
 					name="userType" value="MEMBER" checked
 					onclick="handleTypeChange('MEMBER')"> <span>회원</span>
-				</label> <label class="type-option"> <input type="radio"
-					name="userType" value="DEALER" onclick="handleTypeChange('DEALER')">
-					<span>딜러</span>
+				</label> <label class="type-option disabled-option"> <input
+					type="radio" name="userType" value="DEALER" disabled> <span>딜러</span>
 				</label>
 			</div>
 
@@ -194,7 +193,7 @@ body {
 					id="findDivider">|</span> <a th:href="@{/client/login/findPw}"
 					id="findPwLink">비밀번호 찾기</a>
 			</div>
-	
+
 
 			<div class="join-prompt" id="joinPrompt">
 				아직 회원이 아니신가요? <a th:href="@{/member/join}" class="btn-join">회원가입</a>
@@ -220,25 +219,25 @@ body {
 			const joinPrompt = document.getElementById('joinPrompt');
 
 			if (type === 'MEMBER') {
-			    form.action = '/login';
-			    idInput.name = 'loginId';
-			    idInput.placeholder = '아이디';
+				form.action = '/login';
+				idInput.name = 'loginId';
+				idInput.placeholder = '아이디';
 
-			    findIdLink.style.display = 'inline';
-			    findPwLink.style.display = 'inline';
-			    findDivider.style.display = 'inline';
-			    joinPrompt.style.display = 'block';
+				findIdLink.style.display = 'inline';
+				findPwLink.style.display = 'inline';
+				findDivider.style.display = 'inline';
+				joinPrompt.style.display = 'block';
 			} else {
-			    form.action = '/dealer/login';
-			    idInput.name = 'dealerId';
-			    idInput.placeholder = '사원번호';
+				form.action = '/dealer/login';
+				idInput.name = 'dealerId';
+				idInput.placeholder = '사원번호';
 
-			    findIdLink.style.display = 'none';
-			    findPwLink.style.display = 'inline';
-			    findDivider.style.display = 'none';
-			    joinPrompt.style.display = 'none';
+				findIdLink.style.display = 'none';
+				findPwLink.style.display = 'inline';
+				findDivider.style.display = 'none';
+				joinPrompt.style.display = 'none';
 			}
-			
+
 			idInput.value = '';
 			document.getElementById('memberPw').value = '';
 		}
