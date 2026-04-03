@@ -1,4 +1,4 @@
-package com.kiaev.client.member.domain;
+package com.kiaev.client.member;
 
 import java.time.LocalDate;
 

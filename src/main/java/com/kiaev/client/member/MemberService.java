@@ -1,10 +1,7 @@
-package com.kiaev.client.member.service;
+package com.kiaev.client.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.kiaev.client.member.domain.Member;
-import com.kiaev.client.member.repository.MemberRepository;
 
 @Service
 public class MemberService {
