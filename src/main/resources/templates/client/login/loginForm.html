@@ -16,49 +16,6 @@ body {
 	color: #111;
 }
 
-/* 헤더 */
-.header {
-	width: 100%;
-	height: 74px;
-	background: #fff;
-	border-bottom: 1px solid #e5e5e5;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 0 48px;
-}
-
-.logo {
-	font-size: 22px;
-	font-weight: 800;
-	color: #000;
-}
-
-.nav {
-	display: flex;
-	gap: 42px;
-	font-size: 15px;
-	font-weight: 600;
-}
-
-.nav a {
-	text-decoration: none;
-	color: #111;
-}
-
-.header-right {
-	display: flex;
-	align-items: center;
-	gap: 18px;
-	font-size: 14px;
-	font-weight: 500;
-}
-
-.header-right a {
-	text-decoration: none;
-	color: #444;
-}
-
 /* 본문 */
 .login-page {
 	min-height: calc(100vh - 74px);
@@ -212,20 +169,14 @@ body {
 		<div class="login-box">
 			<h2 class="login-title">LOGIN</h2>
 
-<<<<<<< HEAD
-			<div class="type-selector">
-				<label class="type-option"> <input type="radio"
-					name="userType" value="MEMBER" checked
-					onclick="handleTypeChange('MEMBER')"> <span>회원</span>
-				</label> <label class="type-option disabled-option"> <input
-					type="radio" name="userType" value="DEALER" disabled> <span>딜러</span>
-=======
 			<div class="login-type">
-				<label> <input type="radio" name="userType" checked>
+				<label>
+					<input type="radio" name="userType" value="MEMBER" checked>
 					회원
-				</label> <label class="disabled-label"> <input type="radio"
-					name="userType" value="dealer" disabled> 딜러
->>>>>>> branch 'dev' of https://github.com/LimBeakHyang/KiaEvPlatform
+				</label>
+				<label>
+					<input type="radio" name="userType" value="DEALER" disabled>
+					딜러
 				</label>
 			</div>
 
@@ -249,13 +200,9 @@ body {
 			</form>
 
 			<div class="find-links">
-				<a th:href="@{/client/login/findId}">아이디 찾기</a> | <a
-					th:href="@{/client/login/findPw}">비밀번호 찾기</a>
+				<a th:href="@{/client/login/findId}">아이디 찾기</a> |
+				<a th:href="@{/client/login/findPw}">비밀번호 찾기</a>
 			</div>
-<<<<<<< HEAD
-
-=======
->>>>>>> branch 'dev' of https://github.com/LimBeakHyang/KiaEvPlatform
 
 			<div class="bottom-line"></div>
 
@@ -263,8 +210,7 @@ body {
 				아직 회원이 아니신가요? <a th:href="@{/member/join}">회원가입</a>
 			</div>
 		</div>
-<<<<<<< HEAD
-	</main>
+	</section>
 
 	<th:block th:replace="~{common/footer :: footer}"></th:block>
 
@@ -273,51 +219,5 @@ body {
 			alert('회원가입 성공! 로그인해주세요.');
 		</script>
 	</th:block>
-
-	<script>
-		function handleTypeChange(type) {
-			const form = document.getElementById('loginForm');
-			const idInput = document.getElementById('targetId');
-			const findIdLink = document.getElementById('findIdLink');
-			const findPwLink = document.getElementById('findPwLink');
-			const findDivider = document.getElementById('findDivider');
-			const joinPrompt = document.getElementById('joinPrompt');
-
-			if (type === 'MEMBER') {
-				form.action = '/login';
-				idInput.name = 'loginId';
-				idInput.placeholder = '아이디';
-
-				findIdLink.style.display = 'inline';
-				findPwLink.style.display = 'inline';
-				findDivider.style.display = 'inline';
-				joinPrompt.style.display = 'block';
-			} else {
-				form.action = '/dealer/login';
-				idInput.name = 'dealerId';
-				idInput.placeholder = '사원번호';
-
-				findIdLink.style.display = 'none';
-				findPwLink.style.display = 'inline';
-				findDivider.style.display = 'none';
-				joinPrompt.style.display = 'none';
-			}
-
-			idInput.value = '';
-			document.getElementById('memberPw').value = '';
-		}
-
-		window.onload = function() {
-			const checkedType = document
-					.querySelector('input[name="userType"]:checked');
-			if (checkedType) {
-				handleTypeChange(checkedType.value);
-			}
-		};
-	</script>
-=======
-	</section>
->>>>>>> branch 'dev' of https://github.com/LimBeakHyang/KiaEvPlatform
-
 </body>
 </html>
