@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 상세</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f4f6f8;
+            --card: #fff;
+            --line: #d9dee5;
+            --text: #222;
+            --muted: #6b7280;
+            --brand: #111827;
+            --accent: #2563eb;
+            --danger: #dc2626;
+            --ok: #059669;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: #fff;
+            padding: 24px 18px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 28px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav a {
+            color: #d1d5db;
+            text-decoration: none;
+            padding: 12px 14px;
+            border-radius: 10px;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #1f2937;
+            color: #fff;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 18px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 20px;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 18px;
+        }
+
+        .detail dt {
+            font-weight: bold;
+            padding: 12px 0;
+        }
+
+        .detail dd {
+            margin: 0;
+            padding: 12px 0;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+        }
+
+        .btn {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn.sub {
+            background: white;
+            border: 1px solid #ccc;
+        }
+
+        .btn.red {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+        <div class="logo">KIAEV ADMIN</div>
+
+        <nav class="nav">
+            <a href="#">대시보드</a>
+            <a href="#" class="active">회원관리</a>
+            <a href="#">상담관리</a>
+            <a href="#">게시판관리</a>
+            <a href="#">딜러관리</a>
+            <a href="#">프로모션관리</a>
+            <a href="#">차량관리</a>
+        </nav>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="content">
+
+        <div class="topbar">
+            <h1>회원 상세</h1>
+            <div>ADMIN님, 안녕하세요</div>
+        </div>
+
+        <div class="breadcrumb">
+            ADMIN > 회원관리 > 상세확인
+        </div>
+
+        <div class="split">
+
+            <!-- 회원 정보 -->
+            <section class="card">
+                <h3>회원정보 상세</h3>
+
+                <dl class="detail detail-grid">
+                    <dt>회원번호</dt>
+                    <dd>11020003</dd>
+
+                    <dt>아이디</dt>
+                    <dd>KIA12345</dd>
+
+                    <dt>이름</dt>
+                    <dd>박아연</dd>
+
+                    <dt>생년월일</dt>
+                    <dd>1999.07.09</dd>
+
+                    <dt>이메일</dt>
+                    <dd>company@gogle.com</dd>
+
+                    <dt>전화번호</dt>
+                    <dd>010-1234-5678</dd>
+
+                    <dt>주소</dt>
+                    <dd>오현로 56 롯데캐슬 (01232)</dd>
+
+                    <dt>회원상태</dt>
+                    <dd>정상회원</dd>
+
+                    <dt>가입일시</dt>
+                    <dd>2011.02.01</dd>
+                </dl>
+            </section>
+
+            <!-- 관리 메뉴 -->
+            <section class="card">
+                <h3>관리 메뉴</h3>
+
+                <div class="btn-row">
+                    <button class="btn sub">회원 관리로 이동</button>
+                    <button class="btn red">탈퇴회원 정보</button>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
