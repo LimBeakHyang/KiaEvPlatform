@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지사항 상세</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            display: block;
+            padding: 12px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .detail dt {
+            font-weight: bold;
+            padding: 10px 0;
+        }
+
+        .detail dd {
+            margin: 0;
+            padding: 10px 0;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            min-height: 120px;
+        }
+
+        .btn {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn.sub {
+            background: white;
+            border: 1px solid #ccc;
+        }
+
+        .btn.blue {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn.red {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn.green {
+            background: #059669;
+            color: white;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+        <div class="logo">KIAEV ADMIN</div>
+
+        <nav class="nav">
+            <a href="#">대시보드</a>
+            <a href="#">회원관리</a>
+            <a href="#">상담관리</a>
+            <a href="#" class="active">게시판관리</a>
+            <a href="#">딜러관리</a>
+            <a href="#">프로모션관리</a>
+            <a href="#">차량관리</a>
+        </nav>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="content">
+
+        <div class="topbar">
+            <h1>공지사항 상세</h1>
+            <div>ADMIN님</div>
+        </div>
+
+        <div class="breadcrumb">
+            ADMIN > 게시판 관리 > 상세확인(공지)
+        </div>
+
+        <div class="card">
+
+            <!-- 상세 정보 -->
+            <p class="section-title">공지사항 상세확인</p>
+
+            <dl class="detail detail-grid">
+                <dt>제목</dt>
+                <dd>3월 전기차 프로모션 안내</dd>
+
+                <dt>작성일</dt>
+                <dd>2026.03.18</dd>
+
+                <dt>내용</dt>
+                <dd>3월 한정 EV 시리즈 구매 혜택과 시승 이벤트 일정을 안내드립니다.</dd>
+            </dl>
+
+            <div style="height: 16px;"></div>
+
+            <!-- 수정 영역 -->
+            <label>공지사항 수정</label>
+            <input value="3월 전기차 프로모션 안내">
+
+            <div style="height: 10px;"></div>
+
+            <textarea>3월 한정 EV 시리즈 구매 혜택과 시승 이벤트 일정을 안내드립니다.</textarea>
+
+            <!-- 버튼 -->
+            <div class="btn-row">
+                <button class="btn sub">게시판목록</button>
+                <button class="btn blue">수정</button>
+                <button class="btn red">삭제</button>
+                <button class="btn green">저장</button>
+                <button class="btn sub">취소</button>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
