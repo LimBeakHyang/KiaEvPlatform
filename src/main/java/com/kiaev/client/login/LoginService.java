@@ -9,36 +9,34 @@ public class LoginService {
     @Autowired
     private LoginRepository loginRepository;
 
-    // 회원 로그인
+    // 로그인
     public Login login(String loginId, String memberPw) {
-        return loginRepository.findByLoginIdAndMemberPw(loginId, memberPw).orElse(null);
-    }
-
-    // 딜러 로그인
-    public Login dealerLogin(String dealerId, String memberPw) {
-        return loginRepository.findByDealerIdAndMemberPw(dealerId, memberPw).orElse(null);
+        return loginRepository.findByLoginIdAndMemberPw(loginId, memberPw);
     }
 
     // 아이디 찾기
-    public Login findId(String memberName, String email) {
-        return loginRepository.findByMemberNameAndEmail(memberName, email).orElse(null);
+    public String findLoginId(String memberName, String email) {
+        Login login = loginRepository.findByMemberNameAndEmail(memberName, email);
+
+        if (login != null) {
+            return login.getLoginId();
+        }
+        return null;
     }
 
-    // 비밀번호 찾기
-    public Login findPw(String loginId, String email) {
-        return loginRepository.findByLoginIdAndEmail(loginId, email).orElse(null);
+    // 비밀번호 재설정 전 회원 확인
+    public boolean checkMemberForPasswordReset(String loginId, String memberName, String email) {
+        Login login = loginRepository.findByLoginIdAndMemberNameAndEmail(loginId, memberName, email);
+        return login != null;
     }
 
     // 비밀번호 변경
-    public boolean updatePassword(String loginId, String email, String newPassword) {
-        Login user = loginRepository.findByLoginIdAndEmail(loginId, email).orElse(null);
+    public void updatePassword(String loginId, String newPassword) {
+        Login login = loginRepository.findByLoginId(loginId);
 
-        if (user == null) {
-            return false;
+        if (login != null) {
+            login.setMemberPw(newPassword);
+            loginRepository.save(login);
         }
-
-        user.setMemberPw(newPassword);
-        loginRepository.save(user);
-        return true;
     }
 }
