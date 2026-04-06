@@ -293,12 +293,14 @@ loginIdInput.addEventListener('input', function () {
     isIdChecked = false;
     isIdAvailable = false;
     document.getElementById('idMsg').textContent = '';
+    document.getElementById('idMsg').className = 'msg';
 });
 
 emailInput.addEventListener('input', function () {
     isEmailChecked = false;
     isEmailAvailable = false;
     document.getElementById('emailMsg').textContent = '';
+    document.getElementById('emailMsg').className = 'msg';
 });
 
 phoneInput.addEventListener('input', function () {
@@ -323,19 +325,21 @@ function checkDuplicateId() {
         return;
     }
 
-    fetch('/member/checkId', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'loginId=' + encodeURIComponent(loginId)
+    fetch('/member/checkId?loginId=' + encodeURIComponent(loginId), {
+        method: 'GET'
     })
     .then(response => response.json())
     .then(data => {
         isIdChecked = true;
         isIdAvailable = !data.duplicate;
-        idMsg.textContent = data.message;
-        idMsg.className = data.duplicate ? 'msg error' : 'msg success';
+
+        if (data.duplicate) {
+            idMsg.textContent = '이미 사용중인 아이디 입니다.';
+            idMsg.className = 'msg error';
+        } else {
+            idMsg.textContent = '사용 가능한 아이디 입니다.';
+            idMsg.className = 'msg success';
+        }
     })
     .catch(() => {
         idMsg.textContent = '아이디 중복확인 중 오류가 발생했습니다.';
@@ -360,19 +364,21 @@ function checkEmailDuplicate() {
         return;
     }
 
-    fetch('/member/checkEmail', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'email=' + encodeURIComponent(email)
+    fetch('/member/checkEmail?email=' + encodeURIComponent(email), {
+        method: 'GET'
     })
     .then(response => response.json())
     .then(data => {
         isEmailChecked = true;
         isEmailAvailable = !data.duplicate;
-        emailMsg.textContent = data.message;
-        emailMsg.className = data.duplicate ? 'msg error' : 'msg success';
+
+        if (data.duplicate) {
+            emailMsg.textContent = '이미 사용중인 이메일 입니다.';
+            emailMsg.className = 'msg error';
+        } else {
+            emailMsg.textContent = '사용 가능한 이메일 입니다.';
+            emailMsg.className = 'msg success';
+        }
     })
     .catch(() => {
         emailMsg.textContent = '이메일 중복확인 중 오류가 발생했습니다.';
