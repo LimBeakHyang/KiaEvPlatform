@@ -1,3 +1,4 @@
+import os
 import requests
 import xml.etree.ElementTree as ET
 from urllib.parse import unquote
@@ -5,9 +6,14 @@ import json # JSON 변환을 위해 추가
 
 
 # ==============================
-# 1. 공공데이터포털 서비스키 입력
+# 1. 공공데이터포털 서비스키 입력 (환경변수 사용)
 # ==============================
-SERVICE_KEY = "7ddd037d93edaf576c8b8f705db0e7cdcfe09a543b0d7e738d8512a6cd560a0a"
+# os.getenv()를 사용하여 환경변수에서 API 키를 안전하게 불러옵니다.
+SERVICE_KEY = os.getenv("CHARGING_API_KEY")
+
+# 환경변수가 설정되지 않은 경우 에러 발생
+if not SERVICE_KEY:
+    raise ValueError("환경변수 'CHARGING_API_KEY'가 설정되지 않았습니다. 실행 환경에서 API 키를 설정해주세요.")
 
 # 공식 문서 기준 서비스 URL
 BASE_URL = "http://apis.data.go.kr/B552584/EvCharger"
@@ -36,7 +42,7 @@ def call_api(endpoint: str, params: dict) -> list[dict]:
         "ServiceKey": unquote(SERVICE_KEY),
         **params
     }
-    response = requests.get(url, params=request_params, timeout=20)
+    response = requests.get(url, params=request_params, timeout=60)
     response.raise_for_status()
     return parse_xml_items(response.text)
 
