@@ -55,6 +55,22 @@ body { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; background-
 .info-name { color: #888; font-size: 15px; min-width: 130px; }
 .info-data { color: #111; font-weight: 600; font-size: 15px; flex-grow: 1; text-align: right; }
 
+/* 추가된 차량 색상 칩 스타일 */
+.color-chip-wrapper { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.color-chip {
+    display: inline-block;
+    background: #f4f4f4;
+    color: #333;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #e5e5e5;
+    line-height: 1.4;
+    white-space: nowrap;
+    margin-bottom: 2px;
+}
+
 .description-area { margin: 40px 0; padding: 30px; background: #f9f9f9; border-radius: 15px; }
 
 /* [버튼 스타일] */
@@ -62,19 +78,12 @@ body { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; background-
 .btn { height: 65px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; text-decoration: none; transition: 0.3s ease; line-height: 1; padding: 0; border: none; }
 .btn-main { background: #05141f; color: #fff; }
 
-/* 관심 차량 기본 스타일 (비활성) */
-.btn-sub { 
-    background: #fff; 
-    color: #05141f; 
-    border: 1px solid #05141f; 
-}
-
-/* [활성화] 등록 시 버튼 배경색과 글자색 변경 */
+.btn-sub { background: #fff; color: #05141f; border: 1px solid #05141f; }
 .btn-sub.active { 
-    background: #ff4d4d !important; /* 등록 시 깔끔한 레드 */
+    background: #ff4d4d !important; 
     color: #fff !important; 
-    border: none !important;
-    box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
+    border: none !important; 
+    box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2); 
 }
 
 .btn:hover { opacity: 0.9; transform: translateY(-2px); }
@@ -95,15 +104,20 @@ body { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; background-
 				<div class="main-img-box">
 					<img id="activeImg" th:src="${car.imagePath}" alt="Main Car Image">
 				</div>
+
 				<div class="thumb-container">
 					<div class="thumb active" onclick="updatePreview(this)">
 						<img th:src="${car.imagePath}" alt="Thumbnail 1">
 					</div>
-					<div class="thumb" onclick="updatePreview(this)">
-						<img th:src="${#strings.replace(car.imagePath, '_1.jpg', '_2.jpg')}" alt="Thumbnail 2">
+
+					<div th:if="${car.imageDetail1 != null}" class="thumb"
+						onclick="updatePreview(this)">
+						<img th:src="${car.imageDetail1}" alt="Thumbnail 2">
 					</div>
-					<div class="thumb" onclick="updatePreview(this)">
-						<img th:src="${#strings.replace(car.imagePath, '_1.jpg', '_3.jpg')}" alt="Thumbnail 3">
+
+					<div th:if="${car.imageDetail2 != null}" class="thumb"
+						onclick="updatePreview(this)">
+						<img th:src="${car.imageDetail2}" alt="Thumbnail 3">
 					</div>
 				</div>
 			</div>
@@ -117,35 +131,44 @@ body { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; background-
 					<div class="price-box" style="text-align: right;">
 						<p class="label-sm">Estimated Price</p>
 						<div class="price-val">
-							<span class="num" th:text="${#numbers.formatInteger(car.price, 3, 'COMMA')}">0</span>
-							<span class="won">원~</span>
+							<span class="num" th:text="${car.priceDisplay}">0원</span>
 						</div>
 					</div>
 				</div>
 
 				<div class="core-grid">
 					<div class="core-item">
-						<i class="fa-solid fa-battery-full"></i> <span class="c-label">배터리 용량</span> 
-						<span class="c-val" th:text="${car.batteryCapacity}">-</span>
+						<i class="fa-solid fa-battery-full"></i> <span class="c-label">배터리
+							용량</span> <span class="c-val" th:text="${car.batteryCapacity}">-</span>
 					</div>
 					<div class="core-item">
-						<i class="fa-solid fa-gauge-high"></i> <span class="c-label">최대 주행거리</span> 
-						<span class="c-val" th:text="${car.drivingRangeKm} + 'km'">-</span>
+						<i class="fa-solid fa-gauge-high"></i> <span class="c-label">최대
+							주행거리</span> <span class="c-val" th:text="${car.drivingRangeKm} + 'km'">-</span>
 					</div>
 				</div>
 
 				<div class="info-list">
 					<div class="info-item">
-						<span class="info-name">차량 유형</span><span class="info-data" th:text="${car.carType}">-</span>
+						<span class="info-name">차량 유형</span><span class="info-data"
+							th:text="${car.carType}">-</span>
 					</div>
 					<div class="info-item">
-						<span class="info-name">급속 충전 시간</span><span class="info-data" th:text="${car.fastChargeTime}">-</span>
+						<span class="info-name">급속 충전 시간</span><span class="info-data"
+							th:text="${car.fastChargeTime}">-</span>
 					</div>
 					<div class="info-item">
-						<span class="info-name">충전 정보</span><span class="info-data" th:text="${car.chargeInfo}">-</span>
+						<span class="info-name">충전 정보</span><span class="info-data"
+							th:text="${car.chargeInfo}">-</span>
 					</div>
-					<div class="info-item">
-						<span class="info-name">차량 색상</span><span class="info-data" th:text="${car.carColor}">-</span>
+                    
+					<div class="info-item" style="align-items: flex-start;">
+						<span class="info-name" style="padding-top: 8px;">차량 색상</span>
+						<div class="info-data color-chip-wrapper">
+							<span th:each="color : ${#strings.arraySplit(car.carColor, ',')}" 
+								  th:text="${color.trim()}" 
+								  class="color-chip">
+							</span>
+						</div>
 					</div>
 				</div>
 
@@ -155,13 +178,13 @@ body { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; background-
 				</div>
 
 				<div class="action-btns">
-					<a th:href="@{/consult/form(carNo=${car.carNo})}" class="btn btn-main">구매 상담 신청하기</a>
-					
-					<button id="wishBtn" class="btn btn-sub" 
-							th:classappend="${isWish} ? 'active' : ''"
-							th:onclick="'toggleWishDetail(' + ${car.carNo} + ')'">
-						관심 차량
-					</button>
+					<a th:href="@{/consult/form(carNo=${car.carNo})}"
+						class="btn btn-main">구매 상담 신청하기</a>
+
+					<button id="wishBtn" class="btn btn-sub"
+						th:classappend="${isWish} ? 'active' : ''"
+						th:onclick="'toggleWishDetail(' + ${car.carNo} + ')'">관심
+						차량</button>
 				</div>
 			</div>
 		</div>
@@ -170,7 +193,6 @@ body { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; background-
 	<th:block th:replace="~{common/footer :: footer}"></th:block>
 
 	<script th:inline="javascript">
-		// 이미지 미리보기 함수
 		function updatePreview(element) {
 			const mainImg = document.getElementById('activeImg');
 			const targetSrc = element.querySelector('img').src;
@@ -179,13 +201,9 @@ body { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; background-
 			element.classList.add('active');
 		}
 
-		// 비동기 관심차량 등록/해제 함수
 		function toggleWishDetail(carNo) {
 			const wishBtn = document.getElementById('wishBtn');
-
-			fetch('/mypage/wishlist/toggle?carNo=' + carNo, {
-				method: 'POST'
-			})
+			fetch('/mypage/wishlist/toggle?carNo=' + carNo, { method: 'POST' })
 			.then(response => {
 				if (response.status === 401) {
 					if (confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) {
