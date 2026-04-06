@@ -1,80 +1,130 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>기아 전기차 - 진행 중인 프로모션</title>
-    <style>
-        .promotion-container {
-            max-width: 800px;
-            margin: 120px auto 50px;
-            padding: 20px;
-            font-family: sans-serif;
-        }
-        .promotion-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .promotion-title {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #05141f;
-            margin-bottom: 10px;
-        }
-        .promotion-date {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 15px;
-        }
-        .promotion-discount {
-            color: #e2231a;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        .detail-btn {
-            display: inline-block;
-            padding: 8px 15px;
-            background-color: #05141f;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-        .detail-btn:hover {
-            background-color: #333;
-        }
-        .empty-message {
-            text-align: center;
-            color: #999;
-            padding: 50px 0;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>기아 전기차 - 진행 중인 프로모션</title>
+<style>
+/* 1. 전체 컨테이너 너비를 조금 더 넓게 (선택사항) */
+.promotion-container {
+	max-width: 900px; /* 800에서 900으로 확대 */
+	margin: 120px auto 50px;
+	padding: 20px;
+}
+
+/* 2. 카드 사이의 간격을 대폭 늘림 */
+.promotion-card {
+	display: flex;
+	align-items: flex-start; /* 텍스트가 많아질 것이므로 위쪽 정렬 */
+	gap: 30px; /* 이미지와 텍스트 사이 간격 확대 */
+	border: 1px solid #eee;
+	border-radius: 15px; /* 더 둥글고 부드럽게 */
+	padding: 30px; /* 카드 안쪽 여백 확대 (중요!) */
+	margin-bottom: 40px; /* 카드와 카드 사이 간격 확대 (촘촘함 해소) */
+	transition: transform 0.2s, box-shadow 0.2s;
+	background-color: #fff;
+}
+
+.promotion-card:hover {
+	transform: translateY(-5px); /* 마우스 올리면 살짝 들리는 효과 */
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* 3. 썸네일 이미지 크기 확대 */
+.promotion-thumb {
+	width: 320px; /* 기존보다 가로 크기 확대 */
+	height: 200px; /* 세로 크기 확대 */
+	object-fit: cover;
+	border-radius: 10px;
+	flex-shrink: 0; /* 이미지 크기 고정 */
+}
+
+/* 4. 제목 글자 크기 키우기 */
+.promotion-title {
+	font-size: 1.8em; /* 더 크게 */
+	font-weight: bold;
+	color: #05141f;
+	margin-bottom: 15px;
+}
+
+/* 5. 내용 미리보기 (두 줄 고정) - 행이 꽉 차 보이게 함 */
+.promotion-content-preview {
+	display: -webkit-box;
+	-webkit-line-clamp: 2; /* 딱 두 줄만 표시 */
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	line-height: 1.6;
+	height: 3.2em; /* 줄 간격에 맞춰 높이 확보 */
+	color: #666;
+	margin-bottom: 20px; /* 아래 요소와 간격 */
+}
+
+.promotion-date {
+	color: #666;
+	font-size: 0.9em;
+	margin-bottom: 15px;
+}
+
+.promotion-discount {
+	color: #e2231a;
+	font-weight: bold;
+	margin-bottom: 15px;
+}
+
+.detail-btn {
+	display: inline-block;
+	padding: 8px 15px;
+	background-color: #05141f;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 4px;
+	font-size: 0.9em;
+}
+
+.detail-btn:hover {
+	background-color: #333;
+}
+
+.empty-message {
+	text-align: center;
+	color: #999;
+	padding: 50px 0;
+}
+</style>
 </head>
 <body>
-<th:block th:replace="~{common/header :: header}"></th:block>
+	<th:block th:replace="~{common/header :: header}"></th:block>
 
-<div class="promotion-container">
-    <h2>현재 진행 중인 프로모션</h2>
-    <hr>
+	<div class="promotion-container">
+		<h2>현재 진행 중인 프로모션</h2>
+		<hr>
 
-    <div th:if="${#lists.isEmpty(promotions)}" class="empty-message">
-        <p>현재 진행 중인 프로모션이 없습니다.</p>
-    </div>
+		<div th:if="${#lists.isEmpty(promotions)}" class="empty-message">
+			<p>현재 진행 중인 프로모션이 없습니다.</p>
+		</div>
 
-    <div th:unless="${#lists.isEmpty(promotions)}">
-        <div class="promotion-card" th:each="promo : ${promotions}">
-            <div class="promotion-title" th:text="${promo.title}">프로모션 제목 예시</div>
+		<div th:unless="${#lists.isEmpty(promotions)}">
+			<div th:unless="${#lists.isEmpty(promotions)}">
+    <div class="promotion-card" th:each="promo : ${promotions}">
+        
+        <img th:if="${promo.bannerImageUrl != null}" 
+             th:src="${promo.bannerImageUrl}" 
+             class="promotion-thumb" alt="썸네일">
 
-            <div class="promotion-date">
-                기간:
-                <span th:text="${#temporals.format(promo.startDate, 'yyyy-MM-dd')}">2024-01-01</span>
-                ~
-                <span th:text="${#temporals.format(promo.endDate, 'yyyy-MM-dd')}">2024-12-31</span>
+        <div class="promotion-info">
+            <div class="promotion-title" th:text="${promo.title}">프로모션 제목</div>
+
+            <div class="promotion-content-preview" th:text="${promo.content}">
+                프로모션 상세 내용 중 앞부분이 이곳에 출력되어 이미지와 높이를 맞춰줍니다.
             </div>
 
-            <div class="promotion-discount" th:if="${promo.discountAmount != null and promo.discountAmount > 0}">
-                할인 혜택:
-                <span th:text="${#numbers.formatInteger(promo.discountAmount, 3, 'COMMA')}">1,000,000</span>원
+            <div class="promotion-date" style="margin-bottom: 10px;">
+                <strong>기간:</strong>
+                <span th:text="${#temporals.format(promo.startDate, 'yyyy-MM-dd')}"></span> ~
+                <span th:text="${#temporals.format(promo.endDate, 'yyyy-MM-dd')}"></span>
+            </div>
+
+            <div class="promotion-discount" th:if="${promo.discountAmount > 0}" style="margin-bottom: 20px;">
+                <strong>혜택:</strong> 최대 <span th:text="${#numbers.formatInteger(promo.discountAmount, 3, 'COMMA')}"></span>원 할인
             </div>
 
             <a th:href="@{/promotion/detail(id=${promo.id})}" class="detail-btn">자세히 보기</a>
@@ -82,6 +132,6 @@
     </div>
 </div>
 
-<th:block th:replace="~{common/footer :: footer}"></th:block>
+	<th:block th:replace="~{common/footer :: footer}"></th:block>
 </body>
 </html>
