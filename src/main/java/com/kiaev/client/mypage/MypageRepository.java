@@ -60,4 +60,26 @@ public class MypageRepository {
     public List<Mypage> findFavoriteCarsByMemberNo(Long memberNo) {
         return new ArrayList<>();
     }
+    public List<Mypage> findBoardHistoryByMemberNo(Long memberNo) {
+        return new ArrayList<>();
+    }
+    public void deleteMember(Long memberNo) {
+        // 실제 DB 삭제 또는 상태 변경 자리
+        System.out.println("회원 탈퇴 처리 완료: " + memberNo);
+    }
+    public List<Wishlist> getWishlist(Long memberNo) {
+        return new ArrayList<>();
+    }
+    /*public void toggleWishlist(Long memberNo, Long carId) {
+        System.out.println("관심 차량 등록/취소");
+    }*/
+
+    public void deleteWishlist(Long wishlistNo, Long memberNo) {
+        System.out.println("관심 차량 삭제");
+    }
+    public void toggleWishlist(Long memberNo, Long carId) {
+        System.out.println("관심 차량 등록/취소");
+        System.out.println("memberNo: " + memberNo);
+        System.out.println("carId: " + carId);
+    }
 }

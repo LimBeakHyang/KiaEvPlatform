@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>내 정보 조회</title>
+<style>
+body {
+    background: #f3f3f3;
+    font-family: 'Malgun Gothic', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.mypage-container {
+    display: flex;
+    gap: 30px;
+    width: 1200px;
+    margin: 50px auto;
+}
+
+.side-menu {
+    width: 220px;
+    background: #071b2f;
+    color: white;
+    padding: 30px 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+}
+
+.side-menu h3 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 22px;
+}
+
+.side-menu a {
+    color: white;
+    display: block;
+    margin-bottom: 15px;
+    text-decoration: none;
+    background: #0d2b45;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.side-menu a:hover {
+    background: #12395c;
+}
+
+.side-menu a.active {
+    background: #12395c;
+    font-weight: bold;
+}
+
+.content {
+    flex: 1;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.content h2 {
+    margin-bottom: 30px;
+    color: #071b2f;
+}
+
+.info-row {
+    margin-bottom: 18px;
+}
+
+.info-row label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #071b2f;
+}
+
+.readonly-box {
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    padding: 0 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f8f8f8;
+    box-sizing: border-box;
+}
+
+.btn-area {
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    background: #071b2f;
+    color: white;
+}
+</style>
+</head>
+<body>
+
+<div class="mypage-container">
+    <div class="side-menu">
+        <h3>MY PAGE</h3>
+        <a href="/mypage/info" class="active">내 정보 확인</a>
+        <a href="/mypage/consult">상담내역 조회</a>
+        <a href="/mypage/board">나의 문의 내역</a>
+        <a href="/logout">로그아웃</a>
+    </div>
+
+    <div class="content">
+        <h2>내 정보 조회</h2>
+
+        <div class="info-row">
+            <label>아이디</label>
+            <div class="readonly-box" th:text="${memberInfo.loginId}">kia123</div>
+        </div>
+
+        <div class="info-row">
+            <label>이름</label>
+            <div class="readonly-box" th:text="${memberInfo.memberName}">홍길동</div>
+        </div>
+
+        <div class="info-row">
+            <label>이메일</label>
+            <div class="readonly-box" th:text="${memberInfo.email}">test@test.com</div>
+        </div>
+
+        <div class="info-row">
+            <label>전화번호</label>
+            <div class="readonly-box" th:text="${memberInfo.phone}">010-1234-5678</div>
+        </div>
+
+        <div class="info-row">
+            <label>주소</label>
+            <div class="readonly-box" th:text="${memberInfo.address}">서울 강남구</div>
+        </div>
+
+        <div class="info-row">
+            <label>상세주소</label>
+            <div class="readonly-box" th:text="${memberInfo.detailAddress}">역삼동</div>
+        </div>
+
+        <div class="info-row">
+            <label>우편번호</label>
+            <div class="readonly-box" th:text="${memberInfo.zipcode}">12345</div>
+        </div>
+
+        <div class="info-row">
+            <label>회원상태</label>
+           <!-- <div class="readonly-box" th:text="${memberInfo.memberStatus}">정상회원</div>
+        </div>-->
+
+       <!-- <div class="info-row">
+            <label>회원번호</label>
+            <div class="readonly-box" th:text="${memberInfo.memberNo}">1</div>
+        </div>-->
+
+        <div class="btn-area">
+            <button type="button" class="btn" onclick="location.href='/mypage/update'">수정하기</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
