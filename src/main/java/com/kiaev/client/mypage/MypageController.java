@@ -29,10 +29,12 @@ public class MypageController {
     public String mypageMain(HttpSession session, Model model) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
+        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
 
+        // 관심 차량 목록 조회
         List<Mypage> favoriteCars = mypageService.getFavoriteCars(loginUser.getMemberNo());
 
         model.addAttribute("loginUser", loginUser);
@@ -46,10 +48,12 @@ public class MypageController {
     public String myInfo(HttpSession session, Model model) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
+        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
 
+        // 회원 정보 조회
         Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
 
         model.addAttribute("loginUser", loginUser);
@@ -63,10 +67,12 @@ public class MypageController {
     public String updateMyInfo(Mypage mypage, HttpSession session) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
+        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
 
+        // 세션에 저장된 회원번호 기준으로 수정
         mypage.setMemberNo(loginUser.getMemberNo());
         mypageService.updateMemberInfo(mypage);
 
@@ -75,10 +81,12 @@ public class MypageController {
 
     // 비밀번호 변경 페이지 이동
     @GetMapping("/mypage/passwordChange")
-    public String passwordForm(HttpSession session) {
+    public String passwordForm(HttpSession session, Model model) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
-        if (loginUser == null) {
+        // 비밀번호 변경 성공 후에는 세션이 끊긴 상태에서도
+        // flash 값(passwordChangeSuccess)이 있으면 페이지를 한 번 보여주도록 처리
+        if (loginUser == null && !model.containsAttribute("passwordChangeSuccess")) {
             return "redirect:/login";
         }
 
@@ -88,36 +96,44 @@ public class MypageController {
     // 비밀번호 변경 처리
     @PostMapping("/mypage/passwordChange")
     public String passwordChange(
-            @RequestParam("currentPw") String currentPw,
-            @RequestParam("newPw") String newPw,
-            @RequestParam("confirmPw") String confirmPw,
+            @RequestParam("currentPw") String currentPw,   // 현재 비밀번호
+            @RequestParam("newPw") String newPw,           // 새 비밀번호
+            @RequestParam("confirmPw") String confirmPw,   // 새 비밀번호 확인
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
+        // 로그인 사용자 정보 가져오기
         Login loginUser = (Login) session.getAttribute("loginUser");
 
+        // 로그인 정보가 없으면 로그인 페이지로 이동
         if (loginUser == null) {
-            redirectAttributes.addFlashAttribute("timeoutMessage", "오랫동안 이용이 없어 로그아웃되었습니다.");
             return "redirect:/login";
         }
 
+        // 새 비밀번호와 새 비밀번호 확인이 다르면 다시 비밀번호 변경 페이지로 이동
         if (!newPw.equals(confirmPw)) {
             redirectAttributes.addFlashAttribute("errorMessage", "새 비밀번호가 일치하지 않습니다.");
             return "redirect:/mypage/passwordChange";
         }
 
+        // 비밀번호 변경 서비스 호출
         boolean result = mypageService.changePassword(loginUser.getMemberNo(), currentPw, newPw);
 
+        // 현재 비밀번호가 틀리면 실패 메시지 출력
         if (!result) {
             redirectAttributes.addFlashAttribute("errorMessage", "현재 비밀번호가 올바르지 않습니다.");
             return "redirect:/mypage/passwordChange";
         }
 
+        // 비밀번호 변경 성공 시 세션 종료
         session.invalidate();
 
-        redirectAttributes.addFlashAttribute("successMessage", "비밀번호가 정상적으로 변경되었습니다. 다시 로그인해주세요.");
+        // 비밀번호 변경 페이지에서 성공 알럿을 띄우기 위한 flash 값 전달
+        redirectAttributes.addFlashAttribute("passwordChangeSuccess", true);
 
-        return "redirect:/login";
+        // 다시 비밀번호 변경 페이지로 이동
+        // -> 이 페이지에서 alert 띄운 후 로그인 페이지로 이동할 예정
+        return "redirect:/mypage/passwordChange";
     }
 
     // 회원 탈퇴 처리
@@ -125,12 +141,15 @@ public class MypageController {
     public String deleteMember(HttpSession session) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
+        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
 
+        // 회원 탈퇴 처리
         mypageService.deleteMember(loginUser.getMemberNo());
 
+        // 세션 종료
         session.invalidate();
 
         return "redirect:/login";
@@ -141,10 +160,12 @@ public class MypageController {
     public String consultHistory(HttpSession session, Model model) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
+        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
 
+        // 상담내역 조회
         List<Mypage> list = mypageService.getConsultHistory(loginUser.getMemberNo());
 
         model.addAttribute("consultList", list);
@@ -158,10 +179,12 @@ public class MypageController {
     public String boardHistory(HttpSession session, Model model) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
+        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
 
+        // 문의 내역 조회
         List<Mypage> list = mypageService.getBoardHistory(loginUser.getMemberNo());
 
         model.addAttribute("boardList", list);
@@ -175,10 +198,12 @@ public class MypageController {
     public String updateForm(HttpSession session, Model model) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
+        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
 
+        // 회원 정보 조회
         Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
 
         model.addAttribute("loginUser", loginUser);
@@ -186,4 +211,4 @@ public class MypageController {
 
         return "client/mypage/update";
     }
-}
+} 
