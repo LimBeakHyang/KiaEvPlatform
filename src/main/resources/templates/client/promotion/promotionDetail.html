@@ -120,29 +120,27 @@
 	<th:block th:replace="~{common/header :: header}"></th:block>
 
 	<div class="promotion-container">
-    <div class="promo-header">
-        <div class="promo-title" th:text="${promotion.title}">프로모션 제목</div>
-        <div class="promo-meta">
-            <strong>진행 기간:</strong>
-            <span th:text="${#temporals.format(promotion.startDate, 'yyyy-MM-dd')}"></span> ~
-            <span th:text="${#temporals.format(promotion.endDate, 'yyyy-MM-dd')}"></span>
-        </div>
-    </div>
+		<div class="promo-header">
+			<div class="promo-title" th:text="${promotion.title}">프로모션 제목</div>
+			<div class="promo-meta">
+				<strong>진행 기간:</strong> <span
+					th:text="${#temporals.format(promotion.startDate, 'yyyy-MM-dd')}"></span>
+				~ <span
+					th:text="${#temporals.format(promotion.endDate, 'yyyy-MM-dd')}"></span>
+			</div>
+		</div>
 
-    <div class="promo-banner" th:if="${promotion.bannerImageUrl != null}">
-        <img th:src="${promotion.bannerImageUrl}" alt="프로모션 메인 이미지">
-    </div>
+		<div class="promo-banner" th:if="${promotion.bannerImageUrl != null}">
+			<img th:src="${promotion.bannerImageUrl}" alt="프로모션 메인 이미지">
+		</div>
 
-    <div class="promo-content" 
-         style="white-space: pre-wrap;" 
-         th:text="${promotion.content}">
-        여기에 상세 내용이 출력됩니다.
-    </div>
+		<div class="promo-content" style="white-space: pre-wrap;"
+			th:text="${promotion.content}">여기에 상세 내용이 출력됩니다.</div>
 
-    <div class="button-group">
-        <a th:href="@{/promotion/list}" class="btn-list">목록으로 돌아가기</a>
-    </div>
-</div>
+		<div class="button-group">
+			<a th:href="@{/promotion/list}" class="btn-list">목록으로 돌아가기</a>
+		</div>
+	</div>
 
 	<th:block th:replace="~{common/footer :: footer}"></th:block>
 </body>

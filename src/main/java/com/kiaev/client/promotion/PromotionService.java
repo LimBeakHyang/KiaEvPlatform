@@ -37,4 +37,6 @@ public class PromotionService {
                 // 만약 해당 ID의 데이터가 없다면, IllegalArgumentException 에러를 발생시킵니다.
                 .orElseThrow(() -> new IllegalArgumentException("해당 프로모션이 없습니다. ID: " + id));
     }
+    
+    
 }

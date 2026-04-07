@@ -24,6 +24,7 @@ public class PromotionController {
     public String promotionList(Model model) {
         // 1. 서비스에서 '진행 중인 프로모션 목록' 데이터를 가져옵니다.
         List<Promotion> promotions = promotionService.getActivePromotions();
+
         
         // 2. 가져온 데이터를 HTML 파일(뷰)로 전달하기 위해 Model에 담습니다.
         // 이름표("promotions")를 달아서 넘겨주면, HTML에서 이 이름표로 데이터를 꺼내 쓸 수 있습니다.
