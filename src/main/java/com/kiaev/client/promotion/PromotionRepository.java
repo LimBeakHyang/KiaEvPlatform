@@ -26,4 +26,11 @@ public interface PromotionRepository extends JpaRepository<Promotion, Long> {
      * 모든 프로모션을 최신 등록순으로 조회
      */
     List<Promotion> findAllByOrderByIdDesc();
+    
+ // 🌟 추가: 오늘 날짜를 기준으로 "시작일이 지났고, 종료일이 아직 안 지난" 데이터만 가져오기 (최신순 정렬)
+    List<Promotion> findByStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByStartDateDesc(
+            LocalDateTime now1, 
+            LocalDateTime now2
+    );
+    
 }

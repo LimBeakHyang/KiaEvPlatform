@@ -90,4 +90,18 @@ public class Promotion {
         return (now.isAfter(this.startDate) || now.isEqual(this.startDate)) 
                 && (now.isBefore(this.endDate) || now.isEqual(this.endDate));
     }
+    
+    /**
+     * 종료일까지 남은 일수를 계산합니다.
+     * @return 남은 일수 (오늘 마감이면 0, 지났으면 음수)
+     */
+    public long getRemainDays() {
+        if (this.endDate == null) return 999; // 종료일이 없는 경우 예외 처리
+        
+        // 시간은 빼고 '날짜(일)' 기준으로만 계산합니다.
+        return java.time.temporal.ChronoUnit.DAYS.between(
+                java.time.LocalDate.now(), 
+                this.endDate.toLocalDate()
+        );
+    }
 }
