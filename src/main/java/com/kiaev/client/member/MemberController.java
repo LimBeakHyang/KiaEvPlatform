@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class MemberController {
@@ -25,11 +26,17 @@ public class MemberController {
 
     // 회원가입 저장
     @PostMapping("/member/join")
-    public String join(Member member, Model model) {
+    public String join(Member member, Model model, RedirectAttributes redirectAttributes) {
         try {
             memberService.join(member);
 
-            return "redirect:/";   // 회원가입 성공 -> 메인페이지
+            // 회원가입 성공 메시지 전달
+            model.addAttribute("joinSuccess", "회원가입이 완료되었습니다. 로그인해주세요.");
+            
+            // 다시 회원가입 페이지를 열어줌
+            // 여기서 메시지창을 띄울 예정
+            return "client/member/joinForm";
+
 
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -53,6 +60,7 @@ public class MemberController {
 
         return result;
     }
+    // 이메일 중복확인
     @GetMapping("/member/checkEmail")
     @ResponseBody
     public Map<String, Object> checkEmail(@RequestParam("email") String email) {

@@ -25,6 +25,12 @@ public class MemberService {
         if (member.getJoinDate() == null) {
             member.setJoinDate(LocalDate.now());
         }
+        
+        // 비밀번호 확인 체크
+        if (member.getMemberPw() == null || member.getConfirmPw() == null ||
+            !member.getMemberPw().equals(member.getConfirmPw())) {
+            throw new IllegalArgumentException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        }
 
         // 저장
         memberRepository.save(member);
