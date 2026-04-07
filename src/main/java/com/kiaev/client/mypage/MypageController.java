@@ -91,6 +91,7 @@ public class MypageController {
     }
 
     // 비밀번호 변경 처리
+    @PostMapping("/mypage/passwordChange")
     public String passwordChange(
             @RequestParam("currentPw") String currentPw,   // 현재 비밀번호
             @RequestParam("newPw") String newPw,           // 새 비밀번호
