@@ -103,13 +103,17 @@ public class MypageController {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
         // 로그인 정보가 없으면 로그인 페이지로 이동
+        // 기존에는 쿼리스트링으로 넘겼지만,
+        // 로그인 페이지에서 메시지가 확실하게 뜨도록 FlashAttribute 방식으로 전달
         if (loginUser == null) {
-            return "redirect:/login?timeout=true";
+            redirectAttributes.addFlashAttribute("timeoutMessage", "오랫동안 이용이 없어 로그아웃되었습니다.");
+            return "redirect:/login";
         }
 
         // 새 비밀번호와 확인 비밀번호가 다르면 오류 메시지
+        // passwordChange.html 에서 출력하기 쉽도록 errorMessage 이름으로 통일
         if (!newPw.equals(confirmPw)) {
-            redirectAttributes.addFlashAttribute("error", "새 비밀번호가 일치하지 않습니다.");
+            redirectAttributes.addFlashAttribute("errorMessage", "새 비밀번호가 일치하지 않습니다.");
             return "redirect:/mypage/passwordChange";
         }
 
@@ -118,15 +122,19 @@ public class MypageController {
 
         // 현재 비밀번호가 틀렸거나 회원정보가 없으면 실패 메시지
         if (!result) {
-            redirectAttributes.addFlashAttribute("error", "현재 비밀번호가 올바르지 않습니다.");
+            redirectAttributes.addFlashAttribute("errorMessage", "현재 비밀번호가 올바르지 않습니다.");
             return "redirect:/mypage/passwordChange";
         }
 
         // 비밀번호 변경 성공 시 세션 끊기
         session.invalidate();
 
+        // 성공 메시지를 로그인 페이지로 전달
+        // redirect:/login?pwChanged=true 대신 FlashAttribute 사용
+        redirectAttributes.addFlashAttribute("successMessage", "비밀번호가 정상적으로 변경되었습니다. 다시 로그인해주세요.");
+
         // 성공 후 로그인 페이지로 이동
-        return "redirect:/login?pwChanged=true";
+        return "redirect:/login";
     }
 
     // 회원 탈퇴 처리
@@ -206,7 +214,7 @@ public class MypageController {
     }
 
     // 관심 차량 등록 / 취소
-   		@PostMapping("/mypage/wishlist/toggle")
+        @PostMapping("/mypage/wishlist/toggle")
     public String toggleWishlist(@RequestParam("carId") Long carId,
                                  HttpSession session) {
         Login loginUser = (Login) session.getAttribute("loginUser");
@@ -235,7 +243,7 @@ public class MypageController {
         return "redirect:/mypage/wishlist";
     }*/
  
- // 내 정보 수정 화면
+    // 내 정보 수정 화면
     @GetMapping("/mypage/update")
     public String updateForm(HttpSession session, Model model) {
         Login loginUser = (Login) session.getAttribute("loginUser");
@@ -251,5 +259,4 @@ public class MypageController {
 
         return "client/mypage/update";
     }
- 
 }
