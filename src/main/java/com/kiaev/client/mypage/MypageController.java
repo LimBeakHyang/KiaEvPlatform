@@ -29,12 +29,10 @@ public class MypageController {
     public String mypageMain(HttpSession session, Model model) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
-        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
 
-        // 관심 차량 목록 조회
         List<Mypage> favoriteCars = mypageService.getFavoriteCars(loginUser.getMemberNo());
 
         model.addAttribute("loginUser", loginUser);
@@ -44,7 +42,7 @@ public class MypageController {
     }
 
     // 내 정보 조회 화면
-    @GetMapping("/mypage/info")
+    @GetMapping("/mypage/myinfo")
     public String myInfo(HttpSession session, Model model) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
@@ -57,7 +55,7 @@ public class MypageController {
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("memberInfo", memberInfo);
 
-        return "client/mypage/info";
+        return "client/mypage/myinfo";
     }
 
     // 내 정보 수정 처리
@@ -65,16 +63,14 @@ public class MypageController {
     public String updateMyInfo(Mypage mypage, HttpSession session) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
-        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
 
-        // 세션의 회원번호를 기준으로 수정
         mypage.setMemberNo(loginUser.getMemberNo());
         mypageService.updateMemberInfo(mypage);
 
-        return "redirect:/mypage/info";
+        return "redirect:/mypage/myinfo";
     }
 
     // 비밀번호 변경 페이지 이동
@@ -82,7 +78,6 @@ public class MypageController {
     public String passwordForm(HttpSession session) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
-        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
@@ -93,47 +88,35 @@ public class MypageController {
     // 비밀번호 변경 처리
     @PostMapping("/mypage/passwordChange")
     public String passwordChange(
-            @RequestParam("currentPw") String currentPw,   // 현재 비밀번호
-            @RequestParam("newPw") String newPw,           // 새 비밀번호
-            @RequestParam("confirmPw") String confirmPw,   // 새 비밀번호 확인
+            @RequestParam("currentPw") String currentPw,
+            @RequestParam("newPw") String newPw,
+            @RequestParam("confirmPw") String confirmPw,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
-        // 로그인 사용자 정보 가져오기
         Login loginUser = (Login) session.getAttribute("loginUser");
 
-        // 로그인 정보가 없으면 로그인 페이지로 이동
-        // 기존에는 쿼리스트링으로 넘겼지만,
-        // 로그인 페이지에서 메시지가 확실하게 뜨도록 FlashAttribute 방식으로 전달
         if (loginUser == null) {
             redirectAttributes.addFlashAttribute("timeoutMessage", "오랫동안 이용이 없어 로그아웃되었습니다.");
             return "redirect:/login";
         }
 
-        // 새 비밀번호와 확인 비밀번호가 다르면 오류 메시지
-        // passwordChange.html 에서 출력하기 쉽도록 errorMessage 이름으로 통일
         if (!newPw.equals(confirmPw)) {
             redirectAttributes.addFlashAttribute("errorMessage", "새 비밀번호가 일치하지 않습니다.");
             return "redirect:/mypage/passwordChange";
         }
 
-        // 서비스에서 비밀번호 변경 처리
         boolean result = mypageService.changePassword(loginUser.getMemberNo(), currentPw, newPw);
 
-        // 현재 비밀번호가 틀렸거나 회원정보가 없으면 실패 메시지
         if (!result) {
             redirectAttributes.addFlashAttribute("errorMessage", "현재 비밀번호가 올바르지 않습니다.");
             return "redirect:/mypage/passwordChange";
         }
 
-        // 비밀번호 변경 성공 시 세션 끊기
         session.invalidate();
 
-        // 성공 메시지를 로그인 페이지로 전달
-        // redirect:/login?pwChanged=true 대신 FlashAttribute 사용
         redirectAttributes.addFlashAttribute("successMessage", "비밀번호가 정상적으로 변경되었습니다. 다시 로그인해주세요.");
 
-        // 성공 후 로그인 페이지로 이동
         return "redirect:/login";
     }
 
@@ -142,18 +125,14 @@ public class MypageController {
     public String deleteMember(HttpSession session) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
-        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
 
-        // 회원 탈퇴 처리
         mypageService.deleteMember(loginUser.getMemberNo());
 
-        // 세션 종료
         session.invalidate();
 
-        // 탈퇴 후 로그인 페이지로 이동
         return "redirect:/login";
     }
 
@@ -162,12 +141,10 @@ public class MypageController {
     public String consultHistory(HttpSession session, Model model) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
-        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
 
-        // 상담내역 조회
         List<Mypage> list = mypageService.getConsultHistory(loginUser.getMemberNo());
 
         model.addAttribute("consultList", list);
@@ -181,12 +158,10 @@ public class MypageController {
     public String boardHistory(HttpSession session, Model model) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
-        // 로그인 안 되어 있으면 로그인 페이지로 이동
         if (loginUser == null) {
             return "redirect:/login";
         }
 
-        // 문의 내역 조회
         List<Mypage> list = mypageService.getBoardHistory(loginUser.getMemberNo());
 
         model.addAttribute("boardList", list);
@@ -195,54 +170,6 @@ public class MypageController {
         return "client/mypage/boardHistory";
     }
 
-    
-    // 관심 차량 목록
-    /*@GetMapping("/mypage/wishlist")
-    public String wishlist(HttpSession session, Model model) {
-        Login loginUser = (Login) session.getAttribute("loginUser");
-
-        if (loginUser == null) {
-            return "redirect:/login";
-        }
-
-        List<Wishlist> wishlist = mypageService.getWishlist(loginUser.getMemberNo());
-
-        model.addAttribute("wishlist", wishlist);
-        model.addAttribute("loginUser", loginUser);
-
-        return "client/mypage/wishlist";
-    }
-
-    // 관심 차량 등록 / 취소
-        @PostMapping("/mypage/wishlist/toggle")
-    public String toggleWishlist(@RequestParam("carId") Long carId,
-                                 HttpSession session) {
-        Login loginUser = (Login) session.getAttribute("loginUser");
-
-        if (loginUser == null) {
-            return "redirect:/login";
-        }
-
-        mypageService.toggleWishlist(loginUser.getMemberNo(), carId);
-
-        return "redirect:/mypage/wishlist";
-    }*/
-
-    // 관심 차량 선택 삭제
-   /* @PostMapping("/mypage/wishlist/delete")
-    public String deleteWishlist(@RequestParam("wishlistNo") Long wishlistNo,
-                                 HttpSession session) {
-        Login loginUser = (Login) session.getAttribute("loginUser");
-
-        if (loginUser == null) {
-            return "redirect:/login";
-        }
-
-        mypageService.deleteWishlist(wishlistNo, loginUser.getMemberNo());
-
-        return "redirect:/mypage/wishlist";
-    }*/
- 
     // 내 정보 수정 화면
     @GetMapping("/mypage/update")
     public String updateForm(HttpSession session, Model model) {
