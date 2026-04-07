@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,25 +25,34 @@ public class MemberController {
 
     // 회원가입 저장
     @PostMapping("/member/join")
-    public String join(Member member, Model model, RedirectAttributes redirectAttributes) {
+    public String join(Member member, RedirectAttributes redirectAttributes) {
         try {
             memberService.join(member);
 
             // 회원가입 성공 메시지 전달
-            model.addAttribute("joinSuccess", "회원가입이 완료되었습니다. 로그인해주세요.");
-            
-            // 다시 회원가입 페이지를 열어줌
-            // 여기서 메시지창을 띄울 예정
-            return "client/member/joinForm";
+            // redirect 시 1회성으로 로그인 페이지에 전달됨
+            redirectAttributes.addFlashAttribute("joinSuccess", "회원가입이 완료되었습니다. 로그인해주세요.");
 
+            // 회원가입 성공 후 로그인 페이지로 이동
+            return "redirect:/login";
 
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            return "redirect:/member/join";   // 실패 -> 회원가입 페이지
+
+            // 실패 메시지 전달
+            redirectAttributes.addFlashAttribute("joinError", e.getMessage());
+
+            // 실패 -> 회원가입 페이지
+            return "redirect:/member/join";
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/member/join";   // 오류 -> 회원가입 페이지
+
+            // 오류 메시지 전달
+            redirectAttributes.addFlashAttribute("joinError", "회원가입 중 오류가 발생했습니다.");
+
+            // 오류 -> 회원가입 페이지
+            return "redirect:/member/join";
         }
     }
 
@@ -60,6 +68,7 @@ public class MemberController {
 
         return result;
     }
+
     // 이메일 중복확인
     @GetMapping("/member/checkEmail")
     @ResponseBody
