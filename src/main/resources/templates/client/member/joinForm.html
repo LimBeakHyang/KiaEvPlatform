@@ -42,7 +42,7 @@ body {
 }
 
 .form-label {
-    width: 120px;
+    width: 160px;
     font-size: 20px;
     font-weight: 700;
     color: #000;
@@ -121,7 +121,7 @@ body {
 }
 
 .msg {
-    margin: -10px 0 18px 120px;
+    margin: -10px 0 18px 170px;
     font-size: 15px;
     font-weight: 700;
 }
@@ -205,6 +205,14 @@ body {
         </div>
 
         <div class="form-row">
+            <div class="form-label">비밀번호 확인</div>
+            <div class="form-field">
+                <input type="password" name="confirmPw" id="confirmPw" class="form-input" placeholder="비밀번호 확인 입력" maxlength="20" required>
+            </div>
+        </div>
+        <div id="pwMsg" class="msg"></div>
+
+        <div class="form-row">
             <div class="form-label">이름</div>
             <div class="form-field">
                 <input type="text" name="memberName" class="form-input" placeholder="이름 입력" required>
@@ -214,7 +222,7 @@ body {
         <div class="form-row">
             <div class="form-label">생년월일</div>
             <div class="form-field">
-                <input type="date" name="birthDate" class="form-input" required>
+                <input type="text" name="birthDate" id="birthDate" class="form-input" placeholder="생년월일 입력" maxlength="10" required>
             </div>
         </div>
 
@@ -279,6 +287,26 @@ body {
     </script>
 </th:block>
 
+<script th:inline="javascript">
+    (function() {
+        const originalFetch = window.fetch;
+        const checkIdUrl = /*[[@{/member/checkId}]]*/ '/member/checkId';
+        const checkEmailUrl = /*[[@{/member/checkEmail}]]*/ '/member/checkEmail';
+
+        window.fetch = function(resource, init) {
+            if (typeof resource === 'string') {
+                if (resource.startsWith('/member/checkId')) {
+                    resource = resource.replace('/member/checkId', checkIdUrl);
+                }
+                if (resource.startsWith('/member/checkEmail')) {
+                    resource = resource.replace('/member/checkEmail', checkEmailUrl);
+                }
+            }
+            return originalFetch(resource, init);
+        };
+    })();
+</script>
+
 <script>
 let isIdChecked = false;
 let isIdAvailable = false;
@@ -288,21 +316,66 @@ let isEmailAvailable = false;
 const loginIdInput = document.getElementById('loginId');
 const emailInput = document.getElementById('email');
 const phoneInput = document.getElementById('phone');
+const memberPwInput = document.getElementById('memberPw');
+const confirmPwInput = document.getElementById('confirmPw');
+const birthDateInput = document.getElementById('birthDate');
 
 loginIdInput.addEventListener('input', function () {
     isIdChecked = false;
     isIdAvailable = false;
     document.getElementById('idMsg').textContent = '';
+    document.getElementById('idMsg').className = 'msg';
 });
 
 emailInput.addEventListener('input', function () {
     isEmailChecked = false;
     isEmailAvailable = false;
     document.getElementById('emailMsg').textContent = '';
+    document.getElementById('emailMsg').className = 'msg';
+});
+
+memberPwInput.addEventListener('input', function () {
+    const pwMsg = document.getElementById('pwMsg');
+
+    if (confirmPwInput.value === '') {
+        pwMsg.textContent = '';
+        pwMsg.className = 'msg';
+        return;
+    }
+
+    if (memberPwInput.value === confirmPwInput.value) {
+        pwMsg.textContent = '비밀번호가 일치합니다.';
+        pwMsg.className = 'msg success';
+    } else {
+        pwMsg.textContent = '비밀번호가 일치하지 않습니다.';
+        pwMsg.className = 'msg error';
+    }
+});
+
+confirmPwInput.addEventListener('input', function () {
+    const pwMsg = document.getElementById('pwMsg');
+
+    if (confirmPwInput.value === '') {
+        pwMsg.textContent = '';
+        pwMsg.className = 'msg';
+        return;
+    }
+
+    if (memberPwInput.value === confirmPwInput.value) {
+        pwMsg.textContent = '비밀번호가 일치합니다.';
+        pwMsg.className = 'msg success';
+    } else {
+        pwMsg.textContent = '비밀번호가 일치하지 않습니다.';
+        pwMsg.className = 'msg error';
+    }
 });
 
 phoneInput.addEventListener('input', function () {
     let value = phoneInput.value.replace(/[^0-9]/g, '');
+
+    if (value.length > 11) {
+        value = value.substring(0, 11);
+    }
 
     if (value.length < 4) {
         phoneInput.value = value;
@@ -310,6 +383,22 @@ phoneInput.addEventListener('input', function () {
         phoneInput.value = value.substring(0, 3) + '-' + value.substring(3);
     } else {
         phoneInput.value = value.substring(0, 3) + '-' + value.substring(3, 7) + '-' + value.substring(7, 11);
+    }
+});
+
+birthDateInput.addEventListener('input', function () {
+    let value = birthDateInput.value.replace(/[^0-9]/g, '');
+
+    if (value.length > 8) {
+        value = value.substring(0, 8);
+    }
+
+    if (value.length >= 5) {
+        birthDateInput.value = value.substring(0, 4) + '-' + value.substring(4, 6) + '-' + value.substring(6, 8);
+    } else if (value.length >= 3) {
+        birthDateInput.value = value.substring(0, 4) + '-' + value.substring(4, 6);
+    } else {
+        birthDateInput.value = value;
     }
 });
 
@@ -323,19 +412,21 @@ function checkDuplicateId() {
         return;
     }
 
-    fetch('/member/checkId', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'loginId=' + encodeURIComponent(loginId)
+    fetch('/member/checkId?loginId=' + encodeURIComponent(loginId), {
+        method: 'GET'
     })
     .then(response => response.json())
     .then(data => {
         isIdChecked = true;
         isIdAvailable = !data.duplicate;
-        idMsg.textContent = data.message;
-        idMsg.className = data.duplicate ? 'msg error' : 'msg success';
+
+        if (data.duplicate) {
+            idMsg.textContent = '이미 사용중인 아이디 입니다.';
+            idMsg.className = 'msg error';
+        } else {
+            idMsg.textContent = '사용 가능한 아이디 입니다.';
+            idMsg.className = 'msg success';
+        }
     })
     .catch(() => {
         idMsg.textContent = '아이디 중복확인 중 오류가 발생했습니다.';
@@ -360,19 +451,21 @@ function checkEmailDuplicate() {
         return;
     }
 
-    fetch('/member/checkEmail', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'email=' + encodeURIComponent(email)
+    fetch('/member/checkEmail?email=' + encodeURIComponent(email), {
+        method: 'GET'
     })
     .then(response => response.json())
     .then(data => {
         isEmailChecked = true;
         isEmailAvailable = !data.duplicate;
-        emailMsg.textContent = data.message;
-        emailMsg.className = data.duplicate ? 'msg error' : 'msg success';
+
+        if (data.duplicate) {
+            emailMsg.textContent = '이미 사용중인 이메일 입니다.';
+            emailMsg.className = 'msg error';
+        } else {
+            emailMsg.textContent = '사용 가능한 이메일 입니다.';
+            emailMsg.className = 'msg success';
+        }
     })
     .catch(() => {
         emailMsg.textContent = '이메일 중복확인 중 오류가 발생했습니다.';
@@ -413,6 +506,7 @@ function searchPostcode() {
 
 document.getElementById('joinForm').addEventListener('submit', function (e) {
     const phone = phoneInput.value.trim();
+    const birthDate = birthDateInput.value.trim();
 
     if (!isIdChecked || !isIdAvailable) {
         alert('아이디 중복확인을 완료해주세요.');
@@ -424,6 +518,20 @@ document.getElementById('joinForm').addEventListener('submit', function (e) {
     if (!isEmailChecked || !isEmailAvailable) {
         alert('이메일 중복확인을 완료해주세요.');
         emailInput.focus();
+        e.preventDefault();
+        return;
+    }
+
+    if (memberPwInput.value !== confirmPwInput.value) {
+        alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+        confirmPwInput.focus();
+        e.preventDefault();
+        return;
+    }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(birthDate)) {
+        alert('생년월일을 YYYY-MM-DD 형식으로 입력해주세요.');
+        birthDateInput.focus();
         e.preventDefault();
         return;
     }

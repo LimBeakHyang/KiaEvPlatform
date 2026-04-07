@@ -160,6 +160,59 @@ body {
 	color: #1565c0;
 	border: 1px solid #c9def7;
 }
+
+/* ===== 추가: 회원가입 성공 메시지 모달 ===== */
+.modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.45);
+	display: none;
+	justify-content: center;
+	align-items: center;
+	z-index: 9999;
+}
+
+.modal-box {
+	width: 360px;
+	background: #fff;
+	border-radius: 18px;
+	padding: 30px 24px 24px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+	text-align: center;
+}
+
+.modal-title {
+	font-size: 22px;
+	font-weight: 800;
+	color: #001b36;
+	margin-bottom: 14px;
+}
+
+.modal-text {
+	font-size: 16px;
+	color: #333;
+	margin-bottom: 24px;
+	line-height: 1.5;
+}
+
+.modal-btn {
+	min-width: 100px;
+	height: 44px;
+	border: none;
+	border-radius: 10px;
+	background: #001b36;
+	color: #fff;
+	font-size: 15px;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.modal-btn:hover {
+	background: #00264b;
+}
 </style>
 </head>
 <body>
@@ -212,12 +265,55 @@ body {
 		</div>
 	</section>
 
+	<!-- 추가: 회원가입 성공 메시지 모달 -->
+	<div id="joinSuccessModal" class="modal-overlay" th:if="${joinSuccess != null}">
+		<div class="modal-box">
+			<div class="modal-title">회원가입 완료</div>
+			<div class="modal-text" th:text="${joinSuccess}"></div>
+			<button type="button" class="modal-btn" onclick="closeJoinSuccessModal()">확인</button>
+		</div>
+	</div>
+
 	<th:block th:replace="~{common/footer :: footer}"></th:block>
 
+	<!-- 기존 alert가 떠도 화면에 안보이게 무효화 -->
+	<th:block th:if="${joinSuccess != null}">
+		<script>
+			window.alert = function() {};
+		</script>
+	</th:block>
+
+	<!-- 기존 alert 코드 유지 -->
 	<th:block th:if="${joinSuccess != null}">
 		<script>
 			alert('회원가입 성공! 로그인해주세요.');
 		</script>
 	</th:block>
+
+	<!-- 추가: 성공 메시지창 자동 숨김 -->
+	<script>
+		window.onload = function() {
+			const successBox = document.querySelector(".success-box");
+			if (successBox) {
+				setTimeout(function() {
+					successBox.style.transition = "opacity 0.5s ease";
+					successBox.style.opacity = "0";
+				}, 2500);
+			}
+
+			const modal = document.getElementById("joinSuccessModal");
+			if (modal) {
+				modal.style.display = "flex";
+			}
+		};
+
+		// 추가: 확인 버튼 클릭 시 로그인 페이지 유지 + 모달만 닫기
+		function closeJoinSuccessModal() {
+			const modal = document.getElementById("joinSuccessModal");
+			if (modal) {
+				modal.style.display = "none";
+			}
+		}
+	</script>
 </body>
 </html>
