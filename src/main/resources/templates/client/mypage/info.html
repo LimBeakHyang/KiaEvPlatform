@@ -13,92 +13,97 @@ body {
 
 .mypage-container {
     display: flex;
-    gap: 30px;
+    gap: 26px;
     width: 1200px;
-    margin: 50px auto;
+    margin: 30px auto;
 }
 
 .side-menu {
-    width: 220px;
-    background: #071b2f;
+    width: 200px;
+    background: #001a33;
     color: white;
-    padding: 30px 20px;
-    border-radius: 15px;
+    padding: 30px 18px;
+    border-radius: 18px;
     box-sizing: border-box;
+    min-height: 740px;
 }
 
 .side-menu h3 {
     text-align: center;
-    margin-bottom: 25px;
-    font-size: 22px;
+    margin-bottom: 30px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .side-menu a {
-    color: white;
     display: block;
-    margin-bottom: 15px;
+    background: #0b3258;
+    color: white;
     text-decoration: none;
-    background: #0d2b45;
-    padding: 12px;
+    padding: 14px 12px;
     border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 16px;
 }
 
 .side-menu a:hover {
-    background: #12395c;
+    background: #174a7c;
 }
 
-.side-menu a.active {
-    background: #12395c;
-    font-weight: bold;
-}
-
-.content {
+.content-box {
     flex: 1;
-    background: white;
-    padding: 40px;
+    background: #f7f7f7;
     border-radius: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-.content h2 {
-    margin-bottom: 30px;
-    color: #071b2f;
-}
-
-.info-row {
-    margin-bottom: 18px;
-}
-
-.info-row label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #071b2f;
-}
-
-.readonly-box {
-    width: 100%;
-    height: 45px;
-    line-height: 45px;
-    padding: 0 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background: #f8f8f8;
+    padding: 34px 36px;
     box-sizing: border-box;
 }
 
-.btn-area {
-    margin-top: 30px;
+.content-box h2 {
+    margin: 0 0 26px 0;
+    font-size: 22px;
+    color: #001f3f;
 }
 
-.btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
     font-weight: bold;
-    background: #071b2f;
+    color: #111;
+}
+
+.form-control {
+    width: 100%;
+    height: 54px;
+    border: 1px solid #cfcfcf;
+    border-radius: 8px;
+    padding: 0 14px;
+    font-size: 16px;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.bottom-btn {
+    margin-top: 28px;
+}
+
+.btn-edit {
+    background: #001f3f;
     color: white;
+    border: none;
+    padding: 13px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-edit:hover {
+    background: #003366;
 }
 </style>
 </head>
@@ -107,62 +112,67 @@ body {
 <div class="mypage-container">
     <div class="side-menu">
         <h3>MY PAGE</h3>
-        <a href="/mypage/info" class="active">내 정보 확인</a>
+        <a href="/mypage/info">내 정보 확인</a>
         <a href="/mypage/consult">상담내역 조회</a>
-        <a href="/mypage/board">나의 문의 내역</a>
+        <a href="/mypage/inquiry">나의 문의 내역</a>
         <a href="/logout">로그아웃</a>
     </div>
 
-    <div class="content">
+    <div class="content-box">
         <h2>내 정보 조회</h2>
 
-        <div class="info-row">
+        <div class="form-group">
             <label>아이디</label>
-            <div class="readonly-box" th:text="${memberInfo.loginId}">kia123</div>
+            <input type="text" class="form-control" th:value="${loginUser.loginId}" readonly>
         </div>
 
-        <div class="info-row">
+        <div class="form-group">
             <label>이름</label>
-            <div class="readonly-box" th:text="${memberInfo.memberName}">홍길동</div>
+            <input type="text" class="form-control" th:value="${loginUser.memberName}" readonly>
         </div>
 
-        <div class="info-row">
+        <div class="form-group">
             <label>이메일</label>
-            <div class="readonly-box" th:text="${memberInfo.email}">test@test.com</div>
+            <input type="text" class="form-control" th:value="${loginUser.email}" readonly>
         </div>
 
-        <div class="info-row">
+        <div class="form-group">
             <label>전화번호</label>
-            <div class="readonly-box" th:text="${memberInfo.phone}">010-1234-5678</div>
+            <input type="text" class="form-control" th:value="${loginUser.phone}" readonly>
         </div>
 
-        <div class="info-row">
+        <div class="form-group">
             <label>주소</label>
-            <div class="readonly-box" th:text="${memberInfo.address}">서울 강남구</div>
+            <input type="text" class="form-control" th:value="${loginUser.address}" readonly>
         </div>
 
-        <div class="info-row">
+        <div class="form-group">
             <label>상세주소</label>
-            <div class="readonly-box" th:text="${memberInfo.detailAddress}">역삼동</div>
+            <input type="text" class="form-control" th:value="${loginUser.detailAddress}" readonly>
         </div>
 
-        <div class="info-row">
+        <div class="form-group">
             <label>우편번호</label>
-            <div class="readonly-box" th:text="${memberInfo.zipcode}">12345</div>
+            <input type="text" class="form-control" th:value="${loginUser.zipcode}" readonly>
         </div>
 
-        <div class="info-row">
+        <div class="form-group">
             <label>회원상태</label>
-           <!-- <div class="readonly-box" th:text="${memberInfo.memberStatus}">정상회원</div>
-        </div>-->
+            <input type="text" class="form-control" th:value="${loginUser.memberStatus}" readonly>
+        </div>
 
-       <!-- <div class="info-row">
+        <div class="form-group">
+            <label>가입일시</label>
+            <input type="text" class="form-control" th:value="${loginUser.joinDate}" readonly>
+        </div>
+
+        <div class="form-group">
             <label>회원번호</label>
-            <div class="readonly-box" th:text="${memberInfo.memberNo}">1</div>
-        </div>-->
+            <input type="text" class="form-control" th:value="${loginUser.memberNo}" readonly>
+        </div>
 
-        <div class="btn-area">
-            <button type="button" class="btn" onclick="location.href='/mypage/update'">수정하기</button>
+        <div class="bottom-btn">
+            <button type="button" class="btn-edit" onclick="location.href='/mypage/update'">수정하기</button>
         </div>
     </div>
 </div>

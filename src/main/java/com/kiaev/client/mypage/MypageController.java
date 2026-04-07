@@ -8,8 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kiaev.client.login.Login;
+import com.kiaev.client.login.LoginService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -18,6 +20,9 @@ public class MypageController {
 
     @Autowired
     private MypageService mypageService;
+    
+    @Autowired
+    private LoginService loginService;
 
     // 마이페이지 메인 화면
     @GetMapping("/mypage")
@@ -73,7 +78,7 @@ public class MypageController {
     }
 
     // 비밀번호 변경 페이지 이동
-    @GetMapping("/mypage/password")
+    @GetMapping("/mypage/passwordChange")
     public String passwordForm(HttpSession session) {
         Login loginUser = (Login) session.getAttribute("loginUser");
 
@@ -86,38 +91,41 @@ public class MypageController {
     }
 
     // 비밀번호 변경 처리
-    @PostMapping("/mypage/password")
-    public String changePassword(
-            @RequestParam("currentPw") String currentPw,
-            @RequestParam("newPw") String newPw,
-            @RequestParam("confirmPw") String confirmPw,
+    public String passwordChange(
+            @RequestParam("currentPw") String currentPw,   // 현재 비밀번호
+            @RequestParam("newPw") String newPw,           // 새 비밀번호
+            @RequestParam("confirmPw") String confirmPw,   // 새 비밀번호 확인
             HttpSession session,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
 
+        // 로그인 사용자 정보 가져오기
         Login loginUser = (Login) session.getAttribute("loginUser");
 
-        // 로그인 안 되어 있으면 로그인 페이지로 이동
+        // 로그인 정보가 없으면 로그인 페이지로 이동
         if (loginUser == null) {
-            return "redirect:/login";
+            return "redirect:/login?timeout=true";
         }
 
-        // 새 비밀번호와 확인 비밀번호가 다르면 에러
+        // 새 비밀번호와 확인 비밀번호가 다르면 오류 메시지
         if (!newPw.equals(confirmPw)) {
-            model.addAttribute("error", "새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-            return "client/mypage/passwordChange";
+            redirectAttributes.addFlashAttribute("error", "새 비밀번호가 일치하지 않습니다.");
+            return "redirect:/mypage/passwordChange";
         }
 
-        // 현재 비밀번호 확인 후 변경
+        // 서비스에서 비밀번호 변경 처리
         boolean result = mypageService.changePassword(loginUser.getMemberNo(), currentPw, newPw);
 
-        // 현재 비밀번호가 틀리면 다시 변경 페이지로 이동
+        // 현재 비밀번호가 틀렸거나 회원정보가 없으면 실패 메시지
         if (!result) {
-            model.addAttribute("error", "현재 비밀번호가 틀렸습니다.");
-            return "client/mypage/passwordChange";
+            redirectAttributes.addFlashAttribute("error", "현재 비밀번호가 올바르지 않습니다.");
+            return "redirect:/mypage/passwordChange";
         }
 
-        // 변경 성공 시 내 정보 페이지로 이동
-        return "redirect:/mypage/info";
+        // 비밀번호 변경 성공 시 세션 끊기
+        session.invalidate();
+
+        // 성공 후 로그인 페이지로 이동
+        return "redirect:/login?pwChanged=true";
     }
 
     // 회원 탈퇴 처리
