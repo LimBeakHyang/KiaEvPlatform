@@ -75,4 +75,17 @@ public class Board {
     // 14. 삭제여부 (Null 불가, 기본값 N)
     @Column(name = "deleted_yn", nullable = false, length = 1)
     private String deletedYn = "N";
+    
+    // 15. 숨김여부 (Y/N)
+    @Builder.Default // @Builder를 사용할 때 아래 초기값("N")이 무시되지 않도록 해줍니다.
+    @Column(name = "hidden", length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
+    private String hidden = "N"; // Java 객체 생성 시 기본값 'N'
+    
+    // 16. 공지사항 여부 (Y/N)
+    @Column(name = "NOTICE_YN")
+    private String noticeYn = "N"; 
+
+    // 17. 우선순위 
+    @Column(name = "PRIORITY")
+    private Integer priority = 0; 
 }
