@@ -46,7 +46,6 @@
 
 /* =====================================================
    상단 요약 카드
-   - 기존 3개 카드 + 완료 상담 건수 1개 추가
 ===================================================== */
 .stats-summary-grid {
 	display: grid;
@@ -274,8 +273,6 @@
 
 		<!-- =====================================================
 		     좌측 사이드바
-		     - 현재 페이지는 통계 활성화
-		     - 로그아웃 버튼 유지
 		===================================================== -->
 		<aside class="sidebar">
 			<a th:href="@{/dealer/main}" class="logo">KIA EV Dealer</a>
@@ -304,8 +301,6 @@
 
 			<!-- =========================
 			     통계 요약 카드
-			     - 기존 기능 유지
-			     - 완료 상담 건수 카드 추가
 			========================= -->
 			<section class="panel">
 				<div class="panel-header">
@@ -487,7 +482,6 @@
 		/**
 		 * 금액 축 표시용 함수
 		 * - 원 단위를 만원 단위로 변환
-		 * - 예: 50000000 -> 5,000만원
 		 */
 		function formatManwon(value) {
 			if (value == null || isNaN(value)) {
@@ -502,9 +496,9 @@
 		 * - 빈 데이터 1칸을 뒤에 추가
 		 */
 		function makeSafeChartData(labels, counts, amounts) {
-			const safeLabels = Array.isArray(labels) ? [ ...labels ] : [];
-			const safeCounts = Array.isArray(counts) ? [ ...counts ] : [];
-			const safeAmounts = Array.isArray(amounts) ? [ ...amounts ] : [];
+			const safeLabels = Array.isArray(labels) ? [...labels] : [];
+			const safeCounts = Array.isArray(counts) ? [...counts] : [];
+			const safeAmounts = Array.isArray(amounts) ? [...amounts] : [];
 
 			if (safeLabels.length === 1) {
 				safeLabels.push('');
@@ -513,9 +507,9 @@
 			}
 
 			return {
-				labels : safeLabels,
-				counts : safeCounts,
-				amounts : safeAmounts
+				labels: safeLabels,
+				counts: safeCounts,
+				amounts: safeAmounts
 			};
 		}
 
@@ -554,7 +548,7 @@
 		// =========================
 		// 서버에서 전달받은 데이터
 		// =========================
-		const consultStatusLabels = [ '대기', '진행중', '완료' ];
+		const consultStatusLabels = ['대기', '진행중', '완료'];
 		const consultStatusData = [
 			/*[[${dashboard != null ? dashboard.waitingConsultCount : 0}]]*/0,
 			/*[[${dashboard != null ? dashboard.inProgressConsultCount : 0}]]*/0,
@@ -571,8 +565,6 @@
 
 		// =========================
 		// 상담 상태 도넛 차트
-		// - 전체 값이 0이면 안내 문구 표시
-		// - 밝은 포인트 컬러로 변경
 		// =========================
 		const consultCtx = document.getElementById('consultStatusChart');
 		const consultTotal = consultStatusData.reduce(function(sum, value) {
@@ -584,38 +576,38 @@
 				showChartEmptyMessage('consultStatusChart', 'consultStatusChartWrap', '상담 상태 데이터가 없습니다.');
 			} else {
 				new Chart(consultCtx, {
-					type : 'doughnut',
-					data : {
-						labels : consultStatusLabels,
-						datasets : [ {
-							label : '상담 상태',
-							data : consultStatusData,
-							backgroundColor : [ '#60A5FA', '#F59E0B', '#34D399' ],
-							hoverBackgroundColor : [ '#3B82F6', '#D97706', '#10B981' ],
-							borderColor : '#FFFFFF',
-							borderWidth : 2
-						} ]
+					type: 'doughnut',
+					data: {
+						labels: consultStatusLabels,
+						datasets: [{
+							label: '상담 상태',
+							data: consultStatusData,
+							backgroundColor: ['#60A5FA', '#F59E0B', '#34D399'],
+							hoverBackgroundColor: ['#3B82F6', '#D97706', '#10B981'],
+							borderColor: '#FFFFFF',
+							borderWidth: 2
+						}]
 					},
-					options : {
-						responsive : true,
-						maintainAspectRatio : false,
-						cutout : '58%',
-						plugins : {
-							legend : {
-								position : 'bottom',
-								labels : {
-									boxWidth : 18,
-									boxHeight : 10,
-									padding : 14,
-									font : {
-										size : 12,
-										weight : '600'
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						cutout: '58%',
+						plugins: {
+							legend: {
+								position: 'bottom',
+								labels: {
+									boxWidth: 18,
+									boxHeight: 10,
+									padding: 14,
+									font: {
+										size: 12,
+										weight: '600'
 									}
 								}
 							},
-							tooltip : {
-								callbacks : {
-									label : function(context) {
+							tooltip: {
+								callbacks: {
+									label: function(context) {
 										return context.label + ' : ' + context.raw + '건';
 									}
 								}
@@ -628,9 +620,6 @@
 
 		// =========================
 		// 월별 판매 차트
-		// - 판매 건수 / 판매 금액 이중축
-		// - 금액 축은 만원 단위로 표시
-		// - 밝은 색상으로 변경
 		// =========================
 		const monthlyCtx = document.getElementById('monthlySalesChart');
 
@@ -641,87 +630,87 @@
 				const safeMonthlyData = makeSafeChartData(monthlyLabels, monthlyCounts, monthlyAmounts);
 
 				new Chart(monthlyCtx, {
-					type : 'bar',
-					data : {
-						labels : safeMonthlyData.labels,
-						datasets : [ {
-							label : '판매 건수',
-							data : safeMonthlyData.counts,
-							backgroundColor : '#60A5FA',
-							borderRadius : 8,
-							maxBarThickness : 48,
-							yAxisID : 'y'
+					type: 'bar',
+					data: {
+						labels: safeMonthlyData.labels,
+						datasets: [{
+							label: '판매 건수',
+							data: safeMonthlyData.counts,
+							backgroundColor: '#60A5FA',
+							borderRadius: 8,
+							maxBarThickness: 48,
+							yAxisID: 'y'
 						}, {
-							label : '판매 금액',
-							data : safeMonthlyData.amounts,
-							backgroundColor : '#F59E0B',
-							borderRadius : 8,
-							maxBarThickness : 48,
-							yAxisID : 'y1'
-						} ]
+							label: '판매 금액',
+							data: safeMonthlyData.amounts,
+							backgroundColor: '#F59E0B',
+							borderRadius: 8,
+							maxBarThickness: 48,
+							yAxisID: 'y1'
+						}]
 					},
-					options : {
-						responsive : true,
-						maintainAspectRatio : false,
-						interaction : {
-							mode : 'index',
-							intersect : false
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						interaction: {
+							mode: 'index',
+							intersect: false
 						},
-						scales : {
-							x : {
-								grid : {
-									display : false
+						scales: {
+							x: {
+								grid: {
+									display: false
 								},
-								ticks : {
-									font : {
-										size : 12,
-										weight : '600'
+								ticks: {
+									font: {
+										size: 12,
+										weight: '600'
 									}
 								}
 							},
-							y : {
-								beginAtZero : true,
-								position : 'left',
-								grid : {
-									color : '#E5E7EB'
+							y: {
+								beginAtZero: true,
+								position: 'left',
+								grid: {
+									color: '#E5E7EB'
 								},
-								title : {
-									display : false
+								title: {
+									display: false
 								},
-								ticks : {
-									precision : 0
+								ticks: {
+									precision: 0
 								}
 							},
-							y1 : {
-								beginAtZero : true,
-								position : 'right',
-								grid : {
-									drawOnChartArea : false
+							y1: {
+								beginAtZero: true,
+								position: 'right',
+								grid: {
+									drawOnChartArea: false
 								},
-								title : {
-									display : false
+								title: {
+									display: false
 								},
-								ticks : {
-									callback : function(value) {
+								ticks: {
+									callback: function(value) {
 										return formatManwon(value);
 									}
 								}
 							}
 						},
-						plugins : {
-							legend : {
-								position : 'bottom',
-								labels : {
-									padding : 14,
-									font : {
-										size : 12,
-										weight : '600'
+						plugins: {
+							legend: {
+								position: 'bottom',
+								labels: {
+									padding: 14,
+									font: {
+										size: 12,
+										weight: '600'
 									}
 								}
 							},
-							tooltip : {
-								callbacks : {
-									label : function(context) {
+							tooltip: {
+								callbacks: {
+									label: function(context) {
 										if (context.dataset.label === '판매 금액') {
 											return context.dataset.label + ' : ' + formatCurrency(context.raw);
 										}
@@ -737,9 +726,6 @@
 
 		// =========================
 		// 차량 종류별 판매 차트
-		// - 판매 건수 / 판매 금액 이중축
-		// - 금액 축은 만원 단위로 표시
-		// - 밝은 색상으로 변경
 		// =========================
 		const carModelCtx = document.getElementById('carModelSalesChart');
 
@@ -750,87 +736,87 @@
 				const safeCarModelData = makeSafeChartData(carModelLabels, carModelCounts, carModelAmounts);
 
 				new Chart(carModelCtx, {
-					type : 'bar',
-					data : {
-						labels : safeCarModelData.labels,
-						datasets : [ {
-							label : '판매 건수',
-							data : safeCarModelData.counts,
-							backgroundColor : '#34D399',
-							borderRadius : 8,
-							maxBarThickness : 48,
-							yAxisID : 'y'
+					type: 'bar',
+					data: {
+						labels: safeCarModelData.labels,
+						datasets: [{
+							label: '판매 건수',
+							data: safeCarModelData.counts,
+							backgroundColor: '#34D399',
+							borderRadius: 8,
+							maxBarThickness: 48,
+							yAxisID: 'y'
 						}, {
-							label : '판매 금액',
-							data : safeCarModelData.amounts,
-							backgroundColor : '#F59E0B',
-							borderRadius : 8,
-							maxBarThickness : 48,
-							yAxisID : 'y1'
-						} ]
+							label: '판매 금액',
+							data: safeCarModelData.amounts,
+							backgroundColor: '#F59E0B',
+							borderRadius: 8,
+							maxBarThickness: 48,
+							yAxisID: 'y1'
+						}]
 					},
-					options : {
-						responsive : true,
-						maintainAspectRatio : false,
-						interaction : {
-							mode : 'index',
-							intersect : false
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						interaction: {
+							mode: 'index',
+							intersect: false
 						},
-						scales : {
-							x : {
-								grid : {
-									display : false
+						scales: {
+							x: {
+								grid: {
+									display: false
 								},
-								ticks : {
-									font : {
-										size : 12,
-										weight : '600'
+								ticks: {
+									font: {
+										size: 12,
+										weight: '600'
 									}
 								}
 							},
-							y : {
-								beginAtZero : true,
-								position : 'left',
-								grid : {
-									color : '#E5E7EB'
+							y: {
+								beginAtZero: true,
+								position: 'left',
+								grid: {
+									color: '#E5E7EB'
 								},
-								title : {
-									display : false
+								title: {
+									display: false
 								},
-								ticks : {
-									precision : 0
+								ticks: {
+									precision: 0
 								}
 							},
-							y1 : {
-								beginAtZero : true,
-								position : 'right',
-								grid : {
-									drawOnChartArea : false
+							y1: {
+								beginAtZero: true,
+								position: 'right',
+								grid: {
+									drawOnChartArea: false
 								},
-								title : {
-									display : false
+								title: {
+									display: false
 								},
-								ticks : {
-									callback : function(value) {
+								ticks: {
+									callback: function(value) {
 										return formatManwon(value);
 									}
 								}
 							}
 						},
-						plugins : {
-							legend : {
-								position : 'bottom',
-								labels : {
-									padding : 14,
-									font : {
-										size : 12,
-										weight : '600'
+						plugins: {
+							legend: {
+								position: 'bottom',
+								labels: {
+									padding: 14,
+									font: {
+										size: 12,
+										weight: '600'
 									}
 								}
 							},
-							tooltip : {
-								callbacks : {
-									label : function(context) {
+							tooltip: {
+								callbacks: {
+									label: function(context) {
 										if (context.dataset.label === '판매 금액') {
 											return context.dataset.label + ' : ' + formatCurrency(context.raw);
 										}

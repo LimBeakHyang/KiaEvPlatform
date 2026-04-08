@@ -118,6 +118,10 @@ public class DashboardRepository {
 	/**
 	 * 차량 종류별 판매 통계 조회
 	 *
+	 * 핵심 보완 사항 - 기존 INNER JOIN 을 LEFT JOIN 으로 변경 - sales_tbl 에 판매 데이터가 존재하지만
+	 * car_tbl 과 조인이 실패하는 경우에도 판매 데이터가 완전히 누락되지 않도록 방어 - model_name 이 null 또는 공백이면
+	 * "미분류 차량" 으로 표시
+	 *
 	 * @param dealerNo 딜러 번호
 	 * @return 차량 종류별 판매 통계 목록
 	 */
@@ -125,15 +129,15 @@ public class DashboardRepository {
 
 		String sql = """
 				SELECT
-				    c.model_name AS model_name,
+				    COALESCE(NULLIF(TRIM(c.model_name), ''), '미분류 차량') AS model_name,
 				    COUNT(*) AS sales_count,
 				    COALESCE(SUM(s.sales_amount), 0) AS sales_amount
 				FROM sales_tbl s
-				INNER JOIN car_tbl c
-				        ON s.car_no = c.car_no
+				LEFT JOIN car_tbl c
+				       ON s.car_no = c.car_no
 				WHERE s.dealer_no = :dealerNo
-				GROUP BY c.model_name
-				ORDER BY sales_count DESC, c.model_name ASC
+				GROUP BY COALESCE(NULLIF(TRIM(c.model_name), ''), '미분류 차량')
+				ORDER BY sales_count DESC, model_name ASC
 				""";
 
 		List<?> results = entityManager.createNativeQuery(sql).setParameter("dealerNo", dealerNo).getResultList();
@@ -144,8 +148,14 @@ public class DashboardRepository {
 			Object[] row = (Object[]) rowObj;
 
 			CarModelSalesStat stat = new CarModelSalesStat();
-			stat.setModelName(row[0] != null ? row[0].toString() : "");
+
+			// 차량 모델명
+			stat.setModelName(row[0] != null ? row[0].toString() : "미분류 차량");
+
+			// 판매 건수
 			stat.setSalesCount(toInteger(row[1]));
+
+			// 판매 금액 합계
 			stat.setSalesAmount(toInteger(row[2]));
 
 			list.add(stat);
