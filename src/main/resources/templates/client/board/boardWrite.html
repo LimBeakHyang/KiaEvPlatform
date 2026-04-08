@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>기아 전기차 - 문의글 작성</title>
+    <style>
+        .container { width: 800px; margin: 120px auto 50px; font-family: sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; }
+        th { background-color: #f4f4f4; width: 15%; text-align: center; }
+        input[type="text"], select { width: 90%; padding: 8px; border: 1px solid #ccc; }
+        textarea { width: 90%; height: 200px; padding: 8px; border: 1px solid #ccc; resize: none; }
+        .btn-group { text-align: center; margin-top: 20px; }
+        .btn { display: inline-block; padding: 10px 20px; color: white; text-decoration: none; border: none; cursor: pointer; font-size: 14px; margin: 0 5px; }
+        .btn-submit { background-color: #000; }
+        .btn-cancel { background-color: #6c757d; }
+    </style>
+</head>
+<body>
+<th:block th:replace="~{common/header :: header}"></th:block>
+
+    <div class="container">
+        <h2>✍️ 문의글 작성하기</h2>
+
+        <form th:action="@{/board/write}" method="post">
+            <table>
+                <tbody>
+                    <tr>
+                        <th>분류</th>
+                        <td>
+                            <select name="boardType">
+                                <option value="문의글">문의글</option>
+                                <option value="공지사항">공지사항</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>제목</th>
+                        <td>
+                            <input type="text" name="title" required placeholder="제목을 입력하세요">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>내용</th>
+                        <td>
+                            <textarea name="content" required placeholder="내용을 입력하세요"></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-submit">등록하기</button>
+                <a th:href="@{/board/list}" class="btn btn-cancel">취소</a>
+            </div>
+        </form>
+    </div>
+<th:block th:replace="~{common/footer :: footer}"></th:block>
+</body>
+</html>
