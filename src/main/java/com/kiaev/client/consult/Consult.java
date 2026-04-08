@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "CONSULT_TBL")
-public class ClientConsult {
+@Table(name = "consult_tbl")
+public class Consult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +61,6 @@ public class ClientConsult {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
-    // 🔥 생성 시 자동
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
@@ -74,13 +73,11 @@ public class ClientConsult {
             this.consultStatus = "대기";
         }
 
-        // 🔥 최초 생성 시에도 updatedDate 넣기
         if (this.updatedDate == null) {
             this.updatedDate = now;
         }
     }
 
-    // 🔥 수정 시 자동 업데이트
     @PreUpdate
     public void preUpdate() {
         this.updatedDate = LocalDateTime.now();

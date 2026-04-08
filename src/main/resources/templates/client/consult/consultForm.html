@@ -114,16 +114,9 @@
 
     <form id="consultForm" th:action="@{/consult/register}" method="post" onsubmit="return submitConsult()">
 
-        <!-- 테스트용 회원번호 / 실제 로그인 연동되면 컨트롤러에서 세션값으로 대체 -->
-        <input type="hidden" name="memberNo" id="memberNo" value="1">
-
-        <!-- 배정 전이라 null -->
+        <input type="hidden" name="memberNo" id="memberNo" value="">
         <input type="hidden" name="dealerNo" id="dealerNo">
-
-        <!-- 기본 상태 -->
         <input type="hidden" name="consultStatus" id="consultStatus" value="대기">
-
-        <!-- 관리자 메모는 처음엔 없음 -->
         <input type="hidden" name="consultMemo" id="consultMemo" value="">
 
         <div class="form-row">
@@ -134,16 +127,9 @@
                 <select onchange="setCarNo(this.value, this.options[this.selectedIndex].text)">
                     <option value="">선택</option>
                     <option value="1">EV3</option>
-                    <option value="2">EV3-GT</option>
-                    <option value="3">EV4</option>
-                    <option value="4">EV4-GT</option>
-                    <option value="5">EV5</option>
-                    <option value="6">EV5-GT</option>
-                    <option value="7">EV6</option>
-                    <option value="8">EV6-GT</option>
-                    <option value="9">EV9</option>
-                    <option value="10">EV9-GT</option>
-                    <option value="11">RAY EV</option>
+                    <option value="2">EV6</option>
+                    <option value="3">EV9</option>
+                    <option value="4">RAY EV</option>
                 </select>
             </div>
         </div>
@@ -230,7 +216,7 @@ function setFellowData(value) {
 
 function confirmCancel() {
     if (confirm("상담 신청을 취소하시겠습니까?")) {
-        location.href = "/";
+        location.href = "/main";
     }
 }
 
