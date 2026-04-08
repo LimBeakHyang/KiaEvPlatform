@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpSession;
  * 처리하지 않습니다.
  */
 @Controller
-public class ConsultController {
+public class DealerConsultController {
 
 	@Autowired
 	private ConsultService consultService;
