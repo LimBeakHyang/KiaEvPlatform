@@ -6,27 +6,26 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ClientConsultService {
+public class ConsultService {
 
-    private final ClientConsultRepository consultationRepository;
+    private final ConsultRepository consultationRepository;
 
     // 상담 저장
-    public ClientConsult save(ClientConsult consultation) {
+    public Consult save(Consult consultation) {
         return consultationRepository.save(consultation);
     }
 
     // 상담번호로 조회 (관리자/딜러용 전체 조회)
-    public ClientConsult findById(Long consultNo) {
+    public Consult findById(Long consultNo) {
         return consultationRepository.findById(consultNo).orElse(null);
     }
 
     // 상담번호 + 회원번호로 조회 (일반회원 본인 확인용)
-    public ClientConsult findByConsultNoAndMemberNo(Long consultNo, Long memberNo) {
+    public Consult findByConsultNoAndMemberNo(Long consultNo, Long memberNo) {
         return consultationRepository.findByConsultNoAndMemberNo(consultNo, memberNo).orElse(null);
     }
 
-    // 전체 상담 조회
-    public List<ClientConsult> findAll() {
+    public List<Consult> findAll() {
         return consultationRepository.findAll();
     }
 }
