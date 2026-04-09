@@ -5,11 +5,14 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MemberController {
@@ -17,17 +20,55 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+    // 약관동의 화면
+    @GetMapping("/member/terms")
+    public String termsForm() {
+        return "client/member/termsForm";
+    }
+
+    // 약관동의 처리
+    @PostMapping("/member/terms")
+    public String agreeTerms(
+            @RequestParam(value = "agreeService", required = false) String agreeService,
+            @RequestParam(value = "agreePrivacy", required = false) String agreePrivacy,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        // 필수 약관 미동의 시 다시 약관 페이지로 이동
+        if (agreeService == null || agreePrivacy == null) {
+            redirectAttributes.addFlashAttribute("termsError", "필수 약관에 동의해야 회원가입이 가능합니다.");
+            return "redirect:/member/terms";
+        }
+
+        // 약관동의 여부를 세션에 저장
+        session.setAttribute("termsAgreed", true);
+
+        // 회원가입 페이지로 이동
+        return "redirect:/member/join";
+    }
+
     // 회원가입 화면
     @GetMapping("/member/join")
-    public String joinForm() {
+    public String joinForm(HttpSession session, RedirectAttributes redirectAttributes) {
+        Boolean termsAgreed = (Boolean) session.getAttribute("termsAgreed");
+
+        // 약관동의 없이 회원가입 페이지 직접 접근 방지
+        if (termsAgreed == null || !termsAgreed) {
+            redirectAttributes.addFlashAttribute("termsError", "약관동의 후 회원가입이 가능합니다.");
+            return "redirect:/member/terms";
+        }
+
         return "client/member/joinForm";
     }
 
     // 회원가입 저장
     @PostMapping("/member/join")
-    public String join(Member member, RedirectAttributes redirectAttributes) {
+    public String join(Member member, RedirectAttributes redirectAttributes, HttpSession session) {
         try {
             memberService.join(member);
+
+            // 회원가입 완료 후 약관동의 세션 제거
+            session.removeAttribute("termsAgreed");
 
             // 회원가입 성공 메시지 전달
             // redirect 시 1회성으로 로그인 페이지에 전달됨
