@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ClientConsultRepository extends JpaRepository<ClientConsult, Long> {
+public interface ConsultRepository extends JpaRepository<Consult, Long> {
 
-    Optional<ClientConsult> findByConsultNoAndMemberNo(Long consultNo, Long memberNo);
+    Optional<Consult> findByConsultNoAndMemberNo(Long consultNo, Long memberNo);
 }
