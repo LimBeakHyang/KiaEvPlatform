@@ -12,8 +12,8 @@ CREATE TABLE member_tbl (
     address VARCHAR(255) NOT NULL,
     detail_address VARCHAR(255),
     member_status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
-    join_date DATETIME NOT NULL,
-    update_date DATETIME
+    join_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 SELECT DATABASE();
@@ -24,3 +24,4 @@ desc member_tbl;
 
 ALTER TABLE member_tbl
 ADD dealer_id VARCHAR(50);
+
