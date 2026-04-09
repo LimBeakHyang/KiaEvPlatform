@@ -2,6 +2,10 @@ package com.kiaev.client.board;
 
 import com.kiaev.client.board.Board;
 import com.kiaev.client.board.BoardService;
+import com.kiaev.client.login.Login;
+import com.kiaev.client.member.Member;
+
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -11,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
 
 import java.util.List;
 
@@ -71,6 +76,7 @@ public class BoardController {
 		return "client/board/boardWrite";
 	}
 
+	/*
 	// 4. 실제 글 작성 처리 (명세서의 POST /board/write)
 	@PostMapping("/write")
 	public String boardWriteProcess(@ModelAttribute Board board) {
@@ -78,7 +84,24 @@ public class BoardController {
 		// 저장이 끝나면 다시 목록 화면으로 알아서 이동(Redirect) 시킵니다.
 		return "redirect:/board/list";
 	}
+	*/
+	// 4. 실제 글 작성 처리
+    @PostMapping("/write")
+    public String boardWriteProcess(@ModelAttribute Board board, HttpSession session) {
+        // [중요] 세션에서 로그인한 회원 정보를 꺼냅니다.
+    	Login loginUser = (Login) session.getAttribute("loginUser");
+        
+        // [중요] 게시글 객체에 로그인한 회원의 번호를 심어줍니다.
+        // 그래야 나중에 마이페이지에서 "내 글"만 골라올 수 있어요!
+    	if (loginUser != null) {
+    		board.setMemberNo(loginUser.getMemberNo());
+    		}
 
+        boardService.saveBoard(board);
+        return "redirect:/board/list";
+    }
+
+	// 5. 글 수정 폼 이동  (인터셉터가 로그인 체크함)
 	@GetMapping("/edit")
 	public String boardEditForm(@RequestParam("boardNo") Long boardNo, Model model) {
 		// 1. 기존에 작성된 게시글 데이터를 DB에서 불러옵니다. (상세 조회 로직 재사용)
@@ -91,7 +114,8 @@ public class BoardController {
 		return "client/board/boardEdit";
 	}
 
-	// [8-3] 실제 게시글 수정 처리 (POST)
+	/*
+	// 6. 실제 게시글 수정 처리 (POST)
 	@PostMapping("/update")
 	public String boardUpdateProcess(@ModelAttribute Board board) {
 		// 1. 서비스의 수정 로직을 실행합니다.
@@ -100,8 +124,22 @@ public class BoardController {
 		// 2. 수정이 완벽하게 끝나면, 방금 수정한 그 글의 상세 페이지로 다시 휙! 하고 돌아가게 합니다.
 		return "redirect:/board/detail?boardNo=" + board.getBoardNo();
 	}
+	*/
+	
+	// 6. 실제 게시글 수정 처리
+    @PostMapping("/update")
+    public String boardUpdateProcess(@ModelAttribute Board board, HttpSession session) {
+    	Login loginUser = (Login) session.getAttribute("loginUser");
+        
+        if (loginUser != null) {
+            board.setMemberNo(loginUser.getMemberNo());
+        }
+        
+        boardService.updateBoard(board);
+        return "redirect:/board/detail?boardNo=" + board.getBoardNo();
+    }
 
-	// [9-1] 게시글 삭제 처리 (POST)
+	// 7. 게시글 삭제 처리 (POST)
 	@PostMapping("/delete")
 	public String boardDelete(@RequestParam("boardNo") Long boardNo) {
 		// 1. 서비스에게 "이 번호의 글을 지워줘!" 라고 명령합니다.
