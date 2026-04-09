@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kiaev.client.consult.Consult;
+import com.kiaev.client.consult.ConsultService;
 import com.kiaev.client.login.Login;
 import com.kiaev.client.login.LoginService;
 
@@ -18,195 +20,180 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class MypageController {
 
-	@Autowired
-	private MypageService mypageService;
+   @Autowired
+   private MypageService mypageService;
 
-	@Autowired
-	private LoginService loginService;
+   @Autowired
+   private LoginService loginService;
 
-	// 마이페이지 메인 화면
-	@GetMapping("/mypage")
-	public String mypageMain(HttpSession session, Model model) {
-		Login loginUser = (Login) session.getAttribute("loginUser");
+   @Autowired
+   private ConsultService consultService;
 
-		// 로그인 안 되어 있으면 로그인 페이지로 이동
-		if (loginUser == null) {
-			return "redirect:/login";
-		}
+   // 마이페이지 메인 화면
+   @GetMapping("/mypage")
+   public String mypageMain(HttpSession session, Model model) {
+      Login loginUser = (Login) session.getAttribute("loginUser");
 
-		// 관심 차량 목록 조회
-		List<Mypage> favoriteCars = mypageService.getFavoriteCars(loginUser.getMemberNo());
+      // 로그인 안 되어 있으면 로그인 페이지로 이동
+      if (loginUser == null) {
+         return "redirect:/login";
+      }
 
-		model.addAttribute("loginUser", loginUser);
-		model.addAttribute("favoriteCars", favoriteCars);
+   // 회원 정보 조회
+      Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
 
-		return "client/mypage/MypageMain";
-	}
+      model.addAttribute("loginUser", loginUser);
+      model.addAttribute("memberInfo", memberInfo);
 
-	// 내 정보 조회 화면
-	@GetMapping("/mypage/myinfo")
-	public String myInfo(HttpSession session, Model model) {
-		Login loginUser = (Login) session.getAttribute("loginUser");
+      return "client/mypage/myinfo";
+   }
 
-		// 로그인 안 되어 있으면 로그인 페이지로 이동
-		if (loginUser == null) {
-			return "redirect:/login";
-		}
+   // 내 정보 조회 화면
+   @GetMapping("/mypage/myinfo")
+   public String myInfo(HttpSession session, Model model) {
+      Login loginUser = (Login) session.getAttribute("loginUser");
 
-		// 회원 정보 조회
-		Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
+      // 로그인 안 되어 있으면 로그인 페이지로 이동
+      if (loginUser == null) {
+         return "redirect:/login";
+      }
 
-		model.addAttribute("loginUser", loginUser);
-		model.addAttribute("memberInfo", memberInfo);
+      // 회원 정보 조회
+      Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
 
-		return "client/mypage/myinfo";
-	}
+      model.addAttribute("loginUser", loginUser);
+      model.addAttribute("memberInfo", memberInfo);
 
-	// 내 정보 수정 처리
-	@PostMapping("/mypage/update")
-	public String updateMyInfo(Mypage mypage, HttpSession session) {
-		Login loginUser = (Login) session.getAttribute("loginUser");
+      return "client/mypage/myinfo";
+   }
 
-		// 로그인 안 되어 있으면 로그인 페이지로 이동
-		if (loginUser == null) {
-			return "redirect:/login";
-		}
+   // 내 정보 수정 처리
+   @PostMapping("/mypage/update")
+   public String updateMyInfo(Mypage mypage, HttpSession session) {
+      Login loginUser = (Login) session.getAttribute("loginUser");
 
-		// 세션에 저장된 회원번호 기준으로 수정
-		mypage.setMemberNo(loginUser.getMemberNo());
-		mypageService.updateMemberInfo(mypage);
+      // 로그인 안 되어 있으면 로그인 페이지로 이동
+      if (loginUser == null) {
+         return "redirect:/login";
+      }
 
-		return "redirect:/mypage/myinfo";
-	}
+      // 세션에 저장된 회원번호 기준으로 수정
+      mypage.setMemberNo(loginUser.getMemberNo());
+      mypageService.updateMemberInfo(mypage);
 
-	// 비밀번호 변경 페이지 이동
-	@GetMapping("/mypage/passwordChange")
-	public String passwordForm(HttpSession session, Model model) {
-		Login loginUser = (Login) session.getAttribute("loginUser");
+      return "redirect:/mypage/myinfo";
+   }
 
-		// 비밀번호 변경 성공 후에는 세션이 끊긴 상태에서도
-		// flash 값(passwordChangeSuccess)이 있으면 페이지를 한 번 보여주도록 처리
-		if (loginUser == null && !model.containsAttribute("passwordChangeSuccess")) {
-			return "redirect:/login";
-		}
+   // 비밀번호 변경 페이지 이동
+   @GetMapping("/mypage/passwordChange")
+   public String passwordForm(HttpSession session, Model model) {
+      Login loginUser = (Login) session.getAttribute("loginUser");
 
-		return "client/mypage/passwordChange";
-	}
+      // 비밀번호 변경 성공 후에는 세션이 끊긴 상태에서도
+      // flash 값(passwordChangeSuccess)이 있으면 페이지를 한 번 보여주도록 처리
+      if (loginUser == null && !model.containsAttribute("passwordChangeSuccess")) {
+         return "redirect:/login";
+      }
 
-	// 비밀번호 변경 처리
-	@PostMapping("/mypage/passwordChange")
-	public String passwordChange(@RequestParam("currentPw") String currentPw, // 현재 비밀번호
-			@RequestParam("newPw") String newPw, // 새 비밀번호
-			@RequestParam("confirmPw") String confirmPw, // 새 비밀번호 확인
-			HttpSession session, RedirectAttributes redirectAttributes) {
+      return "client/mypage/passwordChange";
+   }
 
-		// 로그인 사용자 정보 가져오기
-		Login loginUser = (Login) session.getAttribute("loginUser");
+   // 비밀번호 변경 처리
+   @PostMapping("/mypage/passwordChange")
+   public String passwordChange(@RequestParam("currentPw") String currentPw,
+         @RequestParam("newPw") String newPw,
+         @RequestParam("confirmPw") String confirmPw,
+         HttpSession session, RedirectAttributes redirectAttributes) {
 
-		// 로그인 정보가 없으면 로그인 페이지로 이동
-		if (loginUser == null) {
-			return "redirect:/login";
-		}
+      Login loginUser = (Login) session.getAttribute("loginUser");
 
-		// 새 비밀번호와 새 비밀번호 확인이 다르면 다시 비밀번호 변경 페이지로 이동
-		if (!newPw.equals(confirmPw)) {
-			redirectAttributes.addFlashAttribute("errorMessage", "새 비밀번호가 일치하지 않습니다.");
-			return "redirect:/mypage/passwordChange";
-		}
+      if (loginUser == null) {
+         return "redirect:/login";
+      }
 
-		// 비밀번호 변경 서비스 호출
-		boolean result = mypageService.changePassword(loginUser.getMemberNo(), currentPw, newPw);
+      if (!newPw.equals(confirmPw)) {
+         redirectAttributes.addFlashAttribute("errorMessage", "새 비밀번호가 일치하지 않습니다.");
+         return "redirect:/mypage/passwordChange";
+      }
 
-		// 현재 비밀번호가 틀리면 실패 메시지 출력
-		if (!result) {
-			redirectAttributes.addFlashAttribute("errorMessage", "현재 비밀번호가 올바르지 않습니다.");
-			return "redirect:/mypage/passwordChange";
-		}
+      boolean result = mypageService.changePassword(loginUser.getMemberNo(), currentPw, newPw);
 
-		// 비밀번호 변경 성공 시 세션 종료
-		session.invalidate();
+      if (!result) {
+         redirectAttributes.addFlashAttribute("errorMessage", "현재 비밀번호가 올바르지 않습니다.");
+         return "redirect:/mypage/passwordChange";
+      }
 
-		// 비밀번호 변경 페이지에서 성공 알럿을 띄우기 위한 flash 값 전달
-		redirectAttributes.addFlashAttribute("passwordChangeSuccess", true);
+      session.invalidate();
 
-		// 다시 비밀번호 변경 페이지로 이동
-		// -> 이 페이지에서 alert 띄운 후 로그인 페이지로 이동할 예정
-		return "redirect:/mypage/passwordChange";
-	}
+      redirectAttributes.addFlashAttribute("passwordChangeSuccess", true);
 
-	// 회원 탈퇴 처리
-	@GetMapping("/mypage/delete")
-	public String deleteMember(HttpSession session) {
-		Login loginUser = (Login) session.getAttribute("loginUser");
+      return "redirect:/mypage/passwordChange";
+   }
 
-		// 로그인 안 되어 있으면 로그인 페이지로 이동
-		if (loginUser == null) {
-			return "redirect:/login";
-		}
+   // 회원 탈퇴 처리
+   @GetMapping("/mypage/delete")
+   public String deleteMember(HttpSession session) {
+      Login loginUser = (Login) session.getAttribute("loginUser");
 
-		// 회원 탈퇴 처리
-		mypageService.deleteMember(loginUser.getMemberNo());
+      if (loginUser == null) {
+         return "redirect:/login";
+      }
 
-		// 세션 종료
-		session.invalidate();
+      mypageService.deleteMember(loginUser.getMemberNo());
 
-		return "redirect:/login";
-	}
+      session.invalidate();
 
-	// 상담내역 조회
-	@GetMapping("/mypage/consult")
-	public String consultHistory(HttpSession session, Model model) {
-		Login loginUser = (Login) session.getAttribute("loginUser");
+      return "redirect:/login";
+   }
 
-		// 로그인 안 되어 있으면 로그인 페이지로 이동
-		if (loginUser == null) {
-			return "redirect:/login";
-		}
+   // 상담내역 조회
+   @GetMapping("/mypage/consult")
+   public String consultHistory(HttpSession session, Model model) {
+      Login loginUser = (Login) session.getAttribute("loginUser");
 
-		// 상담내역 조회
-		List<Mypage> list = mypageService.getConsultHistory(loginUser.getMemberNo());
+      if (loginUser == null) {
+         return "redirect:/login";
+      }
 
-		model.addAttribute("consultList", list);
-		model.addAttribute("loginUser", loginUser);
+      List<Consult> list = consultService.findByMemberNo(loginUser.getMemberNo());
 
-		return "client/mypage/consultHistory";
-	}
+      model.addAttribute("consultList", list);
+      model.addAttribute("loginUser", loginUser);
 
-	// 문의 내역 조회
-	@GetMapping("/mypage/board")
-	public String boardHistory(HttpSession session, Model model) {
-		Login loginUser = (Login) session.getAttribute("loginUser");
+      return "client/mypage/consultHistory";
+   }
 
-		// 로그인 안 되어 있으면 로그인 페이지로 이동
-		if (loginUser == null) {
-			return "redirect:/login";
-		}
+   // 문의 내역 조회
+   @GetMapping("/mypage/board")
+   public String boardHistory(HttpSession session, Model model) {
+      Login loginUser = (Login) session.getAttribute("loginUser");
 
-		// 문의 내역 조회
-		List<Mypage> list = mypageService.getBoardHistory(loginUser.getMemberNo());
+      if (loginUser == null) {
+         return "redirect:/login";
+      }
 
-		model.addAttribute("boardList", list);
-		model.addAttribute("loginUser", loginUser);
+      List<Mypage> list = mypageService.getBoardHistory(loginUser.getMemberNo());
 
-		return "client/mypage/boardHistory";
-	}
+      model.addAttribute("boardList", list);
+      model.addAttribute("loginUser", loginUser);
 
-	// 내 정보 수정 화면
-	@GetMapping("/mypage/update")
-	public String updateForm(HttpSession session, Model model) {
-		Login loginUser = (Login) session.getAttribute("loginUser");
+      return "client/mypage/boardHistory";
+   }
 
-		// 로그인 안 되어 있으면 로그인 페이지로 이동
-		if (loginUser == null) {
-			return "redirect:/login";
-		}
+   // 내 정보 수정 화면
+   @GetMapping("/mypage/update")
+   public String updateForm(HttpSession session, Model model) {
+      Login loginUser = (Login) session.getAttribute("loginUser");
 
-		// 회원 정보 조회
-		Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
+      if (loginUser == null) {
+         return "redirect:/login";
+      }
 
-		model.addAttribute("loginUser", loginUser);
-		model.addAttribute("memberInfo", memberInfo);
+      Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
 
-		return "client/mypage/update";
-	}
+      model.addAttribute("loginUser", loginUser);
+      model.addAttribute("memberInfo", memberInfo);
+
+      return "client/mypage/update";
+   }
 }
