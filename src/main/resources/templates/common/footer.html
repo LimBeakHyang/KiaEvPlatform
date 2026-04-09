@@ -2,26 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <footer th:fragment="footer">
     <style>
-        /* 1. 푸터 바깥쪽 감싸는 영역: 배경색과 위쪽 선 담당 */
         .footer-wrap { 
             width: 100%;
-            background-color: #f8f8f8 !important; /* 기아차 느낌의 연한 회색 */
+            background-color: #f8f8f8 !important; 
             border-top: 1px solid #eeeeee; 
-            padding: 25px 0;    /* 상하 높이를 결정하는 결정적 수치 */
-            margin-top: 50px;   /* 본문과 푸터 사이의 외부 간격 */
-            clear: both;        /* 주변 요소 간섭 방지 */
+            /* [수정 1] 상하 여백을 20px로 (기존 25와 15의 중간) */
+            padding: 20px 0;    
+            /* [수정 2] 본문과의 간격을 40px로 (기존 50과 30의 중간) */
+            margin-top: 40px;   
+            clear: both;        
         }
 
-        /* 2. 푸터 내부 정렬 */
         .footer-inner { 
             max-width: 1200px; 
             margin: 0 auto; 
             text-align: center; 
         }
 
-        /* 3. 링크 메뉴 스타일 */
         .f-links { 
-            margin-bottom: 8px; /* 카피라이트와의 간격 */
+            /* [수정 3] 메뉴와 카피라이트 사이 간격을 6px로 조절 */
+            margin-bottom: 6px; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -29,30 +29,30 @@
 
         .f-links a { 
             text-decoration: none; 
-            color: #444 !important; /* 글자색을 조금 더 선명하게 */
+            color: #444 !important; 
             font-weight: 600;   
+            /* 글자 크기는 너무 작지 않게 14px 유지 */
             font-size: 14px;    
             transition: 0.2s;
         }
 
         .f-links a:hover { color: #000; }
         
-        /* 세로 구분선 */
         .f-links a:not(:last-child)::after {
             content: "";
             display: inline-block;
             width: 1px;        
-            height: 12px;      
+            height: 11px;      
             background-color: #ccc; 
-            margin: 0 20px;    
+            /* 선 사이 간격도 18px로 적당히 조절 */
+            margin: 0 18px;    
             vertical-align: middle; 
         }
 
-        /* 4. 카피라이트 스타일 */
         .f-copy { 
             color: #999;       
             font-size: 13px;   
-            letter-spacing: 0.3px;
+            letter-spacing: 0.25px;
             line-height: 1.2;
         }
     </style>

@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "member_tbl")
@@ -20,6 +21,9 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_no")
     private Long memberNo;
+    
+    @Transient
+    private String confirmPw;  // DB 저장 안 함, 확인용
 
     @Column(name = "login_id")
     private String loginId;
@@ -89,6 +93,14 @@ public class Member {
 
     public void setMemberPw(String memberPw) {
         this.memberPw = memberPw;
+    }
+    
+    public String getConfirmPw() {
+        return confirmPw;
+    }
+
+    public void setConfirmPw(String confirmPw) {
+        this.confirmPw = confirmPw;
     }
 
     public String getMemberName() {
