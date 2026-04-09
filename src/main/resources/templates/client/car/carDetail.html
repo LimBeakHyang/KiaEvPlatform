@@ -178,14 +178,13 @@ body { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; background-
 				</div>
 
 				<div class="action-btns">
-					<a th:href="@{/consult/form(carNo=${car.carNo})}"
-						class="btn btn-main">구매 상담 신청하기</a>
+    <a th:href="@{/consult/form(carNo=${car.carNo}, carName=${car.modelName})}" 
+       class="btn btn-main">구매 상담 신청하기</a>
 
-					<button id="wishBtn" class="btn btn-sub"
-						th:classappend="${isWish} ? 'active' : ''"
-						th:onclick="'toggleWishDetail(' + ${car.carNo} + ')'">관심
-						차량</button>
-				</div>
+    <button id="wishBtn" class="btn btn-sub"
+        th:classappend="${isWish} ? 'active' : ''"
+        th:onclick="'toggleWishDetail(' + ${car.carNo} + ')'">관심 차량</button>
+</div>
 			</div>
 		</div>
 	</main>
