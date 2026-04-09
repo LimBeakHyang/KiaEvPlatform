@@ -34,12 +34,12 @@ public class MypageController {
    public String mypageMain(HttpSession session, Model model) {
       Login loginUser = (Login) session.getAttribute("loginUser");
 
-      // 로그인 안 되어 있으면 로그인 페이지로 이동
+      // 로그인 안 되어 있으면 세션 만료 안내 후 로그인 페이지로 이동
       if (loginUser == null) {
-         return "redirect:/login";
+         return "redirect:/session-expired";
       }
 
-   // 회원 정보 조회
+      // 회원 정보 조회
       Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
 
       model.addAttribute("loginUser", loginUser);
@@ -53,9 +53,9 @@ public class MypageController {
    public String myInfo(HttpSession session, Model model) {
       Login loginUser = (Login) session.getAttribute("loginUser");
 
-      // 로그인 안 되어 있으면 로그인 페이지로 이동
+      // 로그인 안 되어 있으면 세션 만료 안내 후 로그인 페이지로 이동
       if (loginUser == null) {
-         return "redirect:/login";
+         return "redirect:/session-expired";
       }
 
       // 회원 정보 조회
@@ -72,9 +72,9 @@ public class MypageController {
    public String updateMyInfo(Mypage mypage, HttpSession session) {
       Login loginUser = (Login) session.getAttribute("loginUser");
 
-      // 로그인 안 되어 있으면 로그인 페이지로 이동
+      // 로그인 안 되어 있으면 세션 만료 안내 후 로그인 페이지로 이동
       if (loginUser == null) {
-         return "redirect:/login";
+         return "redirect:/session-expired";
       }
 
       // 세션에 저장된 회원번호 기준으로 수정
@@ -92,7 +92,7 @@ public class MypageController {
       // 비밀번호 변경 성공 후에는 세션이 끊긴 상태에서도
       // flash 값(passwordChangeSuccess)이 있으면 페이지를 한 번 보여주도록 처리
       if (loginUser == null && !model.containsAttribute("passwordChangeSuccess")) {
-         return "redirect:/login";
+         return "redirect:/session-expired";
       }
 
       return "client/mypage/passwordChange";
@@ -108,7 +108,7 @@ public class MypageController {
       Login loginUser = (Login) session.getAttribute("loginUser");
 
       if (loginUser == null) {
-         return "redirect:/login";
+         return "redirect:/session-expired";
       }
 
       if (!newPw.equals(confirmPw)) {
@@ -136,7 +136,7 @@ public class MypageController {
       Login loginUser = (Login) session.getAttribute("loginUser");
 
       if (loginUser == null) {
-         return "redirect:/login";
+         return "redirect:/session-expired";
       }
 
       mypageService.deleteMember(loginUser.getMemberNo());
@@ -152,7 +152,7 @@ public class MypageController {
       Login loginUser = (Login) session.getAttribute("loginUser");
 
       if (loginUser == null) {
-         return "redirect:/login";
+         return "redirect:/session-expired";
       }
 
       List<Consult> list = consultService.findByMemberNo(loginUser.getMemberNo());
@@ -169,7 +169,7 @@ public class MypageController {
       Login loginUser = (Login) session.getAttribute("loginUser");
 
       if (loginUser == null) {
-         return "redirect:/login";
+         return "redirect:/session-expired";
       }
 
       List<Mypage> list = mypageService.getBoardHistory(loginUser.getMemberNo());
@@ -186,7 +186,7 @@ public class MypageController {
       Login loginUser = (Login) session.getAttribute("loginUser");
 
       if (loginUser == null) {
-         return "redirect:/login";
+         return "redirect:/session-expired";
       }
 
       Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
