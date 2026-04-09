@@ -236,13 +236,10 @@ body {
 				th:text="${loginError}"></div>
 			<div th:if="${joinSuccess}" class="message-box success-box"
 				th:text="${joinSuccess}"></div>
+
 			<!-- ✅ 비밀번호 변경 성공 메시지 -->
 			<div th:if="${successMessage}" class="message-box success-box"
 				th:text="${successMessage}"></div>
-
-			<!-- ✅ 세션 만료 메시지 -->
-			<div th:if="${timeoutMessage}" class="message-box error-box"
-				th:text="${timeoutMessage}"></div>
 
 			<form th:action="@{/login}" method="post">
 				<div class="input-group">
@@ -269,15 +266,6 @@ body {
 		</div>
 	</section>
 
-	<!-- 추가: 회원가입 성공 메시지 모달 -->
-	<div id="joinSuccessModal" class="modal-overlay" th:if="${joinSuccess != null}">
-		<div class="modal-box">
-			<div class="modal-title">회원가입 완료</div>
-			<div class="modal-text" th:text="${joinSuccess}"></div>
-			<button type="button" class="modal-btn" onclick="closeJoinSuccessModal()">확인</button>
-		</div>
-	</div>
-
 	<th:block th:replace="~{common/footer :: footer}"></th:block>
 
 	<!-- 기존 alert가 떠도 화면에 안보이게 무효화 -->
@@ -291,6 +279,16 @@ body {
 	<th:block th:if="${joinSuccess != null}">
 		<script>
 			alert('회원가입 성공! 로그인해주세요.');
+		</script>
+	</th:block>
+
+	<!-- ✅ 추가: 세션 만료 시 알럿창 -->
+	<th:block th:if="${timeoutMessage != null}">
+		<script th:inline="javascript">
+			const msg = /*[[${timeoutMessage}]]*/ '';
+			window.addEventListener("load", function() {
+				alert(msg);
+			});
 		</script>
 	</th:block>
 
