@@ -31,9 +31,12 @@ public class Charging {
 
     @Column(name = "addr_detail", length = 255)
     private String addrDetail; // 상세주소
+    
+    @Column(name = "location", length = 255)
+    private String location;  // 충전소 위치 (예: 서울 강남구)
 
     @Column(name = "location_desc", length = 255)
-    private String locationDesc; // 위치설명
+    private String locationDesc; // 위치설명 (예: 강남역 근처, 버스정류장 바로 앞)
 
     @Column(name = "lat", precision = 10, scale = 7, nullable = false)
     private BigDecimal lat; // 위도

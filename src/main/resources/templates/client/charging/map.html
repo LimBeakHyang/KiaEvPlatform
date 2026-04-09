@@ -5,7 +5,7 @@
     <title>전기차 충전소 지도 (통합 검색 및 화면 맞춤)</title>
     <style>
         .search-container { margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 8px; }
-        .search-container input { padding: 8px; width: 250px; border: 1px solid #ccc; border-radius: 4px; }
+        .search-container input { padding: 8px; width: 380px; border: 1px solid #ccc; border-radius: 4px; }
         .search-container button { padding: 8px 12px; margin-left: 5px; cursor: pointer; border: 1px solid #007bff; background-color: #007bff; color: white; border-radius: 4px; font-weight: bold;}
         .search-container button.reset-btn { background-color: #6c757d; border-color: #6c757d; }
         .search-container button.location-btn { background-color: #28a745; border-color: #28a745; }
@@ -16,7 +16,7 @@
     <h2>카카오맵 전기차 충전소 검색</h2>
 
     <div class="search-container">
-        <input type="text" id="keyword" placeholder="충전소 이름 또는 지역명(강남, 양재 등)" onkeypress="if(event.keyCode==13) document.getElementById('searchBtn').click();" />
+        <input type="text" id="keyword" placeholder="충전소 이름 또는 지역명(예: 송파, 부산, 휴게소, 롯데마트)" onkeypress="if(event.keyCode==13) document.getElementById('searchBtn').click();" />
         <button id="searchBtn" type="button">통합 검색</button>
         <button id="searchInViewBtn" type="button" class="view-search-btn">📍 현재 화면에서 찾기</button>
         <button id="myLocationBtn" type="button" class="location-btn">현재 위치(2km 이내)</button>
@@ -124,7 +124,7 @@
             return R * c;
         }
 
-        // 3. [수정] 통합 검색 버튼 (이름 + 주소 검색)
+       /* // 3. [수정] 통합 검색 버튼 (이름 + 주소 검색)
         document.getElementById('searchBtn').addEventListener('click', function () {
             const keyword = document.getElementById('keyword').value.trim();
             if (keyword === '') {
@@ -140,7 +140,32 @@
             // 검색 결과에 맞춰 지도 영역을 조정합니다.
             displayChargers(filteredChargers, true);
         });
+		*/
+		// 3. [수정] 통합 검색 버튼 (서버의 검색 API 호출 방식으로 변경)
+        document.getElementById('searchBtn').addEventListener('click', function () {
+            const keyword = document.getElementById('keyword').value.trim();
+            
+            // 기본 URL은 전체 조회 API
+            let url = '/api/charging/stations';
+            
+            // 검색어가 입력되었다면, 백엔드 컨트롤러가 받을 수 있도록 파라미터 추가
+            if (keyword !== '') {
+                url += '?location=' + encodeURIComponent(keyword);
+            }
 
+            // 프론트엔드에서 자체 필터링하지 않고, 서버에 직접 검색 데이터를 요청합니다.
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // 서버가 찾아준 결과로 지도를 다시 그립니다.
+                    displayChargers(data, true);
+                })
+                .catch(error => {
+                    console.error("검색 요청 실패:", error);
+                    alert("검색 중 오류가 발생했습니다.");
+                });
+        });
+		
         // 4. [수정] 전체 보기 버튼 (내 위치 포함 화면 맞춤)
         document.getElementById('resetBtn').addEventListener('click', function () {
             document.getElementById('keyword').value = '';
