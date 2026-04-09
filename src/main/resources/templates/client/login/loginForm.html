@@ -223,13 +223,10 @@ body {
 			<h2 class="login-title">LOGIN</h2>
 
 			<div class="login-type">
-				<label>
-					<input type="radio" name="userType" value="MEMBER" checked>
-					회원
-				</label>
-				<label>
-					<input type="radio" name="userType" value="DEALER" disabled>
-					딜러
+				<label> <input type="radio" name="userType" value="MEMBER"
+					checked> 회원
+				</label> <label> <input type="radio" name="userType" value="DEALER"
+					disabled> 딜러
 				</label>
 			</div>
 
@@ -239,6 +236,13 @@ body {
 				th:text="${loginError}"></div>
 			<div th:if="${joinSuccess}" class="message-box success-box"
 				th:text="${joinSuccess}"></div>
+			<!-- ✅ 비밀번호 변경 성공 메시지 -->
+			<div th:if="${successMessage}" class="message-box success-box"
+				th:text="${successMessage}"></div>
+
+			<!-- ✅ 세션 만료 메시지 -->
+			<div th:if="${timeoutMessage}" class="message-box error-box"
+				th:text="${timeoutMessage}"></div>
 
 			<form th:action="@{/login}" method="post">
 				<div class="input-group">
@@ -253,8 +257,8 @@ body {
 			</form>
 
 			<div class="find-links">
-				<a th:href="@{/client/login/findId}">아이디 찾기</a> |
-				<a th:href="@{/client/login/findPw}">비밀번호 찾기</a>
+				<a th:href="@{/client/login/findId}">아이디 찾기</a> | <a
+					th:href="@{/client/login/findPw}">비밀번호 찾기</a>
 			</div>
 
 			<div class="bottom-line"></div>
