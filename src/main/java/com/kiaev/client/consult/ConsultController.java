@@ -1,19 +1,10 @@
 package com.kiaev.client.consult;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.kiaev.client.car.Car;
-import com.kiaev.client.car.CarService;
 import com.kiaev.client.login.Login;
-import com.kiaev.client.mypage.Wishlist;
-import com.kiaev.client.mypage.WishlistService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +15,11 @@ import lombok.RequiredArgsConstructor;
 public class ConsultController {
 
     private final ConsultService consultationService;
-    private final WishlistService wishlistService;
-    private final CarService carService;
 
+    // 상담 신청 페이지 (/consult/form)
     @ResponseBody
     @GetMapping("/form")
-    public String showForm(@RequestParam(value = "carNo", required = false) Long carNo,
-                           @RequestParam(value = "carName", required = false) String carName,
-                           HttpSession session) {
+    public String showForm(HttpSession session) {
 
         if (session.getAttribute("loginUser") == null) {
             return "<script>"
@@ -40,85 +28,54 @@ public class ConsultController {
                     + "</script>";
         }
 
-        String redirectUrl = "/consult/formPage";
-        boolean hasParam = false;
-
-        if (carNo != null) {
-            redirectUrl += (hasParam ? "&" : "?") + "carNo=" + carNo;
-            hasParam = true;
-        }
-
-        if (carName != null && !carName.isEmpty()) {
-            redirectUrl += (hasParam ? "&" : "?") + "carName=" + carName;
-        }
-
         return "<script>"
-                + "location.href='" + redirectUrl + "';"
+                + "location.href='/consult/formPage';"
                 + "</script>";
     }
 
+    // 실제 상담 신청 폼 페이지
     @GetMapping("/formPage")
-    public String formPage(@RequestParam(value = "carNo", required = false) Long carNo,
-                           @RequestParam(value = "carName", required = false) String carName,
-                           HttpSession session,
-                           Model model) {
+    public String formPage(HttpSession session) {
 
-        Object loginUserObj = session.getAttribute("loginUser");
-
-        if (loginUserObj == null) {
+        if (session.getAttribute("loginUser") == null) {
             return "redirect:/consult/form";
         }
-
-        List<Car> allCarList = carService.findAll();
-
-        List<Wishlist> wishlist = wishlistService.getMyWishlist(loginUserObj);
-        List<Car> favoriteCarList = new ArrayList<>();
-        Set<Long> favoriteCarNoSet = new HashSet<>();
-
-        for (Wishlist item : wishlist) {
-            if (item.getCar() != null) {
-                Car car = item.getCar();
-                favoriteCarList.add(car);
-                favoriteCarNoSet.add(car.getCarNo());
-            }
-        }
-
-        Long selectedCarNo = null;
-
-        // 상세페이지에서 구매 상담 신청하기 누른 경우 현재 차량 자동선택
-        if (carNo != null) {
-            selectedCarNo = carNo;
-        }
-        // 그냥 상담신청 메뉴로 들어왔고 관심차량이 1개면 자동선택
-        else if (favoriteCarList.size() == 1) {
-            selectedCarNo = favoriteCarList.get(0).getCarNo();
-        }
-
-        model.addAttribute("allCarList", allCarList);
-        model.addAttribute("favoriteCarList", favoriteCarList);
-        model.addAttribute("favoriteCarNoSet", favoriteCarNoSet);
-        model.addAttribute("selectedCarNo", selectedCarNo);
-        model.addAttribute("selectedCar", carName);
 
         return "client/consult/consultForm";
     }
 
+    // 상담 등록
     @PostMapping("/register")
     public String submitForm(Consult consultation, HttpSession session) {
+
+        System.out.println("=== submitForm 진입 ===");
 
         Object loginUserObj = session.getAttribute("loginUser");
 
         if (loginUserObj == null) {
+            System.out.println("비로그인 상태 -> /consult/form");
             return "redirect:/consult/form";
         }
 
         if (!(loginUserObj instanceof Login)) {
+            System.out.println("loginUser 타입 이상 -> /consult/form");
             return "redirect:/consult/form";
         }
 
         Login loginUser = (Login) loginUserObj;
 
+        System.out.println("loginUser = " + loginUser);
+        System.out.println("memberNo(loginUser) = " + loginUser.getMemberNo());
+        System.out.println("memberStatus(loginUser) = " + loginUser.getMemberStatus());
+        System.out.println("consultation.carNo = " + consultation.getCarNo());
+        System.out.println("consultation.mainRangeKm = " + consultation.getMainRangeKm());
+        System.out.println("consultation.usePurpose = " + consultation.getUsePurpose());
+        System.out.println("consultation.budgetAmount = " + consultation.getBudgetAmount());
+        System.out.println("consultation.fellowData = " + consultation.getFellowData());
+        System.out.println("consultation.consultContent = " + consultation.getConsultContent());
+
         if (loginUser.getMemberNo() == null) {
+            System.out.println("memberNo 없음 -> /consult/form");
             return "redirect:/consult/form";
         }
 
@@ -128,11 +85,20 @@ public class ConsultController {
             consultation.setConsultStatus("대기");
         }
 
-        consultationService.save(consultation);
+        Consult savedConsult = consultationService.save(consultation);
+
+        System.out.println("저장 완료!");
+        System.out.println("savedConsult.consultNo = " + savedConsult.getConsultNo());
+        System.out.println("savedConsult.memberNo = " + savedConsult.getMemberNo());
+        System.out.println("savedConsult.carNo = " + savedConsult.getCarNo());
+        System.out.println("savedConsult.consultStatus = " + savedConsult.getConsultStatus());
+        System.out.println("consult 전체 개수 = " + consultationService.findAll().size());
+        System.out.println("-> /consult/success 이동");
 
         return "redirect:/consult/success";
     }
 
+    // 상담 신청 완료 페이지
     @GetMapping("/success")
     public String successPage(HttpSession session) {
 
@@ -143,6 +109,7 @@ public class ConsultController {
         return "client/consult/success";
     }
 
+    // 상담 상세 조회
     @GetMapping("/detail")
     public String consultDetail(@RequestParam("id") Long id, Model model, HttpSession session) {
 
@@ -167,9 +134,11 @@ public class ConsultController {
 
         Consult consult;
 
+        // 관리자/딜러는 전체 조회 가능
         if (isAdminOrDealer(memberStatus)) {
             consult = consultationService.findById(id);
         } else {
+            // 일반 회원은 본인 상담만 조회 가능
             consult = consultationService.findByConsultNoAndMemberNo(id, memberNo);
         }
 
@@ -184,32 +153,7 @@ public class ConsultController {
         return "client/consult/consultDetail";
     }
 
-    @PostMapping("/updateStatus")
-    public String updateConsultStatus(@RequestParam("consultNo") Long consultNo,
-                                      @RequestParam("consultStatus") String consultStatus,
-                                      HttpSession session) {
-
-        Object loginUserObj = session.getAttribute("loginUser");
-
-        if (loginUserObj == null) {
-            return "redirect:/login";
-        }
-
-        if (!(loginUserObj instanceof Login)) {
-            return "redirect:/login";
-        }
-
-        Login loginUser = (Login) loginUserObj;
-
-        if (!isAdminOrDealer(loginUser.getMemberStatus())) {
-            return "redirect:/mypage/consult";
-        }
-
-        consultationService.updateConsultStatus(consultNo, consultStatus, loginUser.getMemberNo());
-
-        return "redirect:/mypage/consult";
-    }
-
+    // 관리자/딜러 권한 체크
     private boolean isAdminOrDealer(String memberStatus) {
         if (memberStatus == null) {
             return false;
