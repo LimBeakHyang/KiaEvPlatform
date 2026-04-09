@@ -25,7 +25,13 @@ public class ConsultService {
         return consultationRepository.findByConsultNoAndMemberNo(consultNo, memberNo).orElse(null);
     }
 
+    // 전체 조회
     public List<Consult> findAll() {
         return consultationRepository.findAll();
+    }
+
+    // 회원번호로 상담 목록 조회 (마이페이지용)
+    public List<Consult> findByMemberNo(Long memberNo) {
+        return consultationRepository.findByMemberNoOrderByRequestDateDesc(memberNo);
     }
 }
