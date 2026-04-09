@@ -1,4 +1,4 @@
-package com.kiaev.dealer.consult;
+package com.kiaev.dealer.dealerconsult;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +21,7 @@ import jakarta.persistence.Transient;
  */
 @Entity
 @Table(name = "consult_tbl")
-public class Consult {
+public class DealerConsult {
 
 	// =========================
 	// 기본 식별 정보

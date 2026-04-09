@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kiaev.dealer.consult.Consult;
-import com.kiaev.dealer.consult.ConsultRepository;
+import com.kiaev.dealer.dealerconsult.DealerConsult;
+import com.kiaev.dealer.dealerconsult.DealerConsultRepository;
 
 /**
  * 판매 관리 Service
@@ -31,7 +31,7 @@ public class SalesService {
 	private SalesRepository salesRepository;
 
 	@Autowired
-	private ConsultRepository consultRepository;
+	private DealerConsultRepository consultRepository;
 
 	/**
 	 * 전체 판매 목록 조회
@@ -95,7 +95,7 @@ public class SalesService {
 	 * 조건 - 로그인한 딜러의 상담만 조회 - 상담 상태가 진행중(IN_PROGRESS) 또는 완료(COMPLETED) - 이미 판매 등록된
 	 * 상담 제외 - 이미 판매된 차량 제외
 	 */
-	public List<Consult> getCompletedConsultList(Integer dealerNo) {
+	public List<DealerConsult> getCompletedConsultList(Integer dealerNo) {
 
 		// 딜러번호 없으면 빈 목록 반환
 		if (dealerNo == null) {
@@ -103,12 +103,12 @@ public class SalesService {
 		}
 
 		// 로그인한 딜러의 상담 목록 조회
-		List<Consult> consultList = consultRepository.findByDealerNoOrderByConsultNoAsc(dealerNo);
+		List<DealerConsult> consultList = consultRepository.findByDealerNoOrderByConsultNoAsc(dealerNo);
 
 		// 반환할 판매 등록 가능 상담 목록
-		List<Consult> availableConsultList = new ArrayList<>();
+		List<DealerConsult> availableConsultList = new ArrayList<>();
 
-		for (Consult consult : consultList) {
+		for (DealerConsult consult : consultList) {
 
 			// null 방어
 			if (consult == null) {
@@ -168,14 +168,14 @@ public class SalesService {
 		}
 
 		// 상담 조회
-		Optional<Consult> optionalConsult = consultRepository.findByConsultNoAndDealerNo(consultNo, dealerNo);
+		Optional<DealerConsult> optionalConsult = consultRepository.findByConsultNoAndDealerNo(consultNo, dealerNo);
 
 		// 상담이 없으면 null
 		if (optionalConsult.isEmpty()) {
 			return null;
 		}
 
-		Consult consult = optionalConsult.get();
+		DealerConsult consult = optionalConsult.get();
 
 		// 상담 상태가 진행중 / 완료가 아니면 불가
 		if (!isAvailableForSales(consult.getConsultStatus())) {
@@ -241,13 +241,13 @@ public class SalesService {
 		}
 
 		// 상담 조회
-		Optional<Consult> optionalConsult = consultRepository.findByConsultNoAndDealerNo(consultNo, dealerNo);
+		Optional<DealerConsult> optionalConsult = consultRepository.findByConsultNoAndDealerNo(consultNo, dealerNo);
 
 		if (optionalConsult.isEmpty()) {
 			return "해당 상담 정보를 찾을 수 없습니다.";
 		}
 
-		Consult consult = optionalConsult.get();
+		DealerConsult consult = optionalConsult.get();
 
 		// 진행중 / 완료 상태 상담만 판매 등록 가능
 		if (!isAvailableForSales(consult.getConsultStatus())) {

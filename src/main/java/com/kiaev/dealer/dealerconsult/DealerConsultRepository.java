@@ -1,4 +1,4 @@
-package com.kiaev.dealer.consult;
+package com.kiaev.dealer.dealerconsult;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * Consult 엔티티를 기준으로 상담 데이터를 조회 / 저장합니다.
  */
 @Repository
-public interface ConsultRepository extends JpaRepository<Consult, Integer> {
+public interface DealerConsultRepository extends JpaRepository<DealerConsult, Integer> {
 
 	/**
 	 * 로그인한 딜러의 상담 목록 조회
@@ -24,7 +24,7 @@ public interface ConsultRepository extends JpaRepository<Consult, Integer> {
 	 * @param dealerNo 딜러번호
 	 * @return 해당 딜러의 상담 목록
 	 */
-	List<Consult> findByDealerNoOrderByConsultNoDesc(Integer dealerNo);
+	List<DealerConsult> findByDealerNoOrderByConsultNoDesc(Integer dealerNo);
 
 	/**
 	 * 로그인한 딜러의 상담 목록 조회
@@ -36,7 +36,7 @@ public interface ConsultRepository extends JpaRepository<Consult, Integer> {
 	 * @param dealerNo 딜러번호
 	 * @return 해당 딜러의 상담 목록
 	 */
-	List<Consult> findByDealerNoOrderByConsultNoAsc(Integer dealerNo);
+	List<DealerConsult> findByDealerNoOrderByConsultNoAsc(Integer dealerNo);
 
 	/**
 	 * 상담번호 + 딜러번호가 모두 일치하는 상담 1건 조회
@@ -47,7 +47,7 @@ public interface ConsultRepository extends JpaRepository<Consult, Integer> {
 	 * @param dealerNo  딜러번호
 	 * @return 조건에 맞는 상담 1건
 	 */
-	Optional<Consult> findByConsultNoAndDealerNo(Integer consultNo, Integer dealerNo);
+	Optional<DealerConsult> findByConsultNoAndDealerNo(Integer consultNo, Integer dealerNo);
 
 	/**
 	 * 대시보드용 전체 상담 수 조회

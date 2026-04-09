@@ -1,4 +1,4 @@
-package com.kiaev.dealer.consult;
+package com.kiaev.dealer.dealerconsult;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ import jakarta.servlet.http.HttpSession;
 public class DealerConsultController {
 
 	@Autowired
-	private ConsultService consultService;
+	private DealerConsultService consultService;
 
 	/**
 	 * 상담 목록 조회
@@ -49,7 +49,7 @@ public class DealerConsultController {
 		Integer dealerNo = loginDealer.getDealerNo();
 
 		// 해당 딜러의 상담 목록 조회
-		List<Consult> consultList = consultService.getConsultList(dealerNo);
+		List<DealerConsult> consultList = consultService.getConsultList(dealerNo);
 
 		// 화면 전달
 		model.addAttribute("consultList", consultList);
@@ -80,7 +80,7 @@ public class DealerConsultController {
 		Integer dealerNo = loginDealer.getDealerNo();
 
 		// 상담 상세 조회
-		Consult consult = consultService.getConsultDetail(consultNo, dealerNo);
+		DealerConsult consult = consultService.getConsultDetail(consultNo, dealerNo);
 
 		// 해당 상담이 없거나 다른 딜러 상담이면 목록으로 이동
 		if (consult == null) {

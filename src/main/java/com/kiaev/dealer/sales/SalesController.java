@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.kiaev.dealer.consult.Consult;
+import com.kiaev.dealer.dealerconsult.DealerConsult;
 import com.kiaev.dealer.login.DealerLogin;
 
 import jakarta.servlet.http.HttpSession;
@@ -114,7 +114,7 @@ public class SalesController {
 		Integer dealerNo = loginDealer.getDealerNo();
 
 		// 판매 등록 가능한 상담 목록 조회
-		List<Consult> completedConsultList = salesService.getCompletedConsultList(dealerNo);
+		List<DealerConsult> completedConsultList = salesService.getCompletedConsultList(dealerNo);
 
 		// 기본은 빈 객체
 		Sales sales = new Sales();
@@ -190,7 +190,7 @@ public class SalesController {
 		}
 
 		// 실패 시 다시 등록 화면으로 이동하면서 메시지 출력
-		List<Consult> completedConsultList = salesService.getCompletedConsultList(dealerNo);
+		List<DealerConsult> completedConsultList = salesService.getCompletedConsultList(dealerNo);
 		Sales sales = salesService.createSalesFromConsult(consultNo, dealerNo);
 
 		// sales가 null이면 화면 바인딩 에러 방지용 기본 객체 생성

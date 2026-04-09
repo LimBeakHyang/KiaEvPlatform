@@ -1,4 +1,4 @@
-package com.kiaev.dealer.consult;
+package com.kiaev.dealer.dealerconsult;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,10 +25,10 @@ import org.springframework.stereotype.Service;
  * 사용하지 않아도 되지만, 기존 구조를 유지하기 위해 그대로 보존합니다.
  */
 @Service
-public class ConsultService {
+public class DealerConsultService {
 
 	@Autowired
-	private ConsultRepository consultRepository;
+	private DealerConsultRepository consultRepository;
 
 	/**
 	 * 상담 메모 누적 저장 시 사용할 날짜 포맷 예: 2026-04-08 10:15:22
@@ -41,7 +41,7 @@ public class ConsultService {
 	 * @param dealerNo 로그인한 딜러번호
 	 * @return 해당 딜러의 상담 목록
 	 */
-	public List<Consult> getConsultList(Integer dealerNo) {
+	public List<DealerConsult> getConsultList(Integer dealerNo) {
 		return consultRepository.findByDealerNoOrderByConsultNoDesc(dealerNo);
 	}
 
@@ -54,13 +54,13 @@ public class ConsultService {
 	 * @param dealerNo  딜러번호
 	 * @return 조회된 상담 객체, 없으면 null
 	 */
-	public Consult getConsultDetail(Integer consultNo, Integer dealerNo) {
+	public DealerConsult getConsultDetail(Integer consultNo, Integer dealerNo) {
 
 		if (consultNo == null || dealerNo == null) {
 			return null;
 		}
 
-		Optional<Consult> optionalConsult = consultRepository.findByConsultNoAndDealerNo(consultNo, dealerNo);
+		Optional<DealerConsult> optionalConsult = consultRepository.findByConsultNoAndDealerNo(consultNo, dealerNo);
 
 		if (optionalConsult.isPresent()) {
 			return optionalConsult.get();
@@ -89,14 +89,14 @@ public class ConsultService {
 			return;
 		}
 
-		Optional<Consult> optionalConsult = consultRepository.findByConsultNoAndDealerNo(consultNo, dealerNo);
+		Optional<DealerConsult> optionalConsult = consultRepository.findByConsultNoAndDealerNo(consultNo, dealerNo);
 
 		// 상담이 없으면 종료
 		if (optionalConsult.isEmpty()) {
 			return;
 		}
 
-		Consult consult = optionalConsult.get();
+		DealerConsult consult = optionalConsult.get();
 
 		// 입력값을 영문 상태코드로 정규화
 		String normalizedStatus = normalizeStatus(consultStatus);
@@ -156,13 +156,13 @@ public class ConsultService {
 			return;
 		}
 
-		Optional<Consult> optionalConsult = consultRepository.findById(consultNo);
+		Optional<DealerConsult> optionalConsult = consultRepository.findById(consultNo);
 
 		if (optionalConsult.isEmpty()) {
 			return;
 		}
 
-		Consult consult = optionalConsult.get();
+		DealerConsult consult = optionalConsult.get();
 
 		String newMemoBlock = buildMemoBlock(writerType, memoContent);
 		String oldMemo = consult.getConsultMemo();
@@ -194,13 +194,13 @@ public class ConsultService {
 			return;
 		}
 
-		Optional<Consult> optionalConsult = consultRepository.findByConsultNoAndDealerNo(consultNo, dealerNo);
+		Optional<DealerConsult> optionalConsult = consultRepository.findByConsultNoAndDealerNo(consultNo, dealerNo);
 
 		if (optionalConsult.isEmpty()) {
 			return;
 		}
 
-		Consult consult = optionalConsult.get();
+		DealerConsult consult = optionalConsult.get();
 
 		String newMemoBlock = buildMemoBlock(writerType, memoContent);
 		String oldMemo = consult.getConsultMemo();
