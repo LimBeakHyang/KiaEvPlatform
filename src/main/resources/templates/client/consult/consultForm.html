@@ -104,36 +104,45 @@ button {
 			onsubmit="return submitConsult()">
 
 			<input type="hidden" name="memberNo" id="memberNo" value="">
-			<input type="hidden" name="dealerNo" id="dealerNo"> <input
-				type="hidden" name="consultStatus" id="consultStatus" value="대기">
+			<input type="hidden" name="dealerNo" id="dealerNo">
+			<input type="hidden" name="consultStatus" id="consultStatus" value="대기">
 			<input type="hidden" name="consultMemo" id="consultMemo" value="">
 
 			<div class="form-row">
-				<label for="carNo">관심차량</label> <select id="carNo" name="carNo">
+				<label for="carNo">관심차량</label>
+				<select id="carNo" name="carNo">
 					<option value="">차량을 선택해주세요</option>
-					<option value="1" th:selected="${selectedCar == 'EV3'}">EV3</option>
-					<option value="2" th:selected="${selectedCar == 'EV3-GT'}">EV3-GT</option>
-					<option value="3" th:selected="${selectedCar == 'EV4'}">EV4</option>
-					<option value="4" th:selected="${selectedCar == 'EV4-GT'}">EV4-GT</option>
-					<option value="5" th:selected="${selectedCar == 'EV5'}">EV5</option>
-					<option value="6" th:selected="${selectedCar == 'EV5-GT'}">EV5-GT</option>
-					<option value="7" th:selected="${selectedCar == 'EV6'}">EV6</option>
-					<option value="8" th:selected="${selectedCar == 'EV6-GT'}">EV6-GT</option>
-					<option value="9" th:selected="${selectedCar == 'EV9'}">EV9</option>
-					<option value="10" th:selected="${selectedCar == 'EV9-GT'}">EV9-GT</option>
-					<option value="11" th:selected="${selectedCar == 'RAY EV'}">RAY
-						EV</option>
+
+					<!-- 관심차량을 상단에 먼저 표시 -->
+					<option th:each="car : ${favoriteCarList}"
+					        th:value="${car.carNo}"
+					        th:text="|♥ ${car.modelName}|"
+					        th:selected="${selectedCarNo != null and selectedCarNo == car.carNo}">
+					</option>
+
+					<!-- 관심차량이 있을 때 구분선 -->
+					<option th:if="${favoriteCarList != null and !favoriteCarList.isEmpty()}" disabled>
+						──────────
+					</option>
+
+					<!-- 전체 차량 목록 표시 (관심차량은 중복 제외) -->
+					<option th:each="car : ${allCarList}"
+					        th:if="${!favoriteCarNoSet.contains(car.carNo)}"
+					        th:value="${car.carNo}"
+					        th:text="${car.modelName}"
+					        th:selected="${selectedCarNo != null and selectedCarNo == car.carNo}">
+					</option>
 				</select>
 			</div>
 
 			<div class="form-row">
-				<label for="budgetAmount">대략 예산금액</label> <input type="text"
-					name="budgetAmount" id="budgetAmount" placeholder="숫자만 입력하세요">
+				<label for="budgetAmount">대략 예산금액</label>
+				<input type="text" name="budgetAmount" id="budgetAmount" placeholder="숫자만 입력하세요">
 			</div>
 
 			<div class="form-row">
-				<label for="usePurpose">이용용도</label> <select id="usePurpose"
-					name="usePurpose">
+				<label for="usePurpose">이용용도</label>
+				<select id="usePurpose" name="usePurpose">
 					<option value="">용도를 선택해주세요</option>
 					<option value="출퇴근용">출퇴근용</option>
 					<option value="가족용">가족용</option>
@@ -143,8 +152,8 @@ button {
 			</div>
 
 			<div class="form-row">
-				<label for="mainRangeKm">주요 주행거리</label> <select id="mainRangeKm"
-					name="mainRangeKm">
+				<label for="mainRangeKm">주요 주행거리</label>
+				<select id="mainRangeKm" name="mainRangeKm">
 					<option value="">주행거리를 선택해주세요</option>
 					<option value="단거리">단거리</option>
 					<option value="장거리">장거리</option>
@@ -152,8 +161,8 @@ button {
 			</div>
 
 			<div class="form-row">
-				<label for="fellowData">동승자 정보</label> <select id="fellowData"
-					name="fellowData">
+				<label for="fellowData">동승자 정보</label>
+				<select id="fellowData" name="fellowData">
 					<option value="">동승자를 선택해주세요</option>
 					<option value="없음">없음</option>
 					<option value="영유아">영유아</option>
