@@ -112,15 +112,32 @@
     <div class="section-title">상담 신청 정보</div>
 
     <div class="detail-row">
-        <div class="detail-label">차량번호</div>
-        <div class="detail-value" th:text="${consult.carNo}">1</div>
+        <div class="detail-label">차량번호 / 차량명</div>
+        <div class="detail-value">
+            <span th:text="${consult.carNo}">1</span>
+            <span> / </span>
+
+            <span th:switch="${consult.carNo}">
+                <span th:case="1">EV3</span>
+                <span th:case="2">EV3-GT</span>
+                <span th:case="3">EV4</span>
+                <span th:case="4">EV4-GT</span>
+                <span th:case="5">EV5</span>
+                <span th:case="6">EV5-GT</span>
+                <span th:case="7">EV6</span>
+                <span th:case="8">EV6-GT</span>
+                <span th:case="9">EV9</span>
+                <span th:case="10">EV9-GT</span>
+                <span th:case="11">RAY EV</span>
+                <span th:case="*">알 수 없는 차량</span>
+            </span>
+        </div>
     </div>
 
     <div class="detail-row">
         <div class="detail-label">예산금액</div>
         <div class="detail-value"
              th:text="${consult.budgetAmount != null ? consult.budgetAmount + ' 만 원' : '미입력'}">
-            3000 만 원
         </div>
     </div>
 
@@ -128,7 +145,6 @@
         <div class="detail-label">이용용도</div>
         <div class="detail-value"
              th:text="${consult.usePurpose != null ? consult.usePurpose : '미선택'}">
-            출퇴근용
         </div>
     </div>
 
@@ -136,7 +152,6 @@
         <div class="detail-label">주행거리</div>
         <div class="detail-value"
              th:text="${consult.mainRangeKm != null ? consult.mainRangeKm : '미선택'}">
-            장거리
         </div>
     </div>
 
@@ -144,7 +159,6 @@
         <div class="detail-label">동승자 정보</div>
         <div class="detail-value"
              th:text="${consult.fellowData != null ? consult.fellowData : '미선택'}">
-            아이
         </div>
     </div>
 
@@ -152,7 +166,6 @@
         <div class="detail-label">상담 내용</div>
         <div class="detail-value"
              th:text="${consult.consultContent != null && !#strings.isEmpty(consult.consultContent) ? consult.consultContent : '내용 없음'}">
-            내용 없음
         </div>
     </div>
 
@@ -160,7 +173,6 @@
         <div class="detail-label">신청일시</div>
         <div class="detail-value"
              th:text="${consult.requestDate != null ? consult.requestDate : '없음'}">
-            2026-04-08T15:00
         </div>
     </div>
 
@@ -176,7 +188,6 @@
             <div class="detail-label">딜러번호</div>
             <div class="detail-value"
                  th:text="${consult.dealerNo != null ? consult.dealerNo : '미배정'}">
-                미배정
             </div>
         </div>
 
@@ -184,7 +195,6 @@
             <div class="detail-label">상담상태</div>
             <div class="detail-value"
                  th:text="${consult.consultStatus != null ? consult.consultStatus : '대기'}">
-                대기
             </div>
         </div>
 
@@ -192,7 +202,6 @@
             <div class="detail-label">배정일시</div>
             <div class="detail-value"
                  th:text="${consult.assignedDate != null ? consult.assignedDate : '미배정'}">
-                미배정
             </div>
         </div>
 
@@ -200,7 +209,6 @@
             <div class="detail-label">완료일시</div>
             <div class="detail-value"
                  th:text="${consult.completedDate != null ? consult.completedDate : '미완료'}">
-                미완료
             </div>
         </div>
 
@@ -208,7 +216,6 @@
             <div class="detail-label">상담 메모</div>
             <div class="detail-value"
                  th:text="${consult.consultMemo != null && !#strings.isEmpty(consult.consultMemo) ? consult.consultMemo : '메모 없음'}">
-                메모 없음
             </div>
         </div>
 
@@ -216,7 +223,6 @@
             <div class="detail-label">수정일시</div>
             <div class="detail-value"
                  th:text="${consult.updatedDate != null ? consult.updatedDate : '수정 이력 없음'}">
-                수정 이력 없음
             </div>
         </div>
     </div>

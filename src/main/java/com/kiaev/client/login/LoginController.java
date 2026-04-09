@@ -16,7 +16,19 @@ public class LoginController {
 
     // 로그인 페이지
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(
+            @RequestParam(value = "pwChanged", required = false) String pwChanged,
+            @RequestParam(value = "timeout", required = false) String timeout,
+            Model model) {
+
+        if ("true".equals(pwChanged)) {
+            model.addAttribute("successMessage", "비밀번호가 정상적으로 변경되었습니다. 다시 로그인해주세요.");
+        }
+
+        if ("true".equals(timeout)) {
+            model.addAttribute("timeoutMessage", "장시간 이용이 없어 로그아웃되었습니다.");
+        }
+
         return "client/login/loginForm";
     }
 
