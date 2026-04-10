@@ -70,7 +70,14 @@ public class BoardController {
 
 	// 3. 글 작성 폼 화면 이동 (명세서의 GET /board/write)
 	@GetMapping("/write")
-	public String boardWriteForm() {
+	public String boardWriteForm(HttpSession session) {
+		Login loginUser = (Login) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			session.setAttribute("prevPage", "/board/write");
+			return "redirect:/login";
+		}
+
 		return "client/board/boardWrite";
 	}
 
