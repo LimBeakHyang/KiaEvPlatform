@@ -180,6 +180,37 @@ tr:hover td {
    background: #0b3258;
 }
 
+.status-form {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 8px;
+}
+
+.status-select {
+   min-width: 110px;
+   padding: 8px 10px;
+   border: 1px solid #d9d9d9;
+   border-radius: 8px;
+   font-size: 14px;
+   background: #fff;
+}
+
+.status-save-btn {
+   padding: 8px 12px;
+   border: none;
+   border-radius: 8px;
+   background: #111;
+   color: #fff;
+   font-size: 13px;
+   font-weight: 600;
+   cursor: pointer;
+}
+
+.status-save-btn:hover {
+   background: #333;
+}
+
 .empty-box {
    width: 100%;
    height: 300px;
@@ -250,9 +281,31 @@ tr:hover td {
                            </td>
                            <td th:text="${consult.requestDate != null ? #temporals.format(consult.requestDate, 'yyyy-MM-dd') : '-'}">2026-02-01</td>
                            <td>
-                              <span th:if="${consult.consultStatus == '대기'}" class="status-badge status-waiting">대기</span>
-                              <span th:if="${consult.consultStatus == '진행중'}" class="status-badge status-progress">진행중</span>
-                              <span th:if="${consult.consultStatus == '완료'}" class="status-badge status-done">완료</span>
+                              <!-- 딜러/관리자만 상태 변경 가능 -->
+                              <th:block th:if="${session.loginUser != null and (session.loginUser.memberStatus == 'ADMIN'
+                                                        or session.loginUser.memberStatus == 'DEALER'
+                                                        or session.loginUser.memberStatus == '관리자'
+                                                        or session.loginUser.memberStatus == '딜러')}">
+                                 <form th:action="@{/consult/updateStatus}" method="post" class="status-form">
+                                    <input type="hidden" name="consultNo" th:value="${consult.consultNo}">
+                                    <select name="consultStatus" class="status-select">
+                                       <option value="대기" th:selected="${consult.consultStatus == '대기'}">대기</option>
+                                       <option value="진행중" th:selected="${consult.consultStatus == '진행중'}">진행중</option>
+                                       <option value="완료" th:selected="${consult.consultStatus == '완료'}">완료</option>
+                                    </select>
+                                    <button type="submit" class="status-save-btn">변경</button>
+                                 </form>
+                              </th:block>
+
+                              <!-- 일반 회원은 상태만 조회 -->
+                              <th:block th:if="${session.loginUser == null or !(session.loginUser.memberStatus == 'ADMIN'
+                                                        or session.loginUser.memberStatus == 'DEALER'
+                                                        or session.loginUser.memberStatus == '관리자'
+                                                        or session.loginUser.memberStatus == '딜러')}">
+                                 <span th:if="${consult.consultStatus == '대기'}" class="status-badge status-waiting">대기</span>
+                                 <span th:if="${consult.consultStatus == '진행중'}" class="status-badge status-progress">진행중</span>
+                                 <span th:if="${consult.consultStatus == '완료'}" class="status-badge status-done">완료</span>
+                              </th:block>
                            </td>
                            <td>
                               <a th:href="@{/consult/detail(id=${consult.consultNo})}" class="detail-btn">상세 확인</a>
