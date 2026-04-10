@@ -48,14 +48,6 @@ public class LoginController {
 
         session.setAttribute("loginUser", loginUser);
 
-        // [수정] 세션에 저장된 "원래 목적지"가 있는지 확인합니다.
-        String prevPage = (String) session.getAttribute("prevPage");
-        
-        if (prevPage != null) {
-            session.removeAttribute("prevPage"); // 사용했으니 메모지는 지웁니다.
-            return "redirect:" + prevPage; // 원래 가려던 곳으로 이동!
-        }
-        
         // 메인페이지로 이동
         return "redirect:/";
     }

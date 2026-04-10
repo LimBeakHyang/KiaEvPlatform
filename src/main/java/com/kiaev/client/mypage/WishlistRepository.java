@@ -15,10 +15,4 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
     // 삭제: 특정 회원과 특정 차량의 연결 고리 제거
     void deleteByMemberAndCar(Member member, Car car);
-    // 추가
-    Wishlist findByMember_MemberNoAndCar_CarNo(Long memberNo, Long carNo);
-
-    // 추가
-    Wishlist findByWishlistNoAndMember_MemberNo(Long wishlistNo, Long memberNo);
 }
-

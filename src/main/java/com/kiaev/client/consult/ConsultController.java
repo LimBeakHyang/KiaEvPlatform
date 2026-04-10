@@ -19,8 +19,7 @@ public class ConsultController {
     // 상담 신청 페이지 (/consult/form)
     @ResponseBody
     @GetMapping("/form")
-    public String showForm(@RequestParam(value = "carName", required = false) String carName, 
-                           HttpSession session) {
+    public String showForm(HttpSession session) {
 
         if (session.getAttribute("loginUser") == null) {
             return "<script>"
@@ -29,34 +28,23 @@ public class ConsultController {
                     + "</script>";
         }
 
-        // 로그인 성공 시 carName 파라미터가 있다면 URL에 붙여서 보냄
-        String redirectUrl = "/consult/formPage";
-        if (carName != null && !carName.isEmpty()) {
-            redirectUrl += "?carName=" + carName;
-        }
-
         return "<script>"
-                + "location.href='" + redirectUrl + "';"
+                + "location.href='/consult/formPage';"
                 + "</script>";
     }
 
     // 실제 상담 신청 폼 페이지
     @GetMapping("/formPage")
-    public String formPage(@RequestParam(value = "carName", required = false) String carName, 
-                           HttpSession session, 
-                           Model model) {
+    public String formPage(HttpSession session) {
 
         if (session.getAttribute("loginUser") == null) {
             return "redirect:/consult/form";
         }
 
-        // 넘어온 차량 이름을 모델에 담아 전송 (기존 코드에 carName 처리 추가)
-        model.addAttribute("selectedCar", carName);
-
         return "client/consult/consultForm";
     }
 
-    // 상담 등록 (기존 로직 및 로그 출력 그대로 유지)
+    // 상담 등록
     @PostMapping("/register")
     public String submitForm(Consult consultation, HttpSession session) {
 
@@ -146,9 +134,11 @@ public class ConsultController {
 
         Consult consult;
 
+        // 관리자/딜러는 전체 조회 가능
         if (isAdminOrDealer(memberStatus)) {
             consult = consultationService.findById(id);
         } else {
+            // 일반 회원은 본인 상담만 조회 가능
             consult = consultationService.findByConsultNoAndMemberNo(id, memberNo);
         }
 
