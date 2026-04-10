@@ -3,10 +3,17 @@ package com.kiaev.client.mypage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MypageRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public MypageRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Mypage findMemberInfoByMemberNo(Long memberNo) {
         Mypage m = new Mypage();
@@ -47,7 +54,38 @@ public class MypageRepository {
     }
 
     public List<Mypage> findBoardHistoryByMemberNo(Long memberNo) {
-        return new ArrayList<>();
+
+        String sql = """
+            SELECT 
+                board_no,
+                title,
+                content,
+                created_at,
+                inquiry_status
+            FROM board_tbl
+            WHERE member_no = ?
+            ORDER BY created_at DESC
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Mypage m = new Mypage();
+
+            m.setBoardNo(rs.getLong("board_no"));
+            m.setBoardTitle(rs.getString("title"));
+            m.setBoardContent(rs.getString("content"));
+
+            if (rs.getTimestamp("created_at") != null) {
+                m.setBoardDate(
+                    rs.getTimestamp("created_at")
+                      .toLocalDateTime()
+                      .toLocalDate()
+                );
+            }
+
+            m.setBoardStatus(rs.getString("inquiry_status"));
+
+            return m;
+        }, memberNo);
     }
 
     public void deleteMember(Long memberNo) {

@@ -2,6 +2,8 @@ package com.kiaev.client.board;
 
 import com.kiaev.client.board.Board;
 import com.kiaev.client.board.BoardService;
+import com.kiaev.client.login.Login;          // 추가
+import jakarta.servlet.http.HttpSession;      // 추가
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -73,7 +75,14 @@ public class BoardController {
 
 	// 4. 실제 글 작성 처리 (명세서의 POST /board/write)
 	@PostMapping("/write")
-	public String boardWriteProcess(@ModelAttribute Board board) {
+	public String boardWriteProcess(@ModelAttribute Board board, HttpSession session) { // session 추가
+		Login loginUser = (Login) session.getAttribute("loginUser"); // 추가
+
+		// 로그인한 회원번호를 게시글에 저장
+		if (loginUser != null) {
+			board.setMemberNo(loginUser.getMemberNo()); // 추가
+		}
+
 		boardService.saveBoard(board);
 		// 저장이 끝나면 다시 목록 화면으로 알아서 이동(Redirect) 시킵니다.
 		return "redirect:/board/list";

@@ -140,12 +140,27 @@ th {
 	background: #89c541;
 }
 
-/* 추가: 문의 내역 없을 때 메시지 */
 .empty-message {
 	padding: 50px 16px;
 	color: #666;
 	font-size: 16px;
 	text-align: center;
+}
+
+/* 추가: 상세확인 버튼 */
+.detail-btn {
+	display: inline-block;
+	padding: 8px 14px;
+	background: #05141f;
+	color: #fff !important;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.detail-btn:hover {
+	background: #89c541;
+	color: #fff !important;
 }
 </style>
 </head>
@@ -178,21 +193,25 @@ th {
 							<th>제목</th>
 							<th>등록 일자</th>
 							<th>문의 상태</th>
+							<th>상세</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="board : ${boardList}">
-							<td th:text="${board.title}"></td>
-							<td th:text="${board.regDate}"></td>
+							<td th:text="${board.boardTitle}"></td>
+							<td th:text="${board.boardDate}"></td>
 							<td>
 								<span th:if="${board.boardStatus == '답변대기'}" class="badge wait" th:text="${board.boardStatus}"></span>
 								<span th:if="${board.boardStatus == '답변완료'}" class="badge done" th:text="${board.boardStatus}"></span>
+								<span th:if="${board.boardStatus == null or board.boardStatus == ''}" class="badge wait">답변대기</span>
+							</td>
+							<td>
+								<a th:href="@{/board/detail(boardNo=${board.boardNo})}" class="detail-btn">상세확인</a>
 							</td>
 						</tr>
 
-						<!-- 추가: 문의 내역이 없을 때 -->
 						<tr th:if="${boardList == null or #lists.isEmpty(boardList)}">
-							<td colspan="3" class="empty-message">현재 문의 내역이 없습니다.</td>
+							<td colspan="4" class="empty-message">현재 문의 내역이 없습니다.</td>
 						</tr>
 					</tbody>
 				</table>

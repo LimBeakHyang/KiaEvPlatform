@@ -78,9 +78,10 @@ public class MypageService {
         return mypageRepository.findConsultHistoryByMemberNo(memberNo);
     }
 
+    
     // 문의 내역 조회
     public List<Mypage> getBoardHistory(Long memberNo) {
-        return mypageRepository.findConsultHistoryByMemberNo(memberNo);
+        return mypageRepository.findBoardHistoryByMemberNo(memberNo);
     }
 
     // 관심 차량 조회
