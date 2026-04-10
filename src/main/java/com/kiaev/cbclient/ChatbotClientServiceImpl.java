@@ -1,37 +1,44 @@
 package com.kiaev.cbclient;
 
+import com.kiaev.client.login.Login;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-// import org.springframework.mail.javamail.JavaMailSender; // 1. 여기도 잠시 주석
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Service("legacyChatbotClientService")
 @RequiredArgsConstructor
 public class ChatbotClientServiceImpl implements ChatbotClientService {
 
     private final ChatbotClientRepository repository;
-    
-    // 2. 이 부분을 주석 처리해야 스프링이 JavaMailSender 부품을 찾지 않습니다.
-    // private final JavaMailSender mailSender; 
+
+    @Override
+    @Transactional(readOnly = true)
+    public ChatbotInitResponse getInitialData(Login loginUser) {
+        throw new UnsupportedOperationException("Use primary chatbot service");
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ChatbotAnswerResponse answer(ChatbotAnswerRequest request) {
+        throw new UnsupportedOperationException("Use primary chatbot service");
+    }
 
     @Override
     @Transactional
-    public void registerInquiry(ChatInquiry chatInquiry) {
-        // 1. DB 저장 확인용
+    public void registerInquiry(ChatbotInquiryRequest request, Login loginUser) {
+        ChatInquiry chatInquiry = ChatInquiry.builder()
+                .member_no(loginUser != null ? loginUser.getMemberNo() : null)
+                .car_no(request.getCarNo())
+                .category(request.getCategory())
+                .writer_name(loginUser != null ? loginUser.getMemberName() : request.getWriterName())
+                .writer_email(loginUser != null ? loginUser.getEmail() : request.getWriterEmail())
+                .content(request.getContent())
+                .build();
+
         repository.save(chatInquiry);
-        
-        // 2. 이메일 알림 발송 (잠시 꺼둠)
-        // sendMail(chatInquiry);
     }
 
     private void sendMail(ChatInquiry chatInquiry) {
-        // mailSender를 주석 처리했으므로 이 안의 로직도 잠시 비워둡니다.
-        /*
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("admin@kiaev.com");
-        message.setSubject("[KiaEV] 신규 문의 알림");
-        message.setText("내용: " + chatInquiry.getContent());
-        */
+        // legacy placeholder
     }
 }
