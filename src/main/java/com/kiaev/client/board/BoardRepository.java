@@ -15,6 +15,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	
 	// 정렬(OrderBy)은 서비스 로직에서 Pageable에 담아서 넘길 것이므로 이름에서 제거합니다.
     Page<Board> findAllByHidden(String hidden, Pageable pageable);
+    
+ // 내 회원번호(memberNo)로 작성된 게시글만 필터링해서 가져오기
+    List<Board> findAllByMemberNoOrderByBoardNoDesc(Long memberNo);
 
 }
 
