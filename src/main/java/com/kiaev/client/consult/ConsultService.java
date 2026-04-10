@@ -77,5 +77,5 @@ public class ConsultService {
         }
 
         consultationRepository.save(consult);
-    }
+}
 }
