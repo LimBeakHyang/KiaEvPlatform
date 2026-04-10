@@ -74,16 +74,21 @@ public class MainController {
 
             /**
              * 1. 팝업용 공지사항 가공
+             * - filter: 'NOTICE' 타입이고 '삭제되지 않은(N)' 글만 필터링
+             * - sorted: 생성일자(CreatedAt) 기준 내림차순(최신순) 정렬
+             * - nullsLast: 날짜 데이터가 없는 더미 데이터가 있어도 서버가 터지지 않게 방어
+             * - limit(2): 팝업 공간을 고려해 최신글 2개만 선택
              */
             List<Board> popupNotices = boardRepository.findAll().stream()
-                    .filter(b -> ("Y".equals(b.getNoticeYn()) || "공지사항".equals(b.getBoardType()) || "NOTICE".equals(b.getBoardType())) 
-                                 && "N".equals(b.getDeletedYn()))
+                    .filter(b -> "NOTICE".equals(b.getBoardType()) && "N".equals(b.getDeletedYn()))
                     .sorted(Comparator.comparing(Board::getCreatedAt, Comparator.nullsLast(Comparator.reverseOrder())))
                     .limit(2)
                     .collect(Collectors.toList());
 
             /**
              * 2. 팝업용 프로모션 가공
+             * - findByIsActiveTrue...: 현재 진행 기간 내에 있는 활성화된 프로모션 조회
+             * - sorted/limit(1): 그 중 가장 최근에 등록된 혜택 1개만 선택
              */
             List<Promotion> popupPromos = promotionRepository
                     .findByIsActiveTrueAndStartDateBeforeAndEndDateAfter(now, now)
@@ -97,6 +102,11 @@ public class MainController {
             model.addAttribute("promoList", popupPromos);
 
         } catch (Exception e) {
+            /**
+             * [예외 방어]
+             * DB 데이터 문제 등으로 에러 발생 시, 사용자에게 500 에러 페이지 대신
+             * 데이터가 비어있는 클린한 팝업창을 보여주도록 처리
+             */
             model.addAttribute("noticeList", Collections.emptyList());
             model.addAttribute("promoList", Collections.emptyList());
             System.err.println("팝업 데이터 로딩 중 오류 발생: " + e.getMessage());

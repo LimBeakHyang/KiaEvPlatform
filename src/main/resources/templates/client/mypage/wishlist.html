@@ -32,13 +32,21 @@ html { overflow-y: scroll !important; }
 /* 왼쪽 사이드 메뉴 */
 .side-menu {
     width: 240px; background: #111111; border-radius: 12px;
-    padding: 40px 25px; min-height: 600px;
+    padding: 40px 25px; min-height: 600px;  position: relative;
 }
 .menu-list { list-style: none; margin-top: 30px; }
 .menu-list li { margin-bottom: 25px; }
 .menu-list li a { color: #fff; font-size: 18px; font-weight: 500; display: block; }
 .menu-list li a:hover { color: #89c541; }
-.logout-box { margin-top: 50px; padding-top: 20px; border-top: 1px solid #333; }
+.logout-box {
+	position: absolute;
+	left: 25px;
+	right: 25px;
+	bottom: 25px;
+	padding-top: 20px;
+	border-top: 1px solid #333;
+	text-align: right;
+}
 .logout-box a { color: #999; font-size: 16px; }
 
 /* 오른쪽 본문 영역 */
@@ -129,7 +137,7 @@ html { overflow-y: scroll !important; }
         <div class="mypage-container">
             <div class="side-menu">
                 <ul class="menu-list">
-                    <li><a th:href="@{/mypage/info}">내 정보 확인</a></li>
+                    <li><a th:href="@{/mypage/myinfo}">내 정보 확인</a></li>
                     <li><a th:href="@{/mypage/consult}">상담내역 조회</a></li>
                     <li><a th:href="@{/mypage/board}">나의 문의 내역</a></li>
                     <li><a th:href="@{/mypage/wishlist}" style="color: #89c541; font-weight: 700;">관심 차량 목록</a></li>
