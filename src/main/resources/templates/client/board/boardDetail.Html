@@ -17,41 +17,44 @@
     </style>
 </head>
 <body>
-<th:block th:replace="~{common/header :: header}"></th:block>
 
-    <div class="container">
-        <h2>🔎 게시글 상세 보기</h2>
+	<th:block th:replace="~{common/header :: header}"></th:block>
 
-        <table>
-            <tbody>
-                <tr>
-                    <th>제목</th>
-                    <td colspan="3" th:text="${board.title}">게시글 제목</td>
-                </tr>
-                <tr>
-                    <th>분류</th>
-                    <td th:text="${board.boardType}">문의글</td>
-                    <th>작성일</th>
-                    <td th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}">2026-03-26</td>
-                </tr>
-                <tr>
-                    <th>조회수</th>
-                    <td colspan="3" th:text="${board.viewCount}">0</td>
-                </tr>
-            </tbody>
-        </table>
+	<div class="container">
+		<h2>게시글 상세 보기</h2>
 
-        <div class="content-area" th:text="${board.content}">
-            게시글 내용이 여기에 들어갑니다.
-        </div>
+		<table>
+			<tbody>
+				<tr>
+					<th>제목</th>
+					<td colspan="3" th:text="${board.title}">게시글 제목</td>
+				</tr>
+				<tr>
+					<th>분류</th>
+					<td th:text="${board.boardType}">문의글</td>
+					<th>작성일</th>
+					<td
+						th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}">2026-03-26</td>
+				</tr>
+				<tr>
+					<th>조회수</th>
+					<td colspan="3" th:text="${board.viewCount}">0</td>
+				</tr>
+			</tbody>
+		</table>
 
-       
-        
-        <div class="btn-group">
-            <a th:href="@{/board/list}" class="btn btn-list">목록으로</a>
-            <a th:href="@{/board/edit(boardNo=${board.boardNo})}" class="btn btn-edit">수정</a>
-            
-            <form th:action="@{/board/delete}" method="post" style="display: inline-block;">
+		<div class="content-area" th:text="${board.content}">게시글 내용이 여기에
+			들어갑니다.</div>
+
+
+
+		<!--<div class="btn-group">
+			<a th:href="@{/board/list}" class="btn btn-list">목록으로</a> <a
+				th:href="@{/board/edit(boardNo=${board.boardNo})}"
+				class="btn btn-edit">수정</a>
+
+			<form th:action="@{/board/delete}" method="post" style="display: inline-block;">
+
                 <input type="hidden" name="boardNo" th:value="${board.boardNo}">
                 <button type="submit" class="btn btn-delete" onclick="return confirm('정말로 이 게시글을 삭제하시겠습니까?');">삭제</button>
             </form>
