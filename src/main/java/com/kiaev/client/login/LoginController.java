@@ -48,24 +48,6 @@ public class LoginController {
 
         session.setAttribute("loginUser", loginUser);
 
-
-        // ================================
-        // 추가 기능 1 : 세션 유지시간 설정
-        // 1800초 = 30분
-        // 사용자가 30분 동안 아무 동작이 없으면 세션이 만료됨
-        // ================================
-        session.setMaxInactiveInterval(60);
-
-
-        // [수정] 세션에 저장된 "원래 목적지"가 있는지 확인합니다.
-        String prevPage = (String) session.getAttribute("prevPage");
-        
-        if (prevPage != null) {
-            session.removeAttribute("prevPage"); // 사용했으니 메모지는 지웁니다.
-            return "redirect:" + prevPage; // 원래 가려던 곳으로 이동!
-        }
-        
-
         // 메인페이지로 이동
         return "redirect:/";
     }
@@ -75,17 +57,6 @@ public class LoginController {
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
-    }
-
-    // ================================
-    // 추가 기능 2 : 세션 만료 안내용 전용 주소
-    // 다른 컨트롤러에서 세션이 없을 때
-    // return "redirect:/session-expired";
-    // 이렇게 보내면 로그인 페이지로 이동하면서 안내문구가 뜸
-    // ================================
-    @GetMapping("/session-expired")
-    public String sessionExpired() {
-        return "redirect:/login?timeout=true";
     }
 
     // 아이디 찾기 페이지

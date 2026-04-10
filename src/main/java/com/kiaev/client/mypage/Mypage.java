@@ -26,7 +26,6 @@ public class Mypage {
     private String boardTitle;
     private String boardContent;
     private LocalDate boardDate;
-    private String boardStatus;   // 추가
 
     // 관심 차량
     private Long carNo;
@@ -172,16 +171,6 @@ public class Mypage {
 
     public void setBoardDate(LocalDate boardDate) {
         this.boardDate = boardDate;
-    }
-
-    // 추가
-    public String getBoardStatus() {
-        return boardStatus;
-    }
-
-    // 추가
-    public void setBoardStatus(String boardStatus) {
-        this.boardStatus = boardStatus;
     }
 
     public Long getCarNo() {
