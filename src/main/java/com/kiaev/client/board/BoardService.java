@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service // 스프링부트에게 "이 클래스는 비즈니스 로직을 담당하는 서비스야!" 라고 알려줍니다.
 @RequiredArgsConstructor // 롬복 기능: BoardRepository를 자동으로 연결(주입)해 줍니다.
@@ -21,6 +22,8 @@ public class BoardService {
 
 	// 1. 게시글 저장 (방금 테스트로 확인했던 그 기능입니다!)
 	public void saveBoard(Board board) {
+		board.setBoardType("문의글");
+		board.setNoticeYn("N");
 		boardRepository.save(board);
 	}
 
@@ -38,19 +41,31 @@ public class BoardService {
 	}
 
 	// 4. 게시글 삭제
-	public void deleteBoard(Long boardNo) {
-		boardRepository.deleteById(boardNo);
+	public void deleteBoard(Long boardNo, Long memberNo) {
+		Board board = boardRepository.findById(boardNo)
+				.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+		if (!isAuthor(board, memberNo)) {
+			throw new IllegalStateException("본인이 작성한 글만 삭제할 수 있습니다.");
+		}
+
+		boardRepository.delete(board);
 	}
 
 	// 5. 게시글 수정 (일정표 8-3)
 	@Transactional // ★중요! DB의 데이터가 변경될 때 꼭 붙여주는 마법의 어노테이션입니다.
-	public void updateBoard(Board updatedBoard) {
+	public void updateBoard(Board updatedBoard, Long memberNo) {
 		// 1. 기존 글을 DB에서 확실하게 찾아옵니다.
 		Board board = boardRepository.findById(updatedBoard.getBoardNo())
 				.orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
 
 		// 2. 화면에서 넘어온 새 데이터(분류, 제목, 내용)로 기존 글의 내용만 쏙쏙 덮어씁니다.
-		board.setBoardType(updatedBoard.getBoardType());
+		if (!isAuthor(board, memberNo)) {
+			throw new IllegalStateException("본인이 작성한 글만 수정할 수 있습니다.");
+		}
+
+		board.setBoardType("문의글");
+		board.setNoticeYn("N");
 		board.setTitle(updatedBoard.getTitle());
 		board.setContent(updatedBoard.getContent());
 
@@ -105,6 +120,10 @@ public class BoardService {
 
 		// 'N'인 데이터만 가져오면서, 우리가 만든 다중 정렬 조건을 적용!
 		return boardRepository.findAllByHidden("N", sortedPageable);
+	}
+
+	public boolean isAuthor(Board board, Long memberNo) {
+		return board != null && memberNo != null && Objects.equals(board.getMemberNo(), memberNo);
 	}
 
 }
