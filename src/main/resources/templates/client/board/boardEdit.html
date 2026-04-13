@@ -1,65 +1,58 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>기아 전기차 - 문의글 수정</title>
     <style>
-        /* 💡 50px을 120px auto 50px로 변경! */
-        .container { width: 800px; margin: 120px auto 50px; font-family: sans-serif; } 
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .container { width: 800px; margin: 120px auto 50px; font-family: sans-serif; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         th, td { border: 1px solid #ddd; padding: 12px; }
         th { background-color: #f4f4f4; width: 15%; text-align: center; }
-        input[type="text"], select { width: 90%; padding: 8px; border: 1px solid #ccc; }
+        input[type="text"] { width: 90%; padding: 8px; border: 1px solid #ccc; }
         textarea { width: 90%; height: 200px; padding: 8px; border: 1px solid #ccc; resize: none; }
         .btn-group { text-align: center; margin-top: 20px; }
         .btn { display: inline-block; padding: 10px 20px; color: white; text-decoration: none; border: none; cursor: pointer; font-size: 14px; margin: 0 5px; }
-        .btn-submit { background-color: #0d6efd; } /* 수정 버튼은 파란색으로 포인트! */
+        .btn-submit { background-color: #0d6efd; }
         .btn-cancel { background-color: #6c757d; }
     </style>
 </head>
 <body>
 <th:block th:replace="~{common/header :: header}"></th:block>
 
-    <div class="container">
-        <h2> 문의글 수정하기</h2>
+<div class="container">
+    <h2>문의글 수정하기</h2>
 
-        <form th:action="@{/board/update}" method="post">
-            
-            <input type="hidden" name="boardNo" th:value="${board.boardNo}">
+    <form th:action="@{/board/update}" method="post">
+        <input type="hidden" name="boardNo" th:value="${board.boardNo}">
+        <input type="hidden" name="boardType" value="문의글">
 
-            <table>
-                <tbody>
-                    <tr>
-                        <th>분류</th>
-                        <td>
-                            <select name="boardType">
-                                <option value="문의글" th:selected="${board.boardType == '문의글'}">문의글</option>
-                                <option value="공지사항" th:selected="${board.boardType == '공지사항'}">공지사항</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>제목</th>
-                        <td>
-                            <input type="text" name="title" th:value="${board.title}" required>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td>
-                            <textarea name="content" required th:text="${board.content}"></textarea>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <table>
+            <tbody>
+                <tr>
+                    <th>분류</th>
+                    <td>문의글</td>
+                </tr>
+                <tr>
+                    <th>제목</th>
+                    <td>
+                        <input type="text" name="title" th:value="${board.title}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>내용</th>
+                    <td>
+                        <textarea name="content" required th:text="${board.content}"></textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-            <div class="btn-group">
-                <button type="submit" class="btn btn-submit">수정완료</button>
-                <a th:href="@{/board/detail(boardNo=${board.boardNo})}" class="btn btn-cancel">취소</a>
-            </div>
-        </form>
-    </div>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-submit">수정완료</button>
+            <a th:href="@{/board/detail(boardNo=${board.boardNo})}" class="btn btn-cancel">취소</a>
+        </div>
+    </form>
+</div>
 <th:block th:replace="~{common/footer :: footer}"></th:block>
 </body>
 </html>
