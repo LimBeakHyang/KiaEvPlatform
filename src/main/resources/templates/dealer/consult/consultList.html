@@ -19,16 +19,6 @@
 	margin-bottom: 20px;
 }
 
-/* 제목 행 */
-.page-title-row {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 20px;
-	flex-wrap: wrap;
-	gap: 12px;
-}
-
 /* 상담 목록 패널 */
 .consult-list-panel {
 	margin-bottom: 0;
@@ -82,38 +72,6 @@
 /* 메모 표시 셀 */
 .consult-table .td-memo {
 	white-space: nowrap;
-}
-
-/* 상태 배지 */
-.status-badge {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	padding: 7px 12px;
-	border-radius: 999px;
-	font-size: 13px;
-	font-weight: 800;
-	text-align: center;
-	min-width: 78px;
-	white-space: nowrap;
-}
-
-.status-waiting {
-	background: #f3f3f3;
-	color: #111;
-	border: 1px solid #d8d8d8;
-}
-
-.status-progress {
-	background: #111;
-	color: #fff;
-	border: 1px solid #111;
-}
-
-.status-completed {
-	background: #e9e9e9;
-	color: #111;
-	border: 1px solid #bdbdbd;
 }
 
 /* 메모 존재 여부 배지 */
@@ -184,122 +142,134 @@
 	<div class="dealer-layout">
 
 		<!-- =====================================================
-		     좌측 사이드바
-		     - 현재 페이지는 상담 관리 활성화
-		     - 로그아웃 버튼 포함
+		     상단 고정 헤더
+		     - 모든 딜러 페이지 공통
+		     - 현재 페이지: 상담 관리 active
 		===================================================== -->
-		<aside class="sidebar">
-			<a th:href="@{/dealer/main}" class="logo">KIA EV Dealer</a>
+		<header class="top-fixed-header">
+			<div class="top-header-left">
+				<a th:href="@{/dealer/main}" class="top-logo">KIA EV Dealer</a>
 
-			<nav class="menu">
-				<a th:href="@{/dealer/main}">대시보드</a> <a
-					th:href="@{/dealer/consult/list}" class="active">상담 관리</a> <a
-					th:href="@{/dealer/sales/list}">판매 관리</a> <a
-					th:href="@{/dealer/sales/register}">판매 등록</a> <a
-					th:href="@{/dealer/statistics}">통계</a>
-			</nav>
-
-			<!-- 로그아웃 영역 -->
-			<div class="logout-area">
-				<a th:href="@{/dealer/logout}" class="logout-btn">로그아웃</a>
+				<nav class="top-nav">
+					<a th:href="@{/dealer/main}">대시보드</a> <a
+						th:href="@{/dealer/consult/list}" class="active">상담관리</a> <a
+						th:href="@{/dealer/sales/list}">판매관리</a> <a
+						th:href="@{/dealer/sales/register}">판매등록</a> <a
+						th:href="@{/dealer/statistics}">통계</a> <a
+						th:href="@{/dealer/logout}">로그아웃</a>
+				</nav>
 			</div>
-		</aside>
+
+			<div class="top-header-right">
+				<div class="top-user-box">
+					<span class="top-user-label">접속 사용자</span> <strong
+						class="top-user-name"
+						th:text="${session.loginDealer != null ? session.loginDealer.dealerName + ' 딜러' : '딜러'}">홍길동
+						딜러</strong>
+				</div>
+			</div>
+		</header>
 
 		<!-- =====================================================
 		     메인 컨텐츠
+		     - 기존 상담 목록 기능 유지
+		     - 수정 사항:
+		       1) 실제 consultNo 대신 화면용 순번(stat.count) 표시
 		===================================================== -->
 		<main class="content consult-list-page">
+			<div class="dashboard-container">
 
-			<!-- 페이지 상단 제목 -->
-			<header class="page-header">
-				<h1 class="page-title">상담 관리</h1>
-			</header>
+				<!-- 페이지 상단 제목 -->
+				<header class="page-header">
+					<h1 class="page-title">상담 관리</h1>
+				</header>
 
-			<!-- =====================================================
-			     상담 데이터가 없을 때
-			===================================================== -->
-			<div class="empty-box" th:if="${#lists.isEmpty(consultList)}">
-				<h2 class="empty-box-title">조회된 상담 내역이 없습니다.</h2>
-				<p class="empty-box-desc">현재 담당 딜러에게 배정된 상담 요청이 없거나 조회 가능한 상담
-					데이터가 없습니다.</p>
+				<!-- =====================================================
+				     상담 데이터가 없을 때
+				===================================================== -->
+				<div class="empty-box" th:if="${#lists.isEmpty(consultList)}">
+					<h2 class="empty-box-title">조회된 상담 내역이 없습니다.</h2>
+					<p class="empty-box-desc">현재 담당 딜러에게 배정된 상담 요청이 없거나 조회 가능한 상담
+						데이터가 없습니다.</p>
+				</div>
+
+				<!-- =====================================================
+				     상담 데이터가 있을 때
+				===================================================== -->
+				<section class="panel consult-list-panel"
+					th:if="${not #lists.isEmpty(consultList)}">
+
+					<div class="panel-header">
+						<div>
+							<h2 class="section-title">등록된 상담 목록</h2>
+						</div>
+					</div>
+
+					<div class="table-wrap">
+						<table class="dealer-table consult-table">
+							<thead>
+								<tr>
+									<th>상담번호</th>
+									<th>회원번호</th>
+									<th>차량번호</th>
+									<th>예산금액</th>
+									<th>상담상태</th>
+									<th>상담메모</th>
+									<th>상담신청일</th>
+									<th>상세보기</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- =====================================================
+								     수정 포인트
+								     - consultList 반복문에 상태 변수 stat 추가
+								     - 화면용 상담번호를 stat.count로 출력
+								     - 실제 consult.consultNo는 상세보기 링크에서 그대로 사용
+								===================================================== -->
+								<tr th:each="consult, stat : ${consultList}">
+									<td class="td-number" th:text="${stat.count}">1</td>
+									<td class="td-member" th:text="${consult.memberNo}">20260401</td>
+									<td class="td-carno" th:text="${consult.carNo}">123가1111</td>
+
+									<td class="td-amount"
+										th:text="${consult.budgetAmount != null ? #numbers.formatInteger(consult.budgetAmount, 3, 'COMMA') + '원' : '-'}">
+										45,000,000원</td>
+
+									<td><span th:if="${consult.consultStatusKor == '대기'}"
+										class="status-badge status-waiting"
+										th:text="${consult.consultStatusKor}">대기</span> <span
+										th:if="${consult.consultStatusKor == '진행중'}"
+										class="status-badge status-progress"
+										th:text="${consult.consultStatusKor}">진행중</span> <span
+										th:if="${consult.consultStatusKor == '완료'}"
+										class="status-badge status-completed"
+										th:text="${consult.consultStatusKor}">완료</span></td>
+
+									<td class="td-memo"><span
+										th:if="${consult.consultMemo != null and !#strings.isEmpty(consult.consultMemo)}"
+										class="memo-badge memo-exists">메모 있음</span> <span
+										th:if="${consult.consultMemo == null or #strings.isEmpty(consult.consultMemo)}"
+										class="memo-empty">-</span></td>
+
+									<td class="td-date"
+										th:text="${consult.requestDate != null ? #temporals.format(consult.requestDate, 'yyyy-MM-dd HH:mm:ss') : '-'}">
+										2026-04-02 15:10:30</td>
+
+									<td><a
+										th:href="@{/dealer/consult/detail(consultNo=${consult.consultNo})}"
+										class="btn-detail">상세보기</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+
 			</div>
 
-			<!-- =====================================================
-			     상담 데이터가 있을 때
-			===================================================== -->
-			<section class="panel consult-list-panel"
-				th:if="${not #lists.isEmpty(consultList)}">
-
-				<div class="panel-header">
-					<div>
-						<h2 class="section-title">등록된 상담 목록</h2>
-					</div>
-				</div>
-
-				<div class="table-wrap">
-					<table class="dealer-table consult-table">
-						<thead>
-							<tr>
-								<th>상담번호</th>
-								<th>회원번호</th>
-								<th>차량번호</th>
-								<th>예산금액</th>
-								<th>상담상태</th>
-								<th>상담메모</th>
-								<th>상담신청일</th>
-								<th>상세보기</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="consult : ${consultList}">
-
-								<!-- 상담번호 -->
-								<td class="td-number" th:text="${consult.consultNo}">1</td>
-
-								<!-- 회원번호 -->
-								<td class="td-member" th:text="${consult.memberNo}">20260401</td>
-
-								<!-- 차량번호 -->
-								<td class="td-carno" th:text="${consult.carNo}">123가1111</td>
-
-								<!-- 예산금액 -->
-								<td class="td-amount"
-									th:text="${consult.budgetAmount != null ? #numbers.formatInteger(consult.budgetAmount, 3, 'COMMA') + '원' : '-'}">
-									45,000,000원</td>
-
-								<!-- 상담상태 -->
-								<td><span th:if="${consult.consultStatusKor == '대기'}"
-									class="status-badge status-waiting"
-									th:text="${consult.consultStatusKor}">대기</span> <span
-									th:if="${consult.consultStatusKor == '진행중'}"
-									class="status-badge status-progress"
-									th:text="${consult.consultStatusKor}">진행중</span> <span
-									th:if="${consult.consultStatusKor == '완료'}"
-									class="status-badge status-completed"
-									th:text="${consult.consultStatusKor}">완료</span></td>
-
-								<!-- 상담메모 존재 여부 -->
-								<td class="td-memo"><span
-									th:if="${consult.consultMemo != null and !#strings.isEmpty(consult.consultMemo)}"
-									class="memo-badge memo-exists">메모 있음</span> <span
-									th:if="${consult.consultMemo == null or #strings.isEmpty(consult.consultMemo)}"
-									class="memo-empty">-</span></td>
-
-								<!-- 상담신청일 -->
-								<td class="td-date"
-									th:text="${consult.requestDate != null ? #temporals.format(consult.requestDate, 'yyyy-MM-dd HH:mm:ss') : '-'}">
-									2026-04-02 15:10:30</td>
-
-								<!-- 상세보기 버튼 -->
-								<td><a
-									th:href="@{/dealer/consult/detail(consultNo=${consult.consultNo})}"
-									class="btn-detail">상세보기</a></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</section>
-
+			<!-- 공통 푸터 -->
+			<footer class="dealer-footer">
+				<p>© 2026 KIA EV Project Team DAY6.</p>
+			</footer>
 		</main>
 	</div>
 

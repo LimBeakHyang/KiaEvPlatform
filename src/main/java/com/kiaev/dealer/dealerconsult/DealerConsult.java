@@ -18,6 +18,9 @@ import jakarta.persistence.Transient;
  * 추가 설명: - consult_memo 는 고객 / 관리자 측에서 작성한 상담 관련 메모를 저장하는 공용 컬럼입니다. - 딜러 화면에서는
  * 이 값을 "조회 전용"으로만 사용합니다. - consult_memo 에 여러 줄 텍스트가 들어올 수 있으므로 화면에서는 줄바꿈이 유지되도록
  * 표시합니다.
+ * 
+ * 추가 보완: - car_model_no 컬럼을 추가로 매핑합니다. - 이 값은 차량 모델 통계용 식별값입니다. - 예:
+ * car_tbl.car_no = 1(EV4), 5(EV3), 9(EV6) ...
  */
 @Entity
 @Table(name = "consult_tbl")
@@ -36,9 +39,13 @@ public class DealerConsult {
 	@Column(name = "member_no")
 	private Integer memberNo;
 
-	// 차량번호
+	// 차량번호(번호판)
 	@Column(name = "car_no")
 	private String carNo;
+
+	// 차량 모델 번호(car_tbl.car_no 와 연결되는 값)
+	@Column(name = "car_model_no")
+	private Integer carModelNo;
 
 	// 딜러번호
 	@Column(name = "dealer_no")
@@ -160,6 +167,14 @@ public class DealerConsult {
 
 	public void setCarNo(String carNo) {
 		this.carNo = carNo;
+	}
+
+	public Integer getCarModelNo() {
+		return carModelNo;
+	}
+
+	public void setCarModelNo(Integer carModelNo) {
+		this.carModelNo = carModelNo;
 	}
 
 	public Integer getDealerNo() {

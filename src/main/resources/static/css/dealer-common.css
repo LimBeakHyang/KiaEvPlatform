@@ -8,18 +8,25 @@
    - salesList.html
    - salesDetail.html
    - salesRegister.html
-   - statistics.html
+   - statisticsMain.html
 
    주요 목적:
    - 딜러 공통 레이아웃
-   - 좌측 사이드바 공통 스타일
+   - 공통 헤더 / 공통 푸터 스타일
    - 카드 / 테이블 / 버튼 / 폼 / 차트 공통 스타일
    - 목록 / 상세 / 통계 / 등록 화면의 톤 통일
+
+   이번 최종 수정 반영:
+   - 좌측 사이드바는 화면에서 숨김
+   - 상단 메뉴형 헤더를 공통 구조로 통일
+   - 각 메뉴 클릭 시 기존 페이지 이동 유지
+   - 푸터를 중앙 하단 정렬로 변경
+   - 기존 기능은 제거하지 않고 디자인/레이아웃만 정리
 ========================================================= */
 
-/* =========================
-   기본 공통 설정
-========================= */
+/* =========================================================
+   1. 기본 공통 설정
+========================================================= */
 * {
 	box-sizing: border-box;
 }
@@ -30,7 +37,7 @@ html, body {
 }
 
 body {
-	font-family: Arial, sans-serif;
+	font-family: Arial, "맑은 고딕", sans-serif;
 	background-color: #f5f5f5;
 	color: #111;
 }
@@ -44,148 +51,311 @@ button, input, select, textarea {
 	font-family: inherit;
 }
 
-/* =========================
-   전체 레이아웃
-========================= */
+/* =========================================================
+   2. 전체 레이아웃
+========================================================= */
 .dealer-layout {
 	display: flex;
 	min-height: 100vh;
 }
 
-/* =========================
-   좌측 사이드바
-   - 세로 배치 구조
-   - 메뉴는 위쪽
-   - 로그아웃은 아래쪽
-   - 긴 페이지에서도 화면 높이 기준으로 유지
-========================= */
+/* =========================================================
+   3. 기존 좌측 사이드바 숨김 처리
+   - HTML에 남아 있어도 화면에서는 보이지 않음
+   - 구조/기능 삭제가 아니라 화면에서만 비표시
+========================================================= */
 .sidebar {
-	width: 240px;
-	background-color: #111;
-	color: #fff;
-	padding: 24px 18px;
-	flex-shrink: 0;
-	display: flex;
-	flex-direction: column;
-	/* 추가 */
-	min-height: 100vh;
-	position: sticky;
-	top: 0;
-	align-self: flex-start;
+	display: none !important;
 }
 
-/* =========================
-   로고
-========================= */
-.logo {
-	display: block;
-	font-size: 24px;
-	font-weight: 700;
-	margin-bottom: 30px;
-	padding-bottom: 14px;
-	border-bottom: 1px solid #333;
-	color: #fff;
-	letter-spacing: -0.2px;
+.logo, .menu, .logout-area, .logout-btn {
+	display: none !important;
 }
 
-.logo:hover {
-	color: #f1f1f1;
-}
-
-/* =========================
-   메뉴 영역
-   - 남는 공간을 차지
-   - 로그아웃이 아래로 밀리도록 구성
-========================= */
-.menu {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-	flex: 1;
-}
-
-/* =========================
-   메뉴 버튼
-========================= */
-.menu a {
-	display: block;
-	padding: 12px 14px;
-	background-color: #222;
-	color: #fff;
-	border-radius: 8px;
-	font-size: 15px;
-	font-weight: 500;
-	line-height: 1.4;
-	transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s
-		ease;
-}
-
-.menu a:hover {
-	background-color: #333;
-	transform: translateX(2px);
-}
-
-/* =========================
-   현재 활성 메뉴
-========================= */
-.menu a.active {
-	background-color: #fff;
-	color: #111;
-	font-weight: 700;
-}
-
-/* =========================
-   로그아웃 영역
-   - 사이드바 하단 배치
-========================= */
-.logout-area {
-	margin-top: auto;
-	padding-top: 24px;
-}
-
-/* =========================
-   로그아웃 버튼
-========================= */
-.logout-btn {
-	display: block;
-	width: 100%;
-	padding: 12px 14px;
-	background-color: #1a1a1a;
-	border: 1px solid #333;
-	border-radius: 10px;
-	color: #fff;
-	font-size: 15px;
-	font-weight: 700;
-	line-height: 1.4;
-	text-align: left;
-	transition: background-color 0.2s ease, color 0.2s ease, border-color
-		0.2s ease;
-}
-
-.logout-btn:hover {
-	background-color: #2a2a2a;
-	border-color: #555;
-	color: #fff;
-}
-
-/* =========================
-   메인 컨텐츠 영역
-========================= */
+/* =========================================================
+   4. 메인 컨텐츠 영역
+   - 상단 고정 헤더(top-fixed-header)가 있으므로
+     본문이 헤더에 가리지 않도록 top padding 확보
+========================================================= */
 .content {
 	flex: 1;
-	padding: 28px 30px;
+	padding: 78px 0 0 0;
 	background-color: #f5f5f5;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	min-width: 0;
 }
 
-/* 대시보드 중앙 정렬용 */
+/* =========================================================
+   5. 상단 고정 헤더
+   - 사용자 요청 이미지 스타일 기준
+   - 좌측 브랜드 / 가운데 메뉴 / 우측 사용자 정보
+========================================================= */
+.top-fixed-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 64px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 28px;
+	padding: 0 44px;
+	background: #ffffff;
+	border-top: 6px solid #111;
+	border-bottom: 1px solid #dcdcdc;
+	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+	z-index: 1000;
+}
+/* =========================================================
+   6. 헤더 좌측 영역
+========================================================= */
+.top-header-left {
+	display: flex;
+	align-items: center;
+	gap: 56px;
+	min-width: 0;
+}
+
+/* 브랜드 로고 */
+.top-logo {
+	display: inline-flex;
+	align-items: center;
+	font-size: 30px;
+	font-weight: 800;
+	color: #111;
+	letter-spacing: -0.4px;
+	white-space: nowrap;
+	line-height: 1;
+}
+
+/* =========================================================
+   7. 헤더 가운데 메뉴
+========================================================= */
+.top-nav {
+	display: flex;
+	align-items: center;
+	gap: 38px;
+	flex-wrap: nowrap;
+}
+
+.top-nav a {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 64px;
+	font-size: 14px;
+	font-weight: 700;
+	color: #222;
+	white-space: nowrap;
+	transition: color 0.2s ease;
+}
+
+.top-nav a:hover {
+	color: #000;
+}
+
+.top-nav a.active {
+	color: #111;
+	font-weight: 800;
+}
+
+.top-nav a.active::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 3px;
+	background: #111;
+	border-radius: 2px 2px 0 0;
+}
+
+/* =========================================================
+   8. 헤더 우측 사용자 정보
+========================================================= */
+.top-header-right {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	min-width: 180px;
+	flex-shrink: 0;
+}
+
+.top-user-box {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 2px;
+}
+
+.top-user-label {
+	font-size: 11px;
+	color: #888;
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.top-user-name {
+	font-size: 13px;
+	font-weight: 800;
+	color: #111;
+	line-height: 1.3;
+	white-space: nowrap;
+}
+
+/* =========================================================
+   9. 기존 dealer-header 구조도 호환 유지
+   - 혹시 남아 있는 페이지가 있어도 최대한 비슷하게 보이도록
+========================================================= */
+.dealer-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	padding: 18px 30px;
+	background-color: #ffffff;
+	border-bottom: 1px solid #e5e5e5;
+	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+}
+
+.dealer-header-left {
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
+	min-width: 180px;
+	gap: 10px;
+}
+
+.dealer-header-title {
+	margin: 0;
+	font-size: 22px;
+	font-weight: 800;
+	color: #111;
+	letter-spacing: -0.3px;
+	line-height: 1.2;
+	white-space: nowrap;
+}
+
+.dealer-header-desc {
+	display: none !important;
+}
+
+.dealer-header-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 34px;
+	flex: 1;
+	min-width: 0;
+}
+
+.dealer-nav-link {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 48px;
+	font-size: 15px;
+	font-weight: 700;
+	color: #111;
+	white-space: nowrap;
+	transition: color 0.2s ease;
+}
+
+.dealer-nav-link:hover {
+	color: #000;
+}
+
+.dealer-nav-link.active {
+	font-weight: 800;
+}
+
+.dealer-nav-link.active::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -10px;
+	height: 3px;
+	background-color: #111;
+	border-radius: 2px 2px 0 0;
+}
+
+.dealer-header-right {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	flex-shrink: 0;
+	margin-left: auto;
+	min-width: 180px;
+	justify-content: flex-end;
+}
+
+.dealer-user-box {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 2px;
+	padding-right: 2px;
+}
+
+.dealer-user-label {
+	font-size: 11px;
+	color: #888;
+	font-weight: 700;
+	letter-spacing: 0.2px;
+}
+
+.dealer-user-name {
+	font-size: 14px;
+	font-weight: 800;
+	color: #111;
+	line-height: 1.4;
+	white-space: nowrap;
+}
+
+.dealer-header-logout {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px 16px;
+	min-height: 40px;
+	border-radius: 999px;
+	background-color: #111;
+	color: #fff;
+	font-size: 13px;
+	font-weight: 700;
+	border: 1px solid #111;
+	transition: background-color 0.2s ease, transform 0.2s ease, box-shadow
+		0.2s ease;
+	white-space: nowrap;
+}
+
+.dealer-header-logout:hover {
+	background-color: #333;
+	color: #fff;
+	transform: translateY(-1px);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10);
+}
+
+/* =========================================================
+   10. 공통 컨텐츠 컨테이너
+========================================================= */
 .dashboard-container {
-	max-width: 1120px;
+	max-width: 1280px;
 	margin: 0 auto;
+	width: 100%;
+	padding: 28px 30px 24px 30px;
+	flex: 1;
 }
 
-/* =========================
-   상단 제목 영역
-========================= */
+/* =========================================================
+   11. 상단 제목 영역
+========================================================= */
 .topbar {
 	margin-bottom: 24px;
 }
@@ -193,9 +363,10 @@ button, input, select, textarea {
 .topbar h1 {
 	margin: 0;
 	font-size: 30px;
-	font-weight: 700;
+	font-weight: 800;
 	color: #111;
-	letter-spacing: -0.3px;
+	letter-spacing: -0.4px;
+	line-height: 1.35;
 }
 
 .page-header {
@@ -205,21 +376,19 @@ button, input, select, textarea {
 .page-title {
 	margin: 0;
 	font-size: 30px;
-	font-weight: 700;
+	font-weight: 800;
 	color: #111;
-	letter-spacing: -0.3px;
+	letter-spacing: -0.4px;
+	line-height: 1.35;
 }
 
 .page-desc {
-	margin: 8px 0 0 0;
-	font-size: 14px;
-	color: #666;
-	line-height: 1.6;
+	display: none !important;
 }
 
-/* =========================
-   대시보드 Hero 영역
-========================= */
+/* =========================================================
+   12. 대시보드 Hero 영역
+========================================================= */
 .hero-panel {
 	display: flex;
 	align-items: center;
@@ -241,6 +410,7 @@ button, input, select, textarea {
 	font-size: 24px;
 	font-weight: 800;
 	line-height: 1.4;
+	letter-spacing: -0.2px;
 }
 
 .hero-left p {
@@ -254,9 +424,9 @@ button, input, select, textarea {
 	color: #fff;
 }
 
-/* =========================
-   공통 패널 / 카드
-========================= */
+/* =========================================================
+   13. 공통 패널 / 카드
+========================================================= */
 .panel {
 	background-color: #fff;
 	border-radius: 18px;
@@ -278,7 +448,6 @@ button, input, select, textarea {
 	flex-wrap: wrap;
 }
 
-/* 버튼 높이 정렬용 */
 .panel-header-align-center {
 	align-items: center;
 }
@@ -289,6 +458,7 @@ button, input, select, textarea {
 	font-weight: 800;
 	color: #111;
 	letter-spacing: -0.2px;
+	line-height: 1.4;
 }
 
 .section-desc {
@@ -298,9 +468,9 @@ button, input, select, textarea {
 	line-height: 1.6;
 }
 
-/* =========================
-   요약 카드 영역
-========================= */
+/* =========================================================
+   14. 요약 카드 영역
+========================================================= */
 .summary-grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -377,7 +547,6 @@ button, input, select, textarea {
 	color: #111;
 }
 
-/* 판매관리/통계 카드 원형 포인트 */
 .summary-card-sales::after, .stats-summary-card::after,
 	.sales-highlight-card::after {
 	content: "";
@@ -390,9 +559,9 @@ button, input, select, textarea {
 	background: rgba(255, 255, 255, 0.04);
 }
 
-/* =========================
-   빠른 이동 카드
-========================= */
+/* =========================================================
+   15. 빠른 이동 카드
+========================================================= */
 .action-grid {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
@@ -420,6 +589,7 @@ button, input, select, textarea {
 	font-weight: 700;
 	color: #111;
 	margin-bottom: 8px;
+	line-height: 1.4;
 }
 
 .action-card-desc {
@@ -428,9 +598,9 @@ button, input, select, textarea {
 	line-height: 1.6;
 }
 
-/* =========================
-   테이블 공통
-========================= */
+/* =========================================================
+   16. 테이블 공통
+========================================================= */
 .table-wrap {
 	width: 100%;
 	overflow-x: auto;
@@ -474,7 +644,6 @@ button, input, select, textarea {
 	background-color: #fafafa;
 }
 
-/* 공통 값 강조용 */
 .td-number {
 	font-weight: 700;
 }
@@ -493,20 +662,18 @@ button, input, select, textarea {
 	word-break: keep-all;
 }
 
-/* 판매 목록 전용 미세 조정 */
 .sales-table tbody td {
 	font-weight: 500;
 }
 
-/* 통계 / 상담 등 확장용 */
 .stats-table tbody td, .consult-table tbody td, .register-consult-table tbody td
 	{
 	font-weight: 500;
 }
 
-/* =========================
-   상세 테이블 공통
-========================= */
+/* =========================================================
+   17. 상세 테이블 공통
+========================================================= */
 .detail-table {
 	width: 100%;
 	border-collapse: collapse;
@@ -536,9 +703,9 @@ button, input, select, textarea {
 	word-break: break-word;
 }
 
-/* =========================
-   버튼 공통
-========================= */
+/* =========================================================
+   18. 버튼 공통
+========================================================= */
 .btn {
 	display: inline-flex;
 	align-items: center;
@@ -603,9 +770,9 @@ button, input, select, textarea {
 	flex-wrap: wrap;
 }
 
-/* =========================
-   입력 폼 공통
-========================= */
+/* =========================================================
+   19. 입력 폼 공통
+========================================================= */
 input[type="text"], input[type="password"], input[type="number"], input[type="date"],
 	input[type="datetime-local"], select, textarea {
 	width: 100%;
@@ -632,9 +799,9 @@ textarea {
 	resize: vertical;
 }
 
-/* =========================
-   빈 데이터 / 메시지
-========================= */
+/* =========================================================
+   20. 빈 데이터 / 메시지
+========================================================= */
 .empty-message {
 	padding: 36px 18px;
 	text-align: center;
@@ -686,9 +853,9 @@ textarea {
 	border-left: 5px solid #c62828;
 }
 
-/* =========================
-   상태 배지
-========================= */
+/* =========================================================
+   21. 상태 배지
+========================================================= */
 .status-badge {
 	display: inline-flex;
 	align-items: center;
@@ -720,9 +887,9 @@ textarea {
 	border: 1px solid #bdbdbd;
 }
 
-/* =========================
-   도움말 / 보조 텍스트
-========================= */
+/* =========================================================
+   22. 도움말 / 보조 텍스트
+========================================================= */
 .help-text {
 	margin-top: 14px;
 	color: #c62828;
@@ -738,18 +905,37 @@ textarea {
 	line-height: 1.5;
 }
 
-/* =========================
-   차트 영역
-========================= */
+/* =========================================================
+   23. 차트 영역
+========================================================= */
 .chart-wrap {
 	position: relative;
 	width: 100%;
 	height: 360px;
 }
 
-/* =========================
-   페이지별 공통 보정 클래스
-========================= */
+/* =========================================================
+   24. 공통 푸터
+   - 중앙 하단 정렬로 수정
+========================================================= */
+.dealer-footer {
+	margin-top: auto;
+	padding: 16px 30px;
+	background-color: #ffffff;
+	border-top: 1px solid #e3e3e3;
+	font-size: 13px;
+	color: #888;
+	line-height: 1.5;
+	text-align: center;
+}
+
+.dealer-footer p {
+	margin: 0;
+}
+
+/* =========================================================
+   25. 페이지별 공통 보정 클래스
+========================================================= */
 .sales-page .topbar, .sales-detail-page .topbar, .register-page .topbar
 	{
 	margin-bottom: 20px;
@@ -767,26 +953,68 @@ textarea {
 	margin-bottom: 10px;
 }
 
-/* =========================
-   반응형
-========================= */
+/* =========================================================
+   26. 반응형
+========================================================= */
+@media ( max-width : 1180px) {
+	.top-fixed-header {
+		padding: 0 20px;
+	}
+	.top-header-left {
+		gap: 26px;
+	}
+	.top-nav {
+		gap: 20px;
+	}
+	.dashboard-container {
+		max-width: 100%;
+		padding: 22px 20px 24px 20px;
+	}
+}
+
 @media ( max-width : 1024px) {
 	.dealer-layout {
 		flex-direction: column;
 	}
-	.sidebar {
-		width: 100%;
-		/* 모바일/태블릿에서는 일반 흐름으로 복귀 */
-		position: relative;
-		top: auto;
-		min-height: auto;
-		align-self: auto;
-	}
 	.content {
-		padding: 22px 18px 24px 18px;
+		padding-top: 122px;
+		min-height: auto;
+	}
+	.top-fixed-header {
+		height: auto;
+		padding: 14px 18px;
+		flex-wrap: wrap;
+		align-items: flex-start;
+	}
+	.top-header-left {
+		width: 100%;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+	}
+	.top-nav {
+		width: 100%;
+		gap: 16px;
+		flex-wrap: wrap;
+	}
+	.top-nav a {
+		height: auto;
+		padding: 6px 0;
+	}
+	.top-nav a.active::after {
+		display: none;
+	}
+	.top-header-right {
+		width: 100%;
+		min-width: auto;
+		justify-content: flex-start;
+	}
+	.top-user-box {
+		align-items: flex-start;
 	}
 	.dashboard-container {
 		max-width: 100%;
+		padding: 22px 18px 24px 18px;
 	}
 	.summary-grid, .sales-summary-grid, .action-grid {
 		grid-template-columns: 1fr;
@@ -794,13 +1022,15 @@ textarea {
 	.hero-panel {
 		padding: 22px 20px;
 	}
-	.logout-area {
-		margin-top: 20px;
-		padding-top: 0;
+	.dealer-footer {
+		padding: 14px 18px;
 	}
 }
 
 @media ( max-width : 768px) {
+	.top-logo {
+		font-size: 24px;
+	}
 	.topbar h1, .page-title {
 		font-size: 24px;
 	}

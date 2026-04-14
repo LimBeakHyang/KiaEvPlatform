@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
  *
  * 주요 기능 1. 딜러 번호 기준 대시보드 요약 통계 조회 2. 월별 판매 통계 조회 3. 차량 종류별 판매 통계 조회
  *
- * 보완 사항 - dashboard null 방지 - 월별 통계 null 방지 - 차량 종류별 통계 null 방지
+ * 보완 사항 - dashboard null 방지 - 월별 통계 null 방지 - 차량 종류별 통계 null 방지 - 기존 기능은 절대
+ * 제거하지 않음
  */
 @Service
 public class DashboardService {
@@ -32,12 +33,16 @@ public class DashboardService {
 
 		Dashboard dashboard = dashboardRepository.getDashboardSummary(dealerNo, dealerName);
 
+		// =========================
 		// 조회 결과가 없으면 기본 Dashboard 생성
+		// =========================
 		if (dashboard == null) {
 			dashboard = createEmptyDashboard(dealerNo, dealerName);
 		}
 
-		// 일부 필드가 null 로 넘어와도 화면이 깨지지 않도록 방어
+		// =========================
+		// null 방어 처리
+		// =========================
 		if (dashboard.getDealerNo() == null) {
 			dashboard.setDealerNo(dealerNo);
 		}
