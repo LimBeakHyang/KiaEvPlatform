@@ -18,6 +18,8 @@ import jakarta.servlet.http.HttpSession;
  * 판매 관리 Controller
  * 
  * 기능 - 판매 목록 조회 - 판매 상세 조회 - 판매 등록 화면 조회 - 완료/진행중 상담 선택 - 판매 등록 처리
+ * 
+ * 기존 기능 유지
  */
 @Controller
 public class SalesController {
@@ -28,28 +30,20 @@ public class SalesController {
 	/**
 	 * 판매 목록 조회
 	 * 
-	 * 로그인한 딜러의 판매 목록만 조회합니다. 로그인 안 되어 있으면 로그인 페이지로 이동합니다.
-	 * 
 	 * URL: GET /dealer/sales/list
 	 */
 	@GetMapping("/dealer/sales/list")
 	public String salesList(HttpSession session, Model model) {
 
-		// 세션에서 로그인 딜러 정보 조회
 		DealerLogin loginDealer = (DealerLogin) session.getAttribute("loginDealer");
 
-		// 로그인 안 된 경우 로그인 페이지로 이동
 		if (loginDealer == null) {
 			return "redirect:/dealer/login";
 		}
 
-		// 로그인한 딜러번호
 		Integer dealerNo = loginDealer.getDealerNo();
-
-		// 로그인한 딜러 기준 판매 목록 조회
 		List<Sales> salesList = salesService.getSalesListByDealerNo(dealerNo);
 
-		// 화면 전달
 		model.addAttribute("salesList", salesList);
 		model.addAttribute("loginDealer", loginDealer);
 
@@ -59,27 +53,20 @@ public class SalesController {
 	/**
 	 * 판매 상세 조회
 	 * 
-	 * 로그인한 딜러 본인의 판매내역만 조회합니다.
-	 * 
 	 * URL: GET /dealer/sales/detail?salesNo=1
 	 */
 	@GetMapping("/dealer/sales/detail")
 	public String salesDetail(@RequestParam("salesNo") Integer salesNo, HttpSession session, Model model) {
 
-		// 세션에서 로그인 딜러 정보 조회
 		DealerLogin loginDealer = (DealerLogin) session.getAttribute("loginDealer");
 
-		// 로그인 안 된 경우 로그인 페이지로 이동
 		if (loginDealer == null) {
 			return "redirect:/dealer/login";
 		}
 
 		Integer dealerNo = loginDealer.getDealerNo();
-
-		// 본인 판매 상세 조회
 		Sales sales = salesService.getSalesDetailByDealerNo(salesNo, dealerNo);
 
-		// 데이터가 없으면 목록으로 이동
 		if (sales == null) {
 			return "redirect:/dealer/sales/list";
 		}
@@ -93,20 +80,14 @@ public class SalesController {
 	/**
 	 * 판매 등록 화면 조회
 	 * 
-	 * 진행중 / 완료 상태의 상담 중, 아직 판매 등록되지 않은 상담만 선택 가능하게 합니다.
-	 * 
-	 * consultNo가 함께 넘어오면 해당 상담을 자동 선택해서 폼에 반영합니다.
-	 * 
 	 * URL: GET /dealer/sales/register URL: GET /dealer/sales/register?consultNo=1
 	 */
 	@GetMapping("/dealer/sales/register")
 	public String salesRegisterForm(@RequestParam(value = "consultNo", required = false) Integer consultNo,
 			HttpSession session, Model model) {
 
-		// 세션에서 로그인 딜러 정보 조회
 		DealerLogin loginDealer = (DealerLogin) session.getAttribute("loginDealer");
 
-		// 로그인 안 된 경우 로그인 페이지로 이동
 		if (loginDealer == null) {
 			return "redirect:/dealer/login";
 		}
@@ -116,10 +97,10 @@ public class SalesController {
 		// 판매 등록 가능한 상담 목록 조회
 		List<DealerConsult> completedConsultList = salesService.getCompletedConsultList(dealerNo);
 
-		// 기본은 빈 객체
+		// 기본 바인딩 객체
 		Sales sales = new Sales();
 
-		// consultNo가 넘어오면 해당 상담으로 폼 자동 채움
+		// 상담번호가 넘어오면 폼 자동 채움
 		if (consultNo != null) {
 			Sales selectedSales = salesService.createSalesFromConsult(consultNo, dealerNo);
 
@@ -130,7 +111,6 @@ public class SalesController {
 			}
 		}
 
-		// 화면 전달
 		model.addAttribute("consultList", completedConsultList);
 		model.addAttribute("completedConsultList", completedConsultList);
 		model.addAttribute("selectedConsultNo", consultNo);
@@ -141,24 +121,19 @@ public class SalesController {
 	}
 
 	/**
-	 * 완료/진행중 상담 선택 후 판매 등록 화면 반영
+	 * 상담 선택 후 판매 등록 화면 반영
 	 * 
 	 * URL: GET /dealer/sales/register/select?consultNo=1
 	 */
 	@GetMapping("/dealer/sales/register/select")
 	public String selectConsultForSales(@RequestParam("consultNo") Integer consultNo, HttpSession session) {
 
-		// 세션에서 로그인 딜러 정보 조회
 		DealerLogin loginDealer = (DealerLogin) session.getAttribute("loginDealer");
 
-		// 로그인 안 된 경우 로그인 페이지로 이동
 		if (loginDealer == null) {
 			return "redirect:/dealer/login";
 		}
 
-		/**
-		 * 선택용 URL은 유지하되, 실제 화면 렌더링은 /dealer/sales/register 로 넘겨서 진입 경로를 하나로 통일합니다.
-		 */
 		return "redirect:/dealer/sales/register?consultNo=" + consultNo;
 	}
 
@@ -171,29 +146,25 @@ public class SalesController {
 	public String salesRegister(@RequestParam("consultNo") Integer consultNo,
 			@RequestParam("salesAmount") Integer salesAmount, HttpSession session, Model model) {
 
-		// 세션에서 로그인 딜러 정보 조회
 		DealerLogin loginDealer = (DealerLogin) session.getAttribute("loginDealer");
 
-		// 로그인 안 된 경우 로그인 페이지로 이동
 		if (loginDealer == null) {
 			return "redirect:/dealer/login";
 		}
 
 		Integer dealerNo = loginDealer.getDealerNo();
 
-		// 판매 등록 처리
 		String resultMessage = salesService.registerSales(consultNo, dealerNo, salesAmount);
 
-		// 성공이면 판매 목록으로 이동
+		// 성공 시 판매 목록 이동
 		if ("판매 등록이 완료되었습니다.".equals(resultMessage)) {
 			return "redirect:/dealer/sales/list";
 		}
 
-		// 실패 시 다시 등록 화면으로 이동하면서 메시지 출력
+		// 실패 시 다시 등록 화면 표시
 		List<DealerConsult> completedConsultList = salesService.getCompletedConsultList(dealerNo);
 		Sales sales = salesService.createSalesFromConsult(consultNo, dealerNo);
 
-		// sales가 null이면 화면 바인딩 에러 방지용 기본 객체 생성
 		if (sales == null) {
 			sales = new Sales();
 			sales.setConsultNo(consultNo);

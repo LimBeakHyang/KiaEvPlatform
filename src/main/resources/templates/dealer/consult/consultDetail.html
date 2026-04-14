@@ -12,13 +12,9 @@
 <style>
 /* =========================================================
    상담 상세 화면 전용 스타일
-   - 공통 CSS는 유지
-   - 상담 상세 화면에서만 필요한 스타일만 추가
 ========================================================= */
 
-/* =========================================================
-   전체 상세 카드
-========================================================= */
+/* 전체 상세 카드 */
 .detail-card {
 	background: #fff;
 	border: 1px solid #e8e8e8;
@@ -28,9 +24,7 @@
 	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
-/* =========================================================
-   카드 상단 제목 영역
-========================================================= */
+/* 카드 상단 제목 영역 */
 .detail-card-header {
 	display: flex;
 	justify-content: space-between;
@@ -55,9 +49,7 @@
 	letter-spacing: -0.3px;
 }
 
-/* =========================================================
-   상세 테이블
-========================================================= */
+/* 상세 테이블 */
 .detail-table-wrap {
 	width: 100%;
 	overflow-x: auto;
@@ -93,9 +85,7 @@
 	word-break: break-word;
 }
 
-/* =========================================================
-   금액 / 날짜 / 번호류 가독성
-========================================================= */
+/* 가독성 */
 .value-strong {
 	font-weight: 700;
 	color: #111;
@@ -111,9 +101,7 @@
 	color: #333;
 }
 
-/* =========================================================
-   긴 텍스트 / 여러 줄 데이터 표시용
-========================================================= */
+/* 여러 줄 표시 */
 .multiline-value {
 	white-space: pre-wrap;
 	word-break: break-word;
@@ -121,15 +109,11 @@
 	vertical-align: top;
 }
 
-/* 메모/상담내용 전용 행은 위쪽 정렬 */
 .memo-row th, .memo-row td {
 	vertical-align: top;
 }
 
-/* =========================================================
-   상담내용 표시 박스
-   - 긴 텍스트를 표 안에서 더 읽기 좋게 정리
-========================================================= */
+/* 상담내용 박스 */
 .content-box {
 	background: #ffffff;
 	border: 1px solid #e6e6e6;
@@ -139,11 +123,7 @@
 	line-height: 1.8;
 }
 
-/* =========================================================
-   메모 표시 박스
-   - 기존 기능 유지
-   - 시각적으로 더 정돈된 카드형 박스로 개선
-========================================================= */
+/* 메모 박스 */
 .memo-box {
 	background: linear-gradient(180deg, #fcfcfc 0%, #f8f8f8 100%);
 	border: 1px solid #e2e2e2;
@@ -182,9 +162,7 @@
 	color: #888;
 }
 
-/* =========================================================
-   상태 배지
-========================================================= */
+/* 상태 배지 */
 .status-badge {
 	display: inline-flex;
 	align-items: center;
@@ -216,16 +194,13 @@
 	border: 1px solid #bdbdbd;
 }
 
-/* 예외 상태값 표시용 */
 .status-unknown {
 	background: #f8f8f8;
 	color: #555;
 	border: 1px solid #d9d9d9;
 }
 
-/* =========================================================
-   상태 변경 박스
-========================================================= */
+/* 상태 변경 박스 */
 .status-change-box {
 	margin-top: 24px;
 	padding: 20px;
@@ -264,9 +239,7 @@
 	border-color: #111;
 }
 
-/* =========================================================
-   버튼 영역
-========================================================= */
+/* 버튼 영역 */
 .btn-area {
 	display: flex;
 	gap: 10px;
@@ -317,9 +290,7 @@
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
-/* =========================================================
-   상담 없음 상태
-========================================================= */
+/* 상담 없음 */
 .empty-detail-box {
 	text-align: center;
 	padding: 28px 16px 12px 16px;
@@ -339,9 +310,7 @@
 	margin: 0;
 }
 
-/* =========================================================
-   반응형
-========================================================= */
+/* 반응형 */
 @media ( max-width : 768px) {
 	.detail-card {
 		padding: 18px;
@@ -378,221 +347,189 @@
 	<div class="dealer-layout">
 
 		<!-- =====================================================
-		     좌측 사이드바
-		     - 현재 페이지는 상담 관리 활성화
-		     - 로그아웃 버튼 포함
+		     상단 고정 헤더
+		     - 현재 페이지: 상담 관리 active
 		===================================================== -->
-		<aside class="sidebar">
-			<a th:href="@{/dealer/main}" class="logo">KIA EV Dealer</a>
+		<header class="top-fixed-header">
+			<div class="top-header-left">
+				<a th:href="@{/dealer/main}" class="top-logo">KIA EV Dealer</a>
 
-			<nav class="menu">
-				<a th:href="@{/dealer/main}">대시보드</a> <a
-					th:href="@{/dealer/consult/list}" class="active">상담 관리</a> <a
-					th:href="@{/dealer/sales/list}">판매 관리</a> <a
-					th:href="@{/dealer/sales/register}">판매 등록</a> <a
-					th:href="@{/dealer/statistics}">통계</a>
-			</nav>
-
-			<!-- 로그아웃 영역 -->
-			<div class="logout-area">
-				<a th:href="@{/dealer/logout}" class="logout-btn">로그아웃</a>
+				<nav class="top-nav">
+					<a th:href="@{/dealer/main}">대시보드</a> <a
+						th:href="@{/dealer/consult/list}" class="active">상담관리</a> <a
+						th:href="@{/dealer/sales/list}">판매관리</a> <a
+						th:href="@{/dealer/sales/register}">판매등록</a> <a
+						th:href="@{/dealer/statistics}">통계</a> <a
+						th:href="@{/dealer/logout}">로그아웃</a>
+				</nav>
 			</div>
-		</aside>
 
-		<!-- =====================================================
-		     메인 컨텐츠
-		===================================================== -->
+			<div class="top-header-right">
+				<div class="top-user-box">
+					<span class="top-user-label">접속 사용자</span> <strong
+						class="top-user-name"
+						th:text="${session.loginDealer != null ? session.loginDealer.dealerName + ' 딜러' : '딜러'}">홍길동
+						딜러</strong>
+				</div>
+			</div>
+		</header>
+
 		<main class="content">
+			<div class="dashboard-container">
 
-			<!-- =====================================================
-			     상단 페이지 제목
-			===================================================== -->
-			<header class="topbar">
-				<h1>상담 상세 조회</h1>
-			</header>
+				<header class="topbar">
+					<h1>상담 상세 조회</h1>
+				</header>
 
-			<!-- =====================================================
-			     상담 정보가 없을 때
-			===================================================== -->
-			<section class="detail-card" th:if="${consult == null}">
-				<div class="empty-detail-box">
-					<h2 class="empty-detail-title">상담 정보를 찾을 수 없습니다.</h2>
-					<p class="empty-detail-desc">선택한 상담 데이터가 없거나 접근 가능한 상담이 아닙니다.</p>
-				</div>
-
-				<div class="btn-area">
-					<a th:href="@{/dealer/consult/list}" class="gray-btn">목록으로</a>
-				</div>
-			</section>
-
-			<!-- =====================================================
-			     상담 정보가 있을 때
-			===================================================== -->
-			<section class="detail-card" th:if="${consult != null}">
-
-				<!-- =====================================================
-				     상단 제목 영역
-				===================================================== -->
-				<div class="detail-card-header">
-					<div class="detail-title-wrap">
-						<h2 class="detail-title">상담 상세 정보</h2>
+				<section class="detail-card" th:if="${consult == null}">
+					<div class="empty-detail-box">
+						<h2 class="empty-detail-title">상담 정보를 찾을 수 없습니다.</h2>
+						<p class="empty-detail-desc">선택한 상담 데이터가 없거나 접근 가능한 상담이 아닙니다.</p>
 					</div>
-				</div>
 
-				<!-- =====================================================
-				     상세 테이블
-				     - 기존 데이터 출력 기능 유지
-				===================================================== -->
-				<div class="detail-table-wrap">
-					<table class="detail-table">
-						<tr>
-							<th>상담번호</th>
-							<td class="value-strong" th:text="${consult.consultNo}">1</td>
-						</tr>
-						<tr>
-							<th>회원번호</th>
-							<td class="value-strong" th:text="${consult.memberNo}">20260401</td>
-						</tr>
-						<tr>
-							<th>차량번호</th>
-							<td class="value-strong" th:text="${consult.carNo}">123가1111</td>
-						</tr>
-						<tr>
-							<th>딜러번호</th>
-							<td class="value-strong" th:text="${consult.dealerNo}">1</td>
-						</tr>
-						<tr>
-							<th>예산금액</th>
-							<td class="value-amount"
-								th:text="${consult.budgetAmount != null ? #numbers.formatInteger(consult.budgetAmount, 3, 'COMMA') + '원' : '-'}">
-								45,000,000원</td>
-						</tr>
-						<tr>
-							<th>사용목적</th>
-							<td
-								th:text="${consult.usePurpose != null ? consult.usePurpose : '-'}">출퇴근</td>
-						</tr>
-						<tr>
-							<th>주행거리 정보</th>
-							<td
-								th:text="${consult.mainRangeKm != null ? consult.mainRangeKm : '-'}">장거리</td>
-						</tr>
-						<tr>
-							<th>동승자/가족 정보</th>
-							<td
-								th:text="${consult.fellowData != null ? consult.fellowData : '-'}">4인가족</td>
-						</tr>
+					<div class="btn-area">
+						<a th:href="@{/dealer/consult/list}" class="gray-btn">목록으로</a>
+					</div>
+				</section>
 
-						<!-- =====================================================
-						     상담내용
-						     - 기존 출력 기능 유지
-						     - 긴 내용도 읽기 좋도록 박스 형태로 정리
-						===================================================== -->
-						<tr class="memo-row">
-							<th>상담내용</th>
-							<td>
-								<div class="content-box multiline-value"
-									th:text="${consult.consultContent != null and !#strings.isEmpty(consult.consultContent) ? consult.consultContent : '-'}">
-									상담 내용</div>
-							</td>
-						</tr>
+				<section class="detail-card" th:if="${consult != null}">
 
-						<!-- =====================================================
-						     고객 상담일지 / 메모
-						     - 기존 consultMemoDisplay 출력 기능 유지
-						     - 메모 영역 디자인만 정리
-						===================================================== -->
-						<tr class="memo-row">
-							<th>고객 상담일지</th>
-							<td>
-								<div class="memo-box">
-									<div class="memo-header">
-										<h4 class="memo-title">메모</h4>
+					<div class="detail-card-header">
+						<div class="detail-title-wrap">
+							<h2 class="detail-title">상담 상세 정보</h2>
+						</div>
+					</div>
+
+					<div class="detail-table-wrap">
+						<table class="detail-table">
+							<tr>
+								<th>상담번호</th>
+								<td class="value-strong" th:text="${consult.consultNo}">1</td>
+							</tr>
+							<tr>
+								<th>회원번호</th>
+								<td class="value-strong" th:text="${consult.memberNo}">20260401</td>
+							</tr>
+							<tr>
+								<th>차량번호</th>
+								<td class="value-strong" th:text="${consult.carNo}">123가1111</td>
+							</tr>
+							<tr>
+								<th>딜러번호</th>
+								<td class="value-strong" th:text="${consult.dealerNo}">1</td>
+							</tr>
+							<tr>
+								<th>예산금액</th>
+								<td class="value-amount"
+									th:text="${consult.budgetAmount != null ? #numbers.formatInteger(consult.budgetAmount, 3, 'COMMA') + '원' : '-'}">45,000,000원</td>
+							</tr>
+							<tr>
+								<th>사용목적</th>
+								<td
+									th:text="${consult.usePurpose != null ? consult.usePurpose : '-'}">출퇴근</td>
+							</tr>
+							<tr>
+								<th>주행거리 정보</th>
+								<td
+									th:text="${consult.mainRangeKm != null ? consult.mainRangeKm : '-'}">장거리</td>
+							</tr>
+							<tr>
+								<th>동승자/가족 정보</th>
+								<td
+									th:text="${consult.fellowData != null ? consult.fellowData : '-'}">4인가족</td>
+							</tr>
+
+							<tr class="memo-row">
+								<th>상담내용</th>
+								<td>
+									<div class="content-box multiline-value"
+										th:text="${consult.consultContent != null and !#strings.isEmpty(consult.consultContent) ? consult.consultContent : '-'}">상담
+										내용</div>
+								</td>
+							</tr>
+
+							<tr class="memo-row">
+								<th>고객 상담일지</th>
+								<td>
+									<div class="memo-box">
+										<div class="memo-header">
+											<h4 class="memo-title">메모</h4>
+										</div>
+
+										<div class="memo-body"
+											th:classappend="${consult.consultMemoDisplay == null or #strings.isEmpty(consult.consultMemoDisplay) or consult.consultMemoDisplay == '-'} ? ' memo-empty' : ''"
+											th:text="${consult.consultMemoDisplay != null and !#strings.isEmpty(consult.consultMemoDisplay) ? consult.consultMemoDisplay : '-'}">-</div>
 									</div>
+								</td>
+							</tr>
 
-									<div class="memo-body"
-										th:classappend="${consult.consultMemoDisplay == null or #strings.isEmpty(consult.consultMemoDisplay) or consult.consultMemoDisplay == '-'} ? ' memo-empty' : ''"
-										th:text="${consult.consultMemoDisplay != null and !#strings.isEmpty(consult.consultMemoDisplay) ? consult.consultMemoDisplay : '-'}">
-										-</div>
-								</div>
-							</td>
-						</tr>
+							<tr>
+								<th>상담상태</th>
+								<td><span th:if="${consult.consultStatusKor == '대기'}"
+									class="status-badge status-waiting"
+									th:text="${consult.consultStatusKor}">대기</span> <span
+									th:if="${consult.consultStatusKor == '진행중'}"
+									class="status-badge status-progress"
+									th:text="${consult.consultStatusKor}">진행중</span> <span
+									th:if="${consult.consultStatusKor == '완료'}"
+									class="status-badge status-completed"
+									th:text="${consult.consultStatusKor}">완료</span> <span
+									th:if="${consult.consultStatusKor != '대기' and consult.consultStatusKor != '진행중' and consult.consultStatusKor != '완료'}"
+									class="status-badge status-unknown"
+									th:text="${consult.consultStatusKor}">기타</span></td>
+							</tr>
+							<tr>
+								<th>상담신청일시</th>
+								<td class="value-date"
+									th:text="${consult.requestDate != null ? #temporals.format(consult.requestDate, 'yyyy-MM-dd HH:mm:ss') : '-'}">2026-04-02
+									15:10:30</td>
+							</tr>
+							<tr>
+								<th>배정일시</th>
+								<td class="value-date"
+									th:text="${consult.assignedDate != null ? #temporals.format(consult.assignedDate, 'yyyy-MM-dd HH:mm:ss') : '-'}">2026-04-02
+									16:00:00</td>
+							</tr>
+							<tr>
+								<th>완료일시</th>
+								<td class="value-date"
+									th:text="${consult.completedDate != null ? #temporals.format(consult.completedDate, 'yyyy-MM-dd HH:mm:ss') : '-'}">2026-04-02
+									18:00:00</td>
+							</tr>
+						</table>
+					</div>
 
-						<tr>
-							<th>상담상태</th>
-							<td><span th:if="${consult.consultStatusKor == '대기'}"
-								class="status-badge status-waiting"
-								th:text="${consult.consultStatusKor}">대기</span> <span
-								th:if="${consult.consultStatusKor == '진행중'}"
-								class="status-badge status-progress"
-								th:text="${consult.consultStatusKor}">진행중</span> <span
-								th:if="${consult.consultStatusKor == '완료'}"
-								class="status-badge status-completed"
-								th:text="${consult.consultStatusKor}">완료</span> <!-- 예외 상태값 fallback -->
-								<span
-								th:if="${consult.consultStatusKor != '대기' and consult.consultStatusKor != '진행중' and consult.consultStatusKor != '완료'}"
-								class="status-badge status-unknown"
-								th:text="${consult.consultStatusKor}">기타</span></td>
-						</tr>
-						<tr>
-							<th>상담신청일시</th>
-							<td class="value-date"
-								th:text="${consult.requestDate != null ? #temporals.format(consult.requestDate, 'yyyy-MM-dd HH:mm:ss') : '-'}">
-								2026-04-02 15:10:30</td>
-						</tr>
-						<tr>
-							<th>배정일시</th>
-							<td class="value-date"
-								th:text="${consult.assignedDate != null ? #temporals.format(consult.assignedDate, 'yyyy-MM-dd HH:mm:ss') : '-'}">
-								2026-04-02 16:00:00</td>
-						</tr>
-						<tr>
-							<th>완료일시</th>
-							<td class="value-date"
-								th:text="${consult.completedDate != null ? #temporals.format(consult.completedDate, 'yyyy-MM-dd HH:mm:ss') : '-'}">
-								2026-04-02 18:00:00</td>
-						</tr>
-					</table>
-				</div>
+					<div class="status-change-box">
+						<h3 class="status-change-title">상담 상태 변경</h3>
 
-				<!-- =====================================================
-				     상담 상태 변경 영역
-				     - 기존 상태 변경 기능 유지
-				===================================================== -->
-				<div class="status-change-box">
-					<h3 class="status-change-title">상담 상태 변경</h3>
+						<form th:action="@{/dealer/consult/status}" method="post"
+							class="status-form">
+							<input type="hidden" name="consultNo"
+								th:value="${consult.consultNo}"> <select
+								name="consultStatus">
+								<option value="대기"
+									th:selected="${consult.consultStatusKor == '대기'}">대기</option>
+								<option value="진행중"
+									th:selected="${consult.consultStatusKor == '진행중'}">진행중</option>
+								<option value="완료"
+									th:selected="${consult.consultStatusKor == '완료'}">완료</option>
+							</select>
 
-					<form th:action="@{/dealer/consult/status}" method="post"
-						class="status-form">
+							<button type="submit" class="dark-btn">상태 변경</button>
+						</form>
+					</div>
 
-						<!-- 어떤 상담의 상태를 변경할지 식별 -->
-						<input type="hidden" name="consultNo"
-							th:value="${consult.consultNo}">
+					<div class="btn-area">
+						<a th:href="@{/dealer/consult/list}" class="gray-btn">목록으로</a>
+					</div>
 
-						<!-- 상태 선택 -->
-						<select name="consultStatus">
-							<option value="대기"
-								th:selected="${consult.consultStatusKor == '대기'}">대기</option>
-							<option value="진행중"
-								th:selected="${consult.consultStatusKor == '진행중'}">진행중</option>
-							<option value="완료"
-								th:selected="${consult.consultStatusKor == '완료'}">완료</option>
-						</select>
+				</section>
 
-						<button type="submit" class="dark-btn">상태 변경</button>
-					</form>
-				</div>
+			</div>
 
-				<!-- =====================================================
-				     하단 버튼
-				     - 목록 이동 기능 유지
-				===================================================== -->
-				<div class="btn-area">
-					<a th:href="@{/dealer/consult/list}" class="gray-btn">목록으로</a>
-				</div>
-
-			</section>
-
+			<footer class="dealer-footer">
+				<p>© 2026 KIA EV Project Team DAY6.</p>
+			</footer>
 		</main>
 	</div>
 
