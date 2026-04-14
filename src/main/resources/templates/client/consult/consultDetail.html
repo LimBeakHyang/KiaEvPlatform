@@ -12,7 +12,7 @@
 
         .container {
             width: 820px;
-            margin: 80px auto;
+            margin: 140px auto 80px;
             background: #ffffff;
             padding: 50px 40px;
             border-radius: 16px;
@@ -93,6 +93,8 @@
     </style>
 </head>
 <body>
+
+<div th:replace="~{common/header :: header}"></div>
 
 <div class="container">
     <h2>상담 상세 조회</h2>
@@ -232,6 +234,8 @@
         <button type="button" class="list-btn" onclick="location.href='/mypage/consult'">상담목록</button>
     </div>
 </div>
+
+<div th:replace="~{common/footer :: footer}"></div>
 
 </body>
 </html>
