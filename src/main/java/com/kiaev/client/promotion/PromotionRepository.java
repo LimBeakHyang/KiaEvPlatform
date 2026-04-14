@@ -20,7 +20,10 @@ public interface PromotionRepository extends JpaRepository<Promotion, Long> {
     /**List<Promotion> findByStartDateBeforeAndEndDateAfter(LocalDateTime now1, LocalDateTime now2);*/
     
  // [수정됨] 활성화 상태(isActive=true)이면서, 기간이 현재 진행 중인 것만 필터링
-    List<Promotion> findByIsActiveTrueAndStartDateBeforeAndEndDateAfter(LocalDateTime now1, LocalDateTime now2);
+    List<Promotion> findByIsActiveTrueAndStartDateBeforeAndEndDateAfterOrderByBannerOrderAsc(
+            LocalDateTime now1,
+            LocalDateTime now2
+    );
 
     /**
      * 모든 프로모션을 최신 등록순으로 조회
