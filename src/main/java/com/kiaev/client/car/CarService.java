@@ -45,6 +45,6 @@ public class CarService {
     
     // 전체 차량 목록 조회 메서드
     public List<Car> findAll() {
-        return carRepository.findAll();
+    	 return carRepository.findAll(Sort.by(Sort.Direction.ASC, "modelName"));
     }
 }
