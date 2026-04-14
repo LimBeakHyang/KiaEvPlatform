@@ -91,7 +91,7 @@ public class MainController {
              * - sorted/limit(1): 그 중 가장 최근에 등록된 혜택 1개만 선택
              */
             List<Promotion> popupPromos = promotionRepository
-                    .findByIsActiveTrueAndStartDateBeforeAndEndDateAfter(now, now)
+                    .findByIsActiveTrueAndStartDateBeforeAndEndDateAfterOrderByBannerOrderAsc(now, now)
                     .stream()
                     .sorted(Comparator.comparing(Promotion::getCreatedAt, Comparator.nullsLast(Comparator.reverseOrder())))
                     .limit(1)
