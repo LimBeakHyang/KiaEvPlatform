@@ -1,58 +1,97 @@
--- 1. 안전 업데이트 모드 잠시 해제
+﻿USE kiaevdb;
+
 SET SQL_SAFE_UPDATES = 0;
+SET FOREIGN_KEY_CHECKS = 0;
 
--- 2. 분류(board_type) 영어를 한글로 일괄 변경
-UPDATE BOARD_TBL SET board_type = '공지사항' WHERE board_type = 'NOTICE';
-UPDATE BOARD_TBL SET board_type = '일반문의' WHERE board_type = 'INQUIRY';
-UPDATE BOARD_TBL SET board_type = '전기차문의' WHERE board_type = 'EV_INQUIRY';
-UPDATE BOARD_TBL SET board_type = '고객센터' WHERE board_type = 'CS_CENTER';
+DROP TABLE IF EXISTS board_tbl;
 
--- 3. 개별 게시글 상세 내용 수정 (PK인 board_no를 사용하므로 안전함)
-UPDATE BOARD_TBL SET title = '[필독] 기아 EV 멤버십 서비스 개편 및 혜택 안내', is_pinned = 'Y', priority = 100 WHERE board_no = 1;
-UPDATE BOARD_TBL SET title = 'EV6 롱레인지 모델 완충 시 주행 가능 거리가 궁금합니다.', is_pinned = 'N', priority = 0 WHERE board_no = 2;
-UPDATE BOARD_TBL SET title = '기아 커넥트 앱 설치 및 연동 방법 알려주세요.', is_pinned = 'N', priority = 0 WHERE board_no = 3;
-UPDATE BOARD_TBL SET title = '26년 상반기 기아 전기차 소프트웨어 무상 업데이트 캠페인', is_pinned = 'Y', priority = 50 WHERE board_no = 4;
+CREATE TABLE `board_tbl` (
+  `board_no` bigint NOT NULL AUTO_INCREMENT COMMENT '게시글번호 (PK)',
+  `board_type` varchar(20) DEFAULT NULL COMMENT '게시글타입 (예: NOTICE, INQUIRY)',
+  `member_no` bigint DEFAULT NULL COMMENT '회원번호 (문의글 작성자)',
+  `admin_no` bigint DEFAULT NULL COMMENT '관리자번호 (공지 작성자 또는 답변자)',
+  `title` varchar(2000) NOT NULL COMMENT '제목',
+  `content` varchar(2000) NOT NULL COMMENT '내용',
+  `is_pinned` varchar(1) DEFAULT NULL COMMENT '상단고정여부',
+  `inquiry_status` varchar(20) DEFAULT NULL COMMENT '문의상태 (예: WAITING, COMPLETED)',
+  `answer_content` varchar(2000) DEFAULT NULL COMMENT '답변내용',
+  `answer_date` datetime DEFAULT NULL COMMENT '답변일시',
+  `view_count` int NOT NULL DEFAULT '0' COMMENT '조회수',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '등록일시',
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
+  `deleted_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '삭제여부',
+  `hidden` char(1) DEFAULT 'N' COMMENT '숨김여부',
+  `notice_yn` varchar(255) DEFAULT 'N' COMMENT '공지여부',
+  `priority` int DEFAULT '0' COMMENT '우선순위',
+  PRIMARY KEY (`board_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- 4. 삭제 여부 초기화
-UPDATE BOARD_TBL SET deleted_yn = 'N';
+SET FOREIGN_KEY_CHECKS = 1;
 
--- 5. 변경사항 저장
+-- ==========================================
+-- 1. 공지사항 등록
+-- admin_no 값은 실제 관리자 번호에 맞춰 조정 가능
+-- ==========================================
+INSERT INTO board_tbl (
+    board_type,
+    member_no,
+    admin_no,
+    title,
+    content,
+    is_pinned,
+    inquiry_status,
+    answer_content,
+    answer_date,
+    view_count,
+    deleted_yn,
+    hidden,
+    notice_yn,
+    priority
+) VALUES
+('NOTICE', NULL, 1, '[필독] 기아 EV 멤버십 서비스 이용 안내', '기아 EV 멤버십 서비스 이용 관련 주요 안내사항입니다. 충전, 정비, 이벤트 참여 등 주요 서비스는 로그인 후 더욱 편리하게 이용하실 수 있습니다.', 'Y', NULL, NULL, NULL, 128, 'N', 'N', 'Y', 100),
+('NOTICE', NULL, 1, '2026년 상반기 전기차 정기 점검 및 소프트웨어 업데이트 안내', '2026년 상반기 기아 전기차 대상 정기 점검 및 소프트웨어 업데이트가 순차적으로 진행됩니다. 가까운 서비스 거점 또는 오토큐 예약 후 방문해 주세요.', 'Y', NULL, NULL, NULL, 86, 'N', 'N', 'Y', 90);
+
+-- ==========================================
+-- 2. 일반 회원 문의글 등록
+-- 일반 사용자 게시글은 member_no = 5 로 통일
+-- ==========================================
+INSERT INTO board_tbl (
+    board_type,
+    member_no,
+    admin_no,
+    title,
+    content,
+    is_pinned,
+    inquiry_status,
+    answer_content,
+    answer_date,
+    view_count,
+    deleted_yn,
+    hidden,
+    notice_yn,
+    priority
+) VALUES
+('INQUIRY', 5, NULL, 'EV6 롱레인지 모델 실주행거리는 어느 정도 나오나요?', '출퇴근 위주로 하루 50km 정도 주행하고 있습니다. 실제 주행거리가 어느 정도 나오는지 궁금합니다.', 'N', 'WAITING', NULL, NULL, 14, 'N', 'N', 'N', 0),
+('INQUIRY', 5, NULL, '가정용 완속 충전기 설치 시 필요한 절차가 궁금합니다', '아파트 거주 중인데 개인 완속 충전기 설치가 가능한지와 신청 절차를 알고 싶습니다.', 'N', 'WAITING', NULL, NULL, 9, 'N', 'N', 'N', 0),
+('INQUIRY', 5, NULL, '기아 커넥트 앱에서 충전 시작 예약이 안 됩니다', '앱에서 예약 충전이 저장되지 않습니다. 같은 증상 해결하신 분 계실까요?', 'N', 'WAITING', NULL, NULL, 11, 'N', 'N', 'N', 0),
+('INQUIRY', 5, NULL, '겨울철 배터리 효율이 많이 떨어지는 편인가요?', '히터를 켜면 주행 가능 거리가 얼마나 줄어드는지 궁금합니다.', 'N', 'WAITING', NULL, NULL, 7, 'N', 'N', 'N', 0),
+('INQUIRY', 5, NULL, 'EV9 2열 독립 시트 승차감 어떤가요?', '가족용 차량으로 보고 있는데 장거리 이동 시 2열 승차감이 궁금합니다.', 'N', 'WAITING', NULL, NULL, 6, 'N', 'N', 'N', 0),
+('INQUIRY', 5, NULL, '공용 급속 충전소에서 충전이 중간에 자꾸 끊깁니다', '최근 외부 급속 충전소에서 80% 전후로 충전이 자주 종료됩니다.', 'N', 'WAITING', NULL, NULL, 13, 'N', 'N', 'N', 0),
+('INQUIRY', 5, NULL, '전비 확인은 계기판이 정확한가요 앱이 정확한가요?', '계기판 전비와 앱 평균 전비가 조금 다르게 보여서 기준이 궁금합니다.', 'N', 'WAITING', NULL, NULL, 5, 'N', 'N', 'N', 0),
+('INQUIRY', 5, NULL, '회생제동 i-PEDAL 설정하면 멀미가 심한 편인가요?', '가족이 처음 전기차를 타서 회생제동 강도를 어느 정도로 두는 게 좋을지 궁금합니다.', 'N', 'WAITING', NULL, NULL, 8, 'N', 'N', 'N', 0),
+('INQUIRY', 5, NULL, '보조금 받고 구매한 차량을 중도 매도해도 되나요?', '전기차 보조금 관련 의무 운행 기간과 중고 판매 시 유의사항이 궁금합니다.', 'N', 'WAITING', NULL, NULL, 10, 'N', 'N', 'N', 0),
+('INQUIRY', 5, NULL, '브레이크 밟을 때 저속에서 소리가 나는데 점검 받아야 할까요?', '주차장이나 저속 주행 중 브레이크 쪽에서 소리가 납니다. 흔한 증상인지 궁금합니다.', 'N', 'WAITING', NULL, NULL, 12, 'N', 'N', 'N', 0);
+
 COMMIT;
 
--- 6. 다시 안전 모드 켜기 (실수 방지를 위해 다시 켜두는 게 좋습니다)
 SET SQL_SAFE_UPDATES = 1;
 
-
-
-
--- 1. 안전 모드 해제 (혹시 모를 에러 방지)
-SET SQL_SAFE_UPDATES = 0;
-
--- 2. 대량 데이터 삽입 (다양한 분류와 제목)
-INSERT INTO BOARD_TBL (board_type, title, content, notice_yn, priority, deleted_yn) VALUES 
-('공지사항', '[이벤트] 기아 EV 멤버십 가입하고 GS칼텍스 쿠폰 받으세요', '이벤트 내용입니다.', 'Y', 90, 'N'),
-('공지사항', '2026년형 EV6 출시 기념 시승회 안내', '시승회 안내 내용입니다.', 'Y', 80, 'N'),
-('일반문의', 'EV9 출고 대기 기간이 보통 어느 정도 되나요?', '출고 대기 관련 문의입니다.', 'N', 0, 'N'),
-('전기차문의', '겨울철 히터 사용 시 주행거리 감소 폭이 궁금합니다.', '배터리 효율 문의입니다.', 'N', 0, 'N'),
-('고객센터', '기아 커넥트 앱 로그인이 안 됩니다. 해결 방법 있나요?', '앱 오류 문의입니다.', 'N', 0, 'N'),
-('일반문의', '기아 EV6 외장 컬러 중에서 어떤 게 제일 인기 많나요?', '컬러 추천 문의입니다.', 'N', 0, 'N'),
-('전기차문의', '완속 충전기와 급속 충전기 케이블 차이점', '충전 방식 문의입니다.', 'N', 0, 'N'),
-('일반문의', '전기차 보조금 거주지 이전 시 반납해야 하나요?', '보조금 법규 문의입니다.', 'N', 0, 'N'),
-('고객센터', '정비 예약하고 싶은데 가장 가까운 오토큐 찾는 법', '정비소 문의입니다.', 'N', 0, 'N'),
-('전기차문의', 'V2L로 캠핑용 인덕션 사용 가능한가요?', 'V2L 활용 문의입니다.', 'N', 0, 'N'),
-('일반문의', '기아 멤버스 포인트로 충전비 결제하는 방법', '포인트 사용 문의입니다.', 'N', 0, 'N'),
-('전기차문의', '회생제동 단계 조절하는 패들 쉬프트 사용법', '운전 조작 문의입니다.', 'N', 0, 'N'),
-('고객센터', '차량 매뉴얼 책자를 분실했는데 새로 받을 수 있나요?', '매뉴얼 문의입니다.', 'N', 0, 'N'),
-('일반문의', '니로 EV랑 EV6 중에서 고민 중입니다. 추천 부탁드려요.', '차량 비교 문의입니다.', 'N', 0, 'N'),
-('전기차문의', '충전소 에티켓! 완충 후 이동 안 하는 차 신고 방법', '매너 관련 문의입니다.', 'N', 0, 'N'),
-('일반문의', '기아 전기차 중고 시세가 궁금합니다.', '중고차 문의입니다.', 'N', 0, 'N'),
-('고객센터', '신차 패키지 선팅 추천 부탁드립니다.', '튜닝 문의입니다.', 'N', 0, 'N'),
-('전기차문의', '원격 스마트 주차 보조 기능 좁은 주차장에서 잘 되나요?', '기능 테스트 문의입니다.', 'N', 0, 'N'),
-('일반문의', '테슬라 슈퍼차저를 기아차도 이용할 수 있게 되나요?', '인프라 문의입니다.', 'N', 0, 'N'),
-('고객센터', '차량 내부에서 소음이 나는데 점검 대상인가요?', 'AS 문의입니다.', 'N', 0, 'N');
-
--- 3. 변경사항 저장
-COMMIT;
-
-SELECT * 
-FROM board_tbl;
+-- ==========================================
+-- 3. 확인용 조회
+-- board_type 은 DB에 영어 코드값으로 저장됨
+-- 화면에서는 Thymeleaf에서 한글로 변환해서 표시
+-- NOTICE -> 공지사항, INQUIRY -> 일반문의
+-- ==========================================
+SELECT board_no, board_type, member_no, admin_no, title, notice_yn, priority
+FROM board_tbl
+ORDER BY notice_yn DESC, priority DESC, board_no DESC;

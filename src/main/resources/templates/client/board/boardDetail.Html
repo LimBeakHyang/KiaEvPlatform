@@ -31,7 +31,7 @@
             </tr>
             <tr>
                 <th>분류</th>
-                <td th:text="${board.boardType}">문의글</td>
+                <td th:text="${board.boardType == 'NOTICE' ? '공지사항' : board.boardType == 'INQUIRY' ? '일반문의' : board.boardType == 'EV_INQUIRY' ? '전기차문의' : board.boardType == 'CS_CENTER' ? '고객센터' : board.boardType}">문의글</td>
                 <th>작성일</th>
                 <td th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}">2026-04-13 16:50</td>
             </tr>

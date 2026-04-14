@@ -63,7 +63,7 @@ a:hover {
 			<tbody>
 				<tr th:each="board : ${boardList}">
 					<td th:text="${board.boardNo}">1</td>
-					<td th:text="${board.boardType}">문의글</td>
+					<td th:text="${board.boardType == 'NOTICE' ? '공지사항' : board.boardType == 'INQUIRY' ? '일반문의' : board.boardType == 'EV_INQUIRY' ? '전기차문의' : board.boardType == 'CS_CENTER' ? '고객센터' : board.boardType}">문의글</td>
 					<td class="title-td"><a
 						th:href="@{/board/detail(boardNo=${board.boardNo})}"
 						th:text="${board.title}">게시글 제목입니다.</a></td>
