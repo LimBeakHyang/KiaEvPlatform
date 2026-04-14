@@ -24,16 +24,14 @@
         .bubble { max-width: 88%; padding: 14px 16px; border-radius: 18px; margin-bottom: 12px; line-height: 1.6; white-space: pre-wrap; }
         .bot { background: #ffffff; border: 1px solid #e3e3e3; color: #111; border-top-left-radius: 6px; }
         .user { margin-left: auto; background: #111111; color: #ffffff; border: 1px solid #111111; border-top-right-radius: 6px; }
-        .side { padding: 22px; }
-        .info-box { padding: 18px; border-radius: 18px; background: #f8f8f8; border: 1px solid #e5e5e5; margin-bottom: 16px; }
+        .side { padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+        .info-box { padding: 18px; border-radius: 18px; background: #f8f8f8; border: 1px solid #e5e5e5; }
         .info-box p { margin: 0; line-height: 1.6; color: #555; font-size: 14px; }
-        .form-grid { display: grid; gap: 12px; }
-        .form-grid label { font-size: 13px; font-weight: 700; color: #111; }
-        .form-grid input, .form-grid select, .form-grid textarea { width: 100%; border: 1px solid #dcdcdc; border-radius: 14px; padding: 12px 14px; font-size: 14px; background: #ffffff; color: #111; }
-        .form-grid textarea { min-height: 140px; resize: vertical; }
-        .submit-btn { border: none; border-radius: 14px; padding: 14px 18px; background: #111111; color: #ffffff; font-size: 15px; font-weight: 700; cursor: pointer; }
-        .submit-btn:hover { background: #222222; }
-        .status-text { margin-top: 10px; min-height: 20px; font-size: 13px; color: #555; }
+        .consult-card { padding: 24px; border-radius: 22px; background: linear-gradient(180deg, #fafafa 0%, #f2f2f2 100%); border: 1px solid #e4e4e4; }
+        .consult-card h3 { margin: 0 0 10px; font-size: 22px; color: #05141f; }
+        .consult-card p { margin: 0 0 18px; line-height: 1.7; color: #555; font-size: 14px; }
+        .consult-link { display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 56px; border-radius: 16px; background: #111111; color: #ffffff; font-size: 16px; font-weight: 800; text-decoration: none; transition: background .2s ease; }
+        .consult-link:hover { background: #222222; }
         @media (max-width: 960px) {
             .layout { grid-template-columns: 1fr; }
             .page { width: min(100% - 24px, 1180px); padding-top: 110px; }
@@ -48,7 +46,7 @@
 <div class="page">
     <section class="hero">
         <h1>KIA EV 챗봇 상담</h1>
-        <p>FAQ 제공, 추천 질문, 선택형 응답, 그리고 1:1 문의 접수까지 한 번에 처리하는 상담 화면입니다.</p>
+        <p>FAQ와 추천 질문으로 빠르게 답변을 확인하고, 추가 상담이 필요하면 상담신청으로 바로 연결되는 화면입니다.</p>
     </section>
 
     <div class="layout">
@@ -65,42 +63,14 @@
 
         <aside class="panel side">
             <div class="info-box">
-                <p>원하는 답변이 없으면 아래 양식으로 1:1 문의를 남겨주세요. 로그인한 회원은 이름과 이메일이 자동 반영됩니다.</p>
+                <p>로그인하지 않아도 챗봇은 이용할 수 있습니다. 추가 상담이 필요하시면 상담신청 버튼을 눌러 진행해 주세요.</p>
             </div>
 
-            <form id="inquiryForm" class="form-grid">
-                <div>
-                    <label for="category">문의 유형</label>
-                    <select id="category" name="category" required>
-                        <option value="">선택해 주세요</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label for="carNo">관심 차량</label>
-                    <select id="carNo" name="carNo">
-                        <option value="">선택 안 함</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label for="writerName">작성자명</label>
-                    <input id="writerName" name="writerName" type="text" required>
-                </div>
-
-                <div>
-                    <label for="writerEmail">작성자 이메일</label>
-                    <input id="writerEmail" name="writerEmail" type="email" required>
-                </div>
-
-                <div>
-                    <label for="content">문의 내용</label>
-                    <textarea id="content" name="content" required placeholder="원하시는 상담 내용을 입력해 주세요."></textarea>
-                </div>
-
-                <button type="submit" class="submit-btn">1:1 문의 접수</button>
-                <div id="statusText" class="status-text"></div>
-            </form>
+            <div class="consult-card">
+                <h3>상담신청</h3>
+                <p>상세한 차량 상담이나 시승, 구매 관련 문의는 상담신청 페이지에서 접수할 수 있습니다. 비로그인 상태라면 먼저 로그인 화면으로 이동합니다.</p>
+                <a class="consult-link" th:href="@{/consult/form}">상담신청 하러 가기</a>
+            </div>
         </aside>
     </div>
 </div>
@@ -112,16 +82,7 @@
     const categoryRowEl = document.getElementById('categoryRow');
     const quickRowEl = document.getElementById('quickRow');
     const carRowEl = document.getElementById('carRow');
-    const inquiryForm = document.getElementById('inquiryForm');
-    const statusTextEl = document.getElementById('statusText');
-    const categorySelect = document.getElementById('category');
-    const carSelect = document.getElementById('carNo');
-    const writerNameInput = document.getElementById('writerName');
-    const writerEmailInput = document.getElementById('writerEmail');
-
     let initData = null;
-    let lastQuestion = '';
-    let lastSource = '직접입력';
     let activeCategoryChip = null;
     let activeQuickChip = null;
     let activeCarChip = null;
@@ -172,8 +133,6 @@
         }
 
         addMessage(question, 'user');
-        lastQuestion = question;
-        lastSource = options.source || '추천질문';
 
         const response = await fetch('/api/v1/chatbot/answer', {
             method: 'POST',
@@ -211,11 +170,6 @@
                 requestAnswer(mappedQuestions[category] || '차량 추천을 받고 싶어요', category, { source: 'FAQ' });
             });
             categoryRowEl.appendChild(chip);
-
-            const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            categorySelect.appendChild(option);
         });
 
         quickRowEl.innerHTML = '';
@@ -234,51 +188,8 @@
                 requestAnswer(`${car.modelName} 정보가 궁금해요`, '차량 안내', { replaceMessages: true, source: 'FAQ' });
             });
             carRowEl.appendChild(chip);
-
-            const option = document.createElement('option');
-            option.value = car.carNo;
-            option.textContent = car.modelName;
-            carSelect.appendChild(option);
         });
-
-        if (initData.loggedIn) {
-            writerNameInput.value = initData.memberName || '';
-            writerEmailInput.value = initData.memberEmail || '';
-        }
     }
-
-    inquiryForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        statusTextEl.textContent = '문의 접수 중입니다...';
-
-        const payload = {
-            category: inquiryForm.category.value,
-            carNo: inquiryForm.carNo.value ? Number(inquiryForm.carNo.value) : null,
-            writerName: inquiryForm.writerName.value.trim(),
-            writerEmail: inquiryForm.writerEmail.value.trim(),
-            content: inquiryForm.content.value.trim(),
-            chatSource: lastSource,
-            questionSummary: lastQuestion || inquiryForm.category.value,
-            status: '접수'
-        };
-
-        const response = await fetch('/api/v1/chatbot/inquiry', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        const message = await response.text();
-
-        if (response.ok) {
-            statusTextEl.textContent = message;
-            inquiryForm.content.value = '';
-            addMessage('1:1 문의가 접수되었습니다. 담당자가 확인 후 안내드릴 예정입니다.', 'bot');
-            return;
-        }
-
-        statusTextEl.textContent = message || '문의 접수 중 오류가 발생했습니다.';
-    });
 
     initChatbot();
 </script>

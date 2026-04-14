@@ -22,6 +22,7 @@ public class ConsultController {
     public String showForm(HttpSession session) {
 
         if (session.getAttribute("loginUser") == null) {
+            session.setAttribute("prevPage", "/consult/formPage");
             return "<script>"
                     + "alert('로그인 후에 이용 가능한 서비스 입니다.');"
                     + "location.href='/login';"
