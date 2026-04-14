@@ -32,4 +32,22 @@ public class ChargingQueryService {
                 .map(ChargingResponseDto::from) // 각각의 Entity를 DTO로 변환 (아까 만든 from 메서드 사용)
                 .collect(Collectors.toList());  // 다시 리스트 형태로 묶어줍니다.
     }
+    public List<ChargingResponseDto> searchChargingStations(String keyword) {
+        String normalizedKeyword = keyword == null ? "" : keyword.trim();
+
+        if (normalizedKeyword.isEmpty()) {
+            return getAllChargingStations();
+        }
+
+        return chargingRepository
+                .findByStatNmContainingIgnoreCaseOrAddrContainingIgnoreCaseOrAddrDetailContainingIgnoreCaseOrLocationDescContainingIgnoreCase(
+                        normalizedKeyword,
+                        normalizedKeyword,
+                        normalizedKeyword,
+                        normalizedKeyword
+                )
+                .stream()
+                .map(ChargingResponseDto::from)
+                .collect(Collectors.toList());
+    }
 }

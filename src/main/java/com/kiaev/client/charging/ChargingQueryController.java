@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -21,10 +22,13 @@ public class ChargingQueryController {
      * 브라우저에서 GET 방식으로 http://localhost:8080/api/charging/stations 를 호출하면 실행됩니다.
      */
     @GetMapping("/stations")
-    public ResponseEntity<List<ChargingResponseDto>> getStations() {
+    public ResponseEntity<List<ChargingResponseDto>> getStations(
+            @RequestParam(value = "location", required = false) String location) {
         
         // 1. Service를 통해 모든 충전소 목록을 가져옵니다.
-        List<ChargingResponseDto> stations = chargingQueryService.getAllChargingStations();
+        List<ChargingResponseDto> stations = (location == null || location.trim().isEmpty())
+                ? chargingQueryService.getAllChargingStations()
+                : chargingQueryService.searchChargingStations(location);
         
         // 2. 가져온 데이터를 정상 상태(HTTP 200 OK)와 함께 클라이언트로 보냅니다.
         return ResponseEntity.ok(stations);
