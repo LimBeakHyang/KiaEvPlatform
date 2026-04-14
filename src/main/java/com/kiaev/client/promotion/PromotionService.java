@@ -24,7 +24,7 @@ public class PromotionService {
         
         // 2. Repository에 만들어둔 쿼리 메서드를 실행합니다.
         // 의미: 시작일이 'now' 이전이고, 종료일이 'now' 이후인 데이터만 찾아라!
-        return promotionRepository.findByIsActiveTrueAndStartDateBeforeAndEndDateAfter(now, now);
+        return promotionRepository.findByIsActiveTrueAndStartDateBeforeAndEndDateAfterOrderByBannerOrderAsc(now, now);
     }
 
     /**
