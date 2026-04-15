@@ -70,7 +70,12 @@ public class MypageService {
 
     // 회원 탈퇴
     public void deleteMember(Long memberNo) {
-        mypageRepository.deleteMember(memberNo);
+        Login member = loginRepository.findById(memberNo).orElse(null);
+
+        if (member != null) {
+            member.setMemberStatus("탈퇴회원");
+            loginRepository.save(member);
+        }
     }
 
     // 상담 내역 조회
@@ -80,7 +85,7 @@ public class MypageService {
 
     // 문의 내역 조회
     public List<Mypage> getBoardHistory(Long memberNo) {
-        return mypageRepository.findConsultHistoryByMemberNo(memberNo);
+        return mypageRepository.findBoardHistoryByMemberNo(memberNo);
     }
 
     // 관심 차량 조회

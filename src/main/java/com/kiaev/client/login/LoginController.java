@@ -39,19 +39,22 @@ public class LoginController {
                         HttpSession session,
                         Model model) {
 
-        Login loginUser = loginService.login(loginId, memberPw);
+        try {
+            Login loginUser = loginService.login(loginId, memberPw);
 
-        if (loginUser == null) {
-            model.addAttribute("loginError", "아이디 또는 비밀번호가 일치하지 않습니다.");
+            if (loginUser == null) {
+                model.addAttribute("loginError", "아이디 또는 비밀번호가 일치하지 않습니다.");
+                return "client/login/loginForm";
+            }
+
+            session.setAttribute("loginUser", loginUser);
+            return "redirect:/";
+
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("loginError", e.getMessage());
             return "client/login/loginForm";
         }
-
-        session.setAttribute("loginUser", loginUser);
-
-        // 메인페이지로 이동
-        return "redirect:/";
     }
-
     // 로그아웃 처리
     @GetMapping("/logout")
     public String logout(HttpSession session) {

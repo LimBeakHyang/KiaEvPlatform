@@ -11,8 +11,25 @@ public class LoginService {
 
     // 로그인
     public Login login(String loginId, String memberPw) {
-        return loginRepository.findByLoginIdAndMemberPw(loginId, memberPw);
+    	Login login = loginRepository.findByLoginId(loginId);
+    
+    // 아이디 없음
+    if (login == null) {
+        return null;
     }
+
+    // 탈퇴 회원이면 로그인 불가
+    if ("탈퇴회원".equals(login.getMemberStatus())) {
+        throw new IllegalArgumentException("탈퇴한 회원입니다.");
+    }
+
+    // 비밀번호 불일치
+    if (!login.getMemberPw().equals(memberPw)) {
+        return null;
+    }
+
+    return login;
+}
 
     // 아이디 찾기
     public String findLoginId(String memberName, String email) {
