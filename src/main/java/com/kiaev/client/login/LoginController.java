@@ -47,7 +47,21 @@ public class LoginController {
                 return "client/login/loginForm";
             }
 
+            // 로그인 성공 시 세션 저장
             session.setAttribute("loginUser", loginUser);
+
+            // 세션 유지시간 30분
+            session.setMaxInactiveInterval(1800);
+
+            // 로그인 전 가려던 페이지가 있으면 그쪽으로 이동
+            String prevPage = (String) session.getAttribute("prevPage");
+
+            if (prevPage != null) {
+                session.removeAttribute("prevPage");
+                return "redirect:" + prevPage;
+            }
+
+            // 기본은 메인페이지 이동
             return "redirect:/";
 
         } catch (IllegalArgumentException e) {
@@ -60,6 +74,17 @@ public class LoginController {
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
+    }
+
+    // ================================
+    // 추가 기능 2 : 세션 만료 안내용 전용 주소
+    // 다른 컨트롤러에서 세션이 없을 때
+    // return "redirect:/session-expired";
+    // 이렇게 보내면 로그인 페이지로 이동하면서 안내문구가 뜸
+    // ================================
+    @GetMapping("/session-expired")
+    public String sessionExpired() {
+        return "redirect:/login?timeout=true";
     }
 
     // 아이디 찾기 페이지
