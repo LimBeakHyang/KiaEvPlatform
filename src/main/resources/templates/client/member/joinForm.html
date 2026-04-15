@@ -17,6 +17,26 @@ body {
     color: #111;
 }
 
+.page-title-row {
+    width: 760px;
+    margin: 20px auto 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.logo-link {
+    text-decoration: none;
+    font-size: 36px;
+    font-weight: 800;
+    color: #001b33;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+
+.logo-link:hover {
+    color: #00264b;
+}
+
 .join-wrap {
     width: 760px;
     margin: 0 auto;
@@ -25,9 +45,9 @@ body {
 
 .join-title {
     text-align: center;
-    font-size: 54px;
+    font-size: 48px;
     font-weight: 800;
-    margin: 0 0 30px;
+    margin: 20px 0 30px;
     letter-spacing: -1px;
 }
 
@@ -181,8 +201,12 @@ body {
 </head>
 <body>
 
+<div class="page-title-row">
+    <a href="/main?lang=kr" class="logo-link">KIA EV</a>
+</div>
+
 <div class="join-wrap">
-    <h1 class="join-title">회원가입</h1>
+<h1 class="join-title">회원가입</h1>
 
     <form th:action="@{/member/join}" method="post" id="joinForm" class="join-form">
 
