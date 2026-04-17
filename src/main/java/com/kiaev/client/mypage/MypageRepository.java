@@ -89,8 +89,13 @@ public class MypageRepository {
     }
 
     public void deleteMember(Long memberNo) {
-        // 실제 DB 삭제 또는 상태 변경 자리
-        System.out.println("회원 탈퇴 처리 완료: " + memberNo);
+        String sql = """
+            UPDATE member_tbl
+            SET member_status = '탈퇴회원'
+            WHERE member_no = ?
+        """;
+
+        jdbcTemplate.update(sql, memberNo);
     }
 
     public List<Wishlist> getWishlist(Long memberNo) {
