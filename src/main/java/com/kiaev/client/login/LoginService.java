@@ -20,7 +20,7 @@ public class LoginService {
 
         // 탈퇴회원 로그인 차단
         if ("탈퇴회원".equals(login.getMemberStatus())) {
-            return null;
+            throw new IllegalArgumentException("탈퇴된 회원입니다.");
         }
 
         // 비밀번호 불일치
