@@ -1,9 +1,9 @@
 package com.kiaev.client.member;
 
 import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional; // [추가]
 
 @Service
 public class MemberService {
@@ -11,9 +11,11 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
+    // 회원가입 및 재가입 로직
+    @Transactional // 가입/수정 작업의 안정성 보장
     public void join(Member member) {
-    	Member existingByLoginId = memberRepository.findByLoginId(member.getLoginId()).orElse(null);
-    	Member existingByEmail = memberRepository.findByEmail(member.getEmail()).orElse(null);
+        Member existingByLoginId = memberRepository.findByLoginId(member.getLoginId()).orElse(null);
+        Member existingByEmail = memberRepository.findByEmail(member.getEmail()).orElse(null);
 
         // 비밀번호 확인 체크
         if (member.getMemberPw() == null || member.getConfirmPw() == null ||
@@ -78,11 +80,20 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    // 회원 탈퇴 처리
+    @Transactional // [중요] 상태값 변경을 DB에 즉시 반영하기 위해 필수!
     public void delete(Long memberNo) {
+        // [디버그 로그] 탈퇴 요청이 서비스까지 오는지 확인용
+        System.out.println("★ [MemberService] 탈퇴 로직 호출됨. 회원번호: " + memberNo);
+
         Member member = memberRepository.findById(memberNo)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        
+        // 상태값 변경
         member.setMemberStatus("탈퇴회원");
         memberRepository.save(member);
+        
+        System.out.println("★ [MemberService] DB 업데이트 완료. 현재 상태: " + member.getMemberStatus());
     }
 
     public boolean existsByLoginId(String loginId) {

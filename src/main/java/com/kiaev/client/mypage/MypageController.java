@@ -14,162 +14,179 @@ import com.kiaev.client.consult.Consult;
 import com.kiaev.client.consult.ConsultService;
 import com.kiaev.client.login.Login;
 import com.kiaev.client.login.LoginService;
+import com.kiaev.client.member.MemberService;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MypageController {
 
-   @Autowired
-   private MypageService mypageService;
+    @Autowired
+    private MypageService mypageService;
 
-   @Autowired
-   private LoginService loginService;
+    @Autowired
+    private LoginService loginService;
 
-   @Autowired
-   private ConsultService consultService;
+    @Autowired
+    private ConsultService consultService;
+    
+    @Autowired // 실제 탈퇴 로직(MemberStatus 변경)을 수행하기 위해 주입
+    private MemberService memberService;
 
-   @GetMapping("/mypage")
-   public String mypageMain(HttpSession session) {
-      Login loginUser = (Login) session.getAttribute("loginUser");
+    @GetMapping("/mypage")
+    public String mypageMain(HttpSession session) {
+        Login loginUser = (Login) session.getAttribute("loginUser");
 
-      if (loginUser == null) {
-         return "redirect:/session-expired";
-      }
+        if (loginUser == null) {
+            return "redirect:/session-expired";
+        }
 
-      return "redirect:/mypage/myinfo";
-   }
+        return "redirect:/mypage/myinfo";
+    }
 
-   @GetMapping("/mypage/myinfo")
-   public String myInfo(HttpSession session, Model model) {
-      Login loginUser = (Login) session.getAttribute("loginUser");
+    @GetMapping("/mypage/myinfo")
+    public String myInfo(HttpSession session, Model model) {
+        Login loginUser = (Login) session.getAttribute("loginUser");
 
-      if (loginUser == null) {
-         return "redirect:/session-expired";
-      }
+        if (loginUser == null) {
+            return "redirect:/session-expired";
+        }
 
-      Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
+        Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
 
-      model.addAttribute("loginUser", loginUser);
-      model.addAttribute("memberInfo", memberInfo);
+        model.addAttribute("loginUser", loginUser);
+        model.addAttribute("memberInfo", memberInfo);
 
-      return "client/mypage/myinfo";
-   }
+        return "client/mypage/myinfo";
+    }
 
-   @PostMapping("/mypage/update")
-   public String updateMyInfo(Mypage mypage, HttpSession session) {
-      Login loginUser = (Login) session.getAttribute("loginUser");
+    @PostMapping("/mypage/update")
+    public String updateMyInfo(Mypage mypage, HttpSession session) {
+        Login loginUser = (Login) session.getAttribute("loginUser");
 
-      if (loginUser == null) {
-         return "redirect:/session-expired";
-      }
+        if (loginUser == null) {
+            return "redirect:/session-expired";
+        }
 
-      mypage.setMemberNo(loginUser.getMemberNo());
-      mypageService.updateMemberInfo(mypage);
+        mypage.setMemberNo(loginUser.getMemberNo());
+        mypageService.updateMemberInfo(mypage);
 
-      return "redirect:/mypage/myinfo";
-   }
+        return "redirect:/mypage/myinfo";
+    }
 
-   @GetMapping("/mypage/passwordChange")
-   public String passwordForm(HttpSession session, Model model) {
-      Login loginUser = (Login) session.getAttribute("loginUser");
+    @GetMapping("/mypage/passwordChange")
+    public String passwordForm(HttpSession session, Model model) {
+        Login loginUser = (Login) session.getAttribute("loginUser");
 
-      if (loginUser == null && !model.containsAttribute("passwordChangeSuccess")) {
-         return "redirect:/session-expired";
-      }
+        if (loginUser == null && !model.containsAttribute("passwordChangeSuccess")) {
+            return "redirect:/session-expired";
+        }
 
-      return "client/mypage/passwordchange";
-   }
+        return "client/mypage/passwordchange";
+    }
 
-   @PostMapping("/mypage/passwordChange")
-   public String passwordChange(@RequestParam("currentPw") String currentPw,
-         @RequestParam("newPw") String newPw,
-         @RequestParam("confirmPw") String confirmPw,
-         HttpSession session, RedirectAttributes redirectAttributes) {
+    @PostMapping("/mypage/passwordChange")
+    public String passwordChange(@RequestParam("currentPw") String currentPw,
+            @RequestParam("newPw") String newPw,
+            @RequestParam("confirmPw") String confirmPw,
+            HttpSession session, RedirectAttributes redirectAttributes) {
 
-      Login loginUser = (Login) session.getAttribute("loginUser");
+        Login loginUser = (Login) session.getAttribute("loginUser");
 
-      if (loginUser == null) {
-         return "redirect:/session-expired";
-      }
+        if (loginUser == null) {
+            return "redirect:/session-expired";
+        }
 
-      if (!newPw.equals(confirmPw)) {
-         redirectAttributes.addFlashAttribute("errorMessage", "새 비밀번호가 일치하지 않습니다.");
-         return "redirect:/mypage/passwordChange";
-      }
+        if (!newPw.equals(confirmPw)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "새 비밀번호가 일치하지 않습니다.");
+            return "redirect:/mypage/passwordChange";
+        }
 
-      boolean result = mypageService.changePassword(loginUser.getMemberNo(), currentPw, newPw);
+        boolean result = mypageService.changePassword(loginUser.getMemberNo(), currentPw, newPw);
 
-      if (!result) {
-         redirectAttributes.addFlashAttribute("errorMessage", "현재 비밀번호가 올바르지 않습니다.");
-         return "redirect:/mypage/passwordChange";
-      }
+        if (!result) {
+            redirectAttributes.addFlashAttribute("errorMessage", "현재 비밀번호가 올바르지 않습니다.");
+            return "redirect:/mypage/passwordChange";
+        }
 
-      session.invalidate();
-      redirectAttributes.addFlashAttribute("passwordChangeSuccess", true);
+        session.invalidate();
+        redirectAttributes.addFlashAttribute("passwordChangeSuccess", true);
 
-      return "redirect:/mypage/passwordChange";
-   }
+        return "redirect:/mypage/passwordChange";
+    }
 
-   @GetMapping("/mypage/delete")
-   public String deleteMember(HttpSession session) {
-      Login loginUser = (Login) session.getAttribute("loginUser");
+    // [수정] 명세서의 GetMapping 구조를 유지하되, 내부 로직을 보강함
+    @GetMapping("/mypage/delete")
+    public String deleteMember(HttpSession session, RedirectAttributes redirectAttributes) {
+        Login loginUser = (Login) session.getAttribute("loginUser");
 
-      if (loginUser == null) {
-         return "redirect:/session-expired";
-      }
+        if (loginUser == null) {
+            return "redirect:/session-expired";
+        }
 
-      mypageService.deleteMember(loginUser.getMemberNo());
-      session.invalidate();
+        try {
+            // 1. 실제 DB의 member_status를 '탈퇴회원'으로 변경하는 로직 호출
+            memberService.delete(loginUser.getMemberNo());
+            
+            // 2. 세션 무효화 (로그아웃)
+            session.invalidate();
+            
+            // 3. 탈퇴 성공 메시지 (선택 사항)
+            redirectAttributes.addFlashAttribute("joinSuccess", "탈퇴가 정상적으로 처리되었습니다.");
+            
+            return "redirect:/login";
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/mypage/myinfo";
+        }
+    }
 
-      return "redirect:/login";
-   }
+    @GetMapping("/mypage/consult")
+    public String consultHistory(HttpSession session, Model model) {
+        Login loginUser = (Login) session.getAttribute("loginUser");
 
-   @GetMapping("/mypage/consult")
-   public String consultHistory(HttpSession session, Model model) {
-      Login loginUser = (Login) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            return "redirect:/session-expired";
+        }
 
-      if (loginUser == null) {
-         return "redirect:/session-expired";
-      }
+        List<Consult> list = consultService.findByMemberNo(loginUser.getMemberNo());
 
-      List<Consult> list = consultService.findByMemberNo(loginUser.getMemberNo());
+        model.addAttribute("consultList", list);
+        model.addAttribute("loginUser", loginUser);
 
-      model.addAttribute("consultList", list);
-      model.addAttribute("loginUser", loginUser);
+        return "client/mypage/consulthistory";
+    }
 
-      return "client/mypage/consulthistory";
-   }
+    @GetMapping("/mypage/board")
+    public String boardHistory(HttpSession session, Model model) {
+        Login loginUser = (Login) session.getAttribute("loginUser");
 
-   @GetMapping("/mypage/board")
-   public String boardHistory(HttpSession session, Model model) {
-      Login loginUser = (Login) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            return "redirect:/session-expired";
+        }
 
-      if (loginUser == null) {
-         return "redirect:/session-expired";
-      }
+        List<Mypage> list = mypageService.getBoardHistory(loginUser.getMemberNo());
 
-      List<Mypage> list = mypageService.getBoardHistory(loginUser.getMemberNo());
+        model.addAttribute("boardList", list);
+        model.addAttribute("loginUser", loginUser);
 
-      model.addAttribute("boardList", list);
-      model.addAttribute("loginUser", loginUser);
+        return "client/mypage/boardhistory";
+    }
 
-      return "client/mypage/boardhistory";
-   }
+    @GetMapping("/mypage/update")
+    public String updateForm(HttpSession session, Model model) {
+        Login loginUser = (Login) session.getAttribute("loginUser");
 
-   @GetMapping("/mypage/update")
-   public String updateForm(HttpSession session, Model model) {
-      Login loginUser = (Login) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            return "redirect:/session-expired";
+        }
 
-      if (loginUser == null) {
-         return "redirect:/session-expired";
-      }
+        Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
 
-      Mypage memberInfo = mypageService.getMemberInfo(loginUser.getMemberNo());
+        model.addAttribute("loginUser", loginUser);
+        model.addAttribute("memberInfo", memberInfo);
 
-      model.addAttribute("loginUser", loginUser);
-      model.addAttribute("memberInfo", memberInfo);
-
-      return "client/mypage/update";
-   }
+        return "client/mypage/update";
+    }
 }

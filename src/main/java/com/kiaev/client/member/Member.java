@@ -67,7 +67,7 @@ public class Member {
         }
 
         if (this.memberStatus == null || this.memberStatus.trim().isEmpty()) {
-            this.memberStatus = "Y";
+            this.memberStatus = "정상회원";
         }
     }
 
