@@ -79,7 +79,10 @@ public class MemberService {
     }
 
     public void delete(Long memberNo) {
-        memberRepository.deleteById(memberNo);
+        Member member = memberRepository.findById(memberNo)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        member.setMemberStatus("탈퇴회원");
+        memberRepository.save(member);
     }
 
     public boolean existsByLoginId(String loginId) {
