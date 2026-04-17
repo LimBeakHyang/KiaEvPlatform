@@ -80,7 +80,7 @@ public class MainController {
              * - limit(2): 팝업 공간을 고려해 최신글 2개만 선택
              */
             List<Board> popupNotices = boardRepository.findAll().stream()
-                    .filter(b -> "NOTICE".equals(b.getBoardType()) && "N".equals(b.getDeletedYn()))
+                    .filter(b -> "공지사항".equals(b.getBoardType()) && "N".equals(b.getDeletedYn()))
                     .sorted(Comparator.comparing(Board::getCreatedAt, Comparator.nullsLast(Comparator.reverseOrder())))
                     .limit(2)
                     .collect(Collectors.toList());
