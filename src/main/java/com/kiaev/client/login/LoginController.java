@@ -39,36 +39,34 @@ public class LoginController {
                         HttpSession session,
                         Model model) {
 
-        Login loginUser = loginService.login(loginId, memberPw);
+        try {
+            Login loginUser = loginService.login(loginId, memberPw);
 
-        if (loginUser == null) {
-            model.addAttribute("loginError", "아이디 또는 비밀번호가 일치하지 않습니다.");
+            if (loginUser == null) {
+                model.addAttribute("loginError", "아이디 또는 비밀번호가 일치하지 않습니다.");
+                return "client/login/loginForm";
+            }
+
+            session.setAttribute("loginUser", loginUser);
+
+            // 세션 유지시간
+            session.setMaxInactiveInterval(60);
+
+            // 원래 가려던 페이지 이동
+            String prevPage = (String) session.getAttribute("prevPage");
+
+            if (prevPage != null) {
+                session.removeAttribute("prevPage");
+                return "redirect:" + prevPage;
+            }
+
+            return "redirect:/";
+
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("loginError", e.getMessage());
             return "client/login/loginForm";
         }
-
-        session.setAttribute("loginUser", loginUser);
-
-
-        // ================================
-        // 추가 기능 1 : 세션 유지시간 설정
-        // 1800초 = 30분
-        // 사용자가 30분 동안 아무 동작이 없으면 세션이 만료됨
-        // ================================
-        session.setMaxInactiveInterval(60);
-
-
-        // [수정] 세션에 저장된 "원래 목적지"가 있는지 확인합니다.
-        String prevPage = (String) session.getAttribute("prevPage");
-        
-        if (prevPage != null) {
-            session.removeAttribute("prevPage"); // 사용했으니 메모지는 지웁니다.
-            return "redirect:" + prevPage; // 원래 가려던 곳으로 이동!
-        }
-        
-
-        // 메인페이지로 이동
-        return "redirect:/";
-    }
+    }        
 
     // 로그아웃 처리
     @GetMapping("/logout")
