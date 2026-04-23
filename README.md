@@ -63,7 +63,7 @@ src/main/java/com/kiaev
 │   └── recommend
 ├── cbclient
 └── common
-
+```
 ## 구현하며 배운 점
 Spring Boot 기반 MVC 구조 설계
 Controller, Service, Repository 계층 분리
