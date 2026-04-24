@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 관리</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            display: block;
+            padding: 12px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #eee;
+            text-decoration: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f9fafb;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .tag.green {
+            background: #dcfce7;
+        }
+
+        .tag.blue {
+            background: #dbeafe;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+        <div class="logo">KIAEV ADMIN</div>
+
+        <nav class="nav">
+            <a href="#">대시보드</a>
+            <a href="#">회원관리</a>
+            <a href="#">상담관리</a>
+            <a href="#" class="active">게시판관리</a>
+            <a href="#">딜러관리</a>
+            <a href="#">프로모션관리</a>
+            <a href="#">차량관리</a>
+        </nav>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="content">
+
+        <div class="topbar">
+            <h1>게시판 관리</h1>
+            <div>ADMIN님</div>
+        </div>
+
+        <div class="breadcrumb">
+            ADMIN > 게시판 관리
+        </div>
+
+        <div class="card">
+
+            <!-- 필터 -->
+            <div class="toolbar">
+                <a href="#" class="btn">전체</a>
+                <a href="#" class="btn">공지</a>
+                <a href="#" class="btn">문의</a>
+
+                <select>
+                    <option>전체</option>
+                    <option>답변 대기</option>
+                    <option>답변 완료</option>
+                    <option>숨김 처리</option>
+                </select>
+
+                <input type="text" placeholder="제목 또는 작성자 검색">
+            </div>
+
+            <!-- 테이블 -->
+            <table>
+                <thead>
+                <tr>
+                    <th>유형</th>
+                    <th>제목</th>
+                    <th>상태</th>
+                    <th>작성일</th>
+                    <th>상세</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>공지</td>
+                    <td>3월 전기차 프로모션 안내</td>
+                    <td><span class="tag green">게시중</span></td>
+                    <td>2026.03.18</td>
+                    <td><a href="#" class="btn">공지 상세</a></td>
+                </tr>
+
+                <tr>
+                    <td>문의</td>
+                    <td>차량 구매 관련 문의드립니다.</td>
+                    <td><span class="tag blue">답변 대기</span></td>
+                    <td>2026.03.20</td>
+                    <td><a href="#" class="btn">문의 상세</a></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
