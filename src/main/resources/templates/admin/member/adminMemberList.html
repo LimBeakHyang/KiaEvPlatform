@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f4f6f8;
+            --card: #fff;
+            --line: #d9dee5;
+            --text: #222;
+            --muted: #6b7280;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: var(--bg);
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            display: block;
+            padding: 12px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f9fafb;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #eee;
+            text-decoration: none;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .tag.green {
+            background: #dcfce7;
+        }
+
+        .tag.gray {
+            background: #eee;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+        <div class="logo">KIAEV ADMIN</div>
+
+        <nav class="nav">
+            <a href="#">대시보드</a>
+            <a href="#" class="active">회원관리</a>
+            <a href="#">상담관리</a>
+            <a href="#">게시판관리</a>
+            <a href="#">딜러관리</a>
+            <a href="#">프로모션관리</a>
+            <a href="#">차량관리</a>
+        </nav>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="content">
+
+        <div class="topbar">
+            <h1>회원 관리</h1>
+            <div>ADMIN님</div>
+        </div>
+
+        <div class="breadcrumb">
+            ADMIN > 회원관리
+        </div>
+
+        <div class="card">
+
+            <!-- 검색 영역 -->
+            <div class="toolbar">
+                <select>
+                    <option>회원번호</option>
+                    <option>가입일시</option>
+                </select>
+
+                <select>
+                    <option>없음</option>
+                    <option>정상회원</option>
+                    <option>탈퇴회원</option>
+                </select>
+
+                <input type="text" placeholder="회원번호 또는 이름 검색">
+            </div>
+
+            <!-- 테이블 -->
+            <table>
+                <thead>
+                <tr>
+                    <th>회원번호</th>
+                    <th>이름</th>
+                    <th>이메일</th>
+                    <th>회원상태</th>
+                    <th>가입일시</th>
+                    <th>상세</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>11020003</td>
+                    <td>박아연</td>
+                    <td>company@gogle.com</td>
+                    <td><span class="tag green">정상회원</span></td>
+                    <td>2011.02.01</td>
+                    <td><a href="#" class="btn">상세확인</a></td>
+                </tr>
+
+                <tr>
+                    <td>11020004</td>
+                    <td>김민수</td>
+                    <td>minsu@example.com</td>
+                    <td><span class="tag gray">탈퇴회원</span></td>
+                    <td>2011.02.04</td>
+                    <td><a href="#" class="btn">상세확인</a></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- 페이징 -->
+            <div class="pagination">
+                « 1 2 »
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
