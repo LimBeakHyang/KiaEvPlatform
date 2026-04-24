@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>딜러 상세</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            display: block;
+            padding: 12px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .detail dt {
+            font-weight: bold;
+            padding: 10px 0;
+        }
+
+        .detail dd {
+            margin: 0;
+            padding: 10px 0;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .tag.green {
+            background: #dcfce7;
+        }
+
+        .btn {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn.sub {
+            background: white;
+            border: 1px solid #ccc;
+        }
+
+        .btn.red {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+        <div class="logo">KIAEV ADMIN</div>
+
+        <nav class="nav">
+            <a href="#">대시보드</a>
+            <a href="#">회원관리</a>
+            <a href="#">상담관리</a>
+            <a href="#">게시판관리</a>
+            <a href="#" class="active">딜러관리</a>
+            <a href="#">프로모션관리</a>
+            <a href="#">차량관리</a>
+        </nav>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="content">
+
+        <div class="topbar">
+            <h1>딜러 상세</h1>
+            <div>ADMIN님</div>
+        </div>
+
+        <div class="breadcrumb">
+            ADMIN > 딜러관리 > 상세확인
+        </div>
+
+        <div class="split">
+
+            <!-- 딜러 정보 -->
+            <section class="card">
+                <p class="section-title">딜러정보 상세</p>
+
+                <dl class="detail detail-grid">
+                    <dt>사원번호</dt>
+                    <dd>2601D007</dd>
+
+                    <dt>이름</dt>
+                    <dd>이딜러</dd>
+
+                    <dt>담당 지점</dt>
+                    <dd>서울 본점</dd>
+
+                    <dt>입사일</dt>
+                    <dd>2026.03.18</dd>
+
+                    <dt>계정 상태</dt>
+                    <dd><span class="tag green">정상</span></dd>
+
+                    <dt>연락처</dt>
+                    <dd>010-1111-2222</dd>
+
+                    <dt>이메일</dt>
+                    <dd>dealer@kiaev.com</dd>
+                </dl>
+            </section>
+
+            <!-- 관리 영역 -->
+            <section class="card">
+                <p class="section-title">상태 참고</p>
+
+                <div class="btn-row">
+                    <button class="btn sub">딜러 관리로 이동</button>
+                    <button class="btn red">퇴사 딜러 정보</button>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
