@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>차량 수정하기</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            display: block;
+            padding: 12px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 18px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .hero-note {
+            padding: 10px;
+            background: #eef6ff;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .file-box {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 14px;
+            background: #fafafa;
+        }
+
+        .file-select-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .file-name-box {
+            flex: 1;
+            background: white;
+        }
+
+        .file-btn {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+
+        .hint {
+            color: #666;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .thumbs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .thumb {
+            min-height: 170px;
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fafafa;
+            color: #999;
+            font-size: 13px;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .btn {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        .btn.green {
+            background: #059669;
+            color: white;
+        }
+
+        .btn.sub {
+            background: white;
+            border: 1px solid #ccc;
+            color: #333;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="logo">KIAEV ADMIN</div>
+
+        <nav class="nav">
+            <a href="/admin/main">대시보드</a>
+            <a href="/admin/member/list">회원관리</a>
+            <a href="/admin/consult/list">상담관리</a>
+            <a href="/admin/board/list">게시판관리</a>
+            <a href="/admin/dealer/list">딜러관리</a>
+            <a href="/admin/promotion/list">프로모션관리</a>
+            <a href="/admin/car/list" class="active">차량관리</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+
+        <div class="topbar">
+            <h1>차량 수정하기</h1>
+            <div>ADMIN님</div>
+        </div>
+
+        <div class="breadcrumb">
+            ADMIN &gt; 차량관리 &gt; 상세확인 &gt; 차량 수정하기
+        </div>
+
+        <div class="card">
+
+            <p class="section-title">차량 수정하기</p>
+
+            <form action="/admin/car/edit" method="post" enctype="multipart/form-data"
+                  onsubmit="return confirm('수정을 완료하시겠습니까?');">
+
+                <input type="hidden" name="carId" th:value="${car.carId}">
+
+                <div class="grid grid-2">
+                    <div>
+                        <label class="form-label">차량번호</label>
+                        <input type="text" name="carNumber" th:value="${car.carNumber}">
+                    </div>
+
+                    <div>
+                        <label class="form-label">모델명</label>
+                        <input type="text" name="carName" th:value="${car.carName}">
+                    </div>
+
+                    <div>
+                        <label class="form-label">브랜드</label>
+                        <select name="carBrand">
+                            <option value="">브랜드 선택</option>
+                            <option value="KIA" th:selected="${car.carBrand == 'KIA'}">KIA</option>
+                            <option value="HYUNDAI" th:selected="${car.carBrand == 'HYUNDAI'}">HYUNDAI</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="form-label">차량 유형</label>
+                        <input type="text" name="carType" th:value="${car.carType}">
+                    </div>
+
+                    <div>
+                        <label class="form-label">차량 색상</label>
+                        <input type="text" name="carColor" th:value="${car.carColor}">
+                    </div>
+
+                    <div>
+                        <label class="form-label">상태</label>
+                        <select name="carStatus">
+                            <option value="판매중" th:selected="${car.carStatus == '판매중'}">판매중</option>
+                            <option value="품절" th:selected="${car.carStatus == '품절'}">품절</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="form-label">가격(숫자 저장용)</label>
+                        <input type="number" name="carPrice" th:value="${car.carPrice}">
+                    </div>
+
+                    <div>
+                        <label class="form-label">가격 표시문구</label>
+                        <input type="text" name="carPriceDisplay" th:value="${car.carPriceDisplay}">
+                    </div>
+
+                    <div>
+                        <label class="form-label">배터리 용량</label>
+                        <input type="text" name="batteryCapacity" th:value="${car.batteryCapacity}">
+                    </div>
+
+                    <div>
+                        <label class="form-label">1회 충전 주행거리</label>
+                        <input type="text" name="drivingRange" th:value="${car.drivingRange}">
+                    </div>
+
+                    <div>
+                        <label class="form-label">급속 충전 시간</label>
+                        <input type="text" name="fastChargeTime" th:value="${car.fastChargeTime}">
+                    </div>
+
+                    <div>
+                        <label class="form-label">충전 퍼센트 정보</label>
+                        <input type="text" name="chargePercentInfo" th:value="${car.chargePercentInfo}">
+                    </div>
+                </div>
+
+                <div style="height: 12px;"></div>
+
+                <label class="form-label">차량 설명</label>
+                <textarea name="carContent" th:text="${car.carContent}"></textarea>
+
+                <div style="height: 16px;"></div>
+
+                <div class="hero-note">차량 사진 변경하기</div>
+
+                <div class="file-grid">
+                    <div class="file-box">
+                        <label class="form-label">대표 이미지</label>
+                        <div class="file-select-row">
+                            <input type="text" id="mainFileName" class="file-name-box" value="선택된 파일 없음" readonly>
+                            <label for="mainFile" class="file-btn">찾아보기</label>
+                            <input type="file" id="mainFile" name="mainFile" accept="image/*" hidden onchange="setFileName(this, 'mainFileName')">
+                        </div>
+                    </div>
+
+                    <div class="file-box">
+                        <label class="form-label">추가 이미지 1</label>
+                        <div class="file-select-row">
+                            <input type="text" id="img1FileName" class="file-name-box" value="선택된 파일 없음" readonly>
+                            <label for="img1File" class="file-btn">찾아보기</label>
+                            <input type="file" id="img1File" name="img1File" accept="image/*" hidden onchange="setFileName(this, 'img1FileName')">
+                        </div>
+                    </div>
+
+                    <div class="file-box">
+                        <label class="form-label">추가 이미지 2</label>
+                        <div class="file-select-row">
+                            <input type="text" id="img2FileName" class="file-name-box" value="선택된 파일 없음" readonly>
+                            <label for="img2File" class="file-btn">찾아보기</label>
+                            <input type="file" id="img2File" name="img2File" accept="image/*" hidden onchange="setFileName(this, 'img2FileName')">
+                        </div>
+                    </div>
+
+                    <div class="file-box">
+                        <label class="form-label">추가 이미지 3</label>
+                        <div class="file-select-row">
+                            <input type="text" id="img3FileName" class="file-name-box" value="선택된 파일 없음" readonly>
+                            <label for="img3File" class="file-btn">찾아보기</label>
+                            <input type="file" id="img3File" name="img3File" accept="image/*" hidden onchange="setFileName(this, 'img3FileName')">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hint">새 이미지를 선택하지 않으면 기존 이미지가 유지됩니다.</div>
+
+                <div class="thumbs">
+                    <div class="thumb">
+                        <img th:if="${car.carMainImg != null and !#strings.isEmpty(car.carMainImg)}"
+                             th:src="${car.carMainImg}" alt="대표 이미지">
+                        <span th:if="${car.carMainImg == null or #strings.isEmpty(car.carMainImg)}">대표 이미지 없음</span>
+                    </div>
+
+                    <div class="thumb">
+                        <img th:if="${car.carImg1 != null and !#strings.isEmpty(car.carImg1)}"
+                             th:src="${car.carImg1}" alt="추가 이미지 1">
+                        <span th:if="${car.carImg1 == null or #strings.isEmpty(car.carImg1)}">추가 이미지 1 없음</span>
+                    </div>
+
+                    <div class="thumb">
+                        <img th:if="${car.carImg2 != null and !#strings.isEmpty(car.carImg2)}"
+                             th:src="${car.carImg2}" alt="추가 이미지 2">
+                        <span th:if="${car.carImg2 == null or #strings.isEmpty(car.carImg2)}">추가 이미지 2 없음</span>
+                    </div>
+
+                    <div class="thumb">
+                        <img th:if="${car.carImg3 != null and !#strings.isEmpty(car.carImg3)}"
+                             th:src="${car.carImg3}" alt="추가 이미지 3">
+                        <span th:if="${car.carImg3 == null or #strings.isEmpty(car.carImg3)}">추가 이미지 3 없음</span>
+                    </div>
+                </div>
+
+                <div class="btn-row">
+                    <button type="submit" class="btn green">수정 완료</button>
+                    <a th:href="@{/admin/car/detail(carId=${car.carId})}" class="btn sub"
+                       onclick="return confirm('수정을 취소하시겠습니까?');">수정 취소</a>
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+    function setFileName(input, targetId) {
+        const target = document.getElementById(targetId);
+        if (!input.files || input.files.length === 0) {
+            target.value = "선택된 파일 없음";
+            return;
+        }
+        target.value = input.files[0].name;
+    }
+</script>
+
+</body>
+</html>
